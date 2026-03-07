@@ -62,15 +62,46 @@
             pointer-events: none;
         }
 
-        .floating-emoji:nth-child(1) { top: 20px; left: 10%; animation-delay: 0s; }
-        .floating-emoji:nth-child(2) { top: 10px; right: 10%; animation-delay: 0.5s; }
-        .floating-emoji:nth-child(3) { top: 60px; left: 25%; animation-delay: 1s; }
-        .floating-emoji:nth-child(4) { top: 50px; right: 25%; animation-delay: 1.5s; }
-        .floating-emoji:nth-child(5) { top: 30px; left: 50%; animation-delay: 0.8s; }
+        .floating-emoji:nth-child(1) {
+            top: 20px;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .floating-emoji:nth-child(2) {
+            top: 10px;
+            right: 10%;
+            animation-delay: 0.5s;
+        }
+
+        .floating-emoji:nth-child(3) {
+            top: 60px;
+            left: 25%;
+            animation-delay: 1s;
+        }
+
+        .floating-emoji:nth-child(4) {
+            top: 50px;
+            right: 25%;
+            animation-delay: 1.5s;
+        }
+
+        .floating-emoji:nth-child(5) {
+            top: 30px;
+            left: 50%;
+            animation-delay: 0.8s;
+        }
 
         @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-15px); }
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-15px);
+            }
         }
 
         /* Cards */
@@ -102,9 +133,17 @@
             box-shadow: 0 16px 32px rgba(0, 0, 0, 0.15);
         }
 
-        .card-light { border-color: var(--light-color); }
-        .card-insight { border-color: var(--insight-color); }
-        .card-star { border-color: var(--star-color); }
+        .card-light {
+            border-color: var(--light-color);
+        }
+
+        .card-insight {
+            border-color: var(--insight-color);
+        }
+
+        .card-star {
+            border-color: var(--star-color);
+        }
 
         .card-header {
             border-radius: 12px;
@@ -112,9 +151,17 @@
             margin: -30px -30px 20px -30px;
         }
 
-        .card-light .card-header { background: linear-gradient(135deg, #74b9ff, #a29bfe); }
-        .card-insight .card-header { background: linear-gradient(135deg, #ff6b6b, #ff9ff3); }
-        .card-star .card-header { background: linear-gradient(135deg, #ffeaa7, #fdcb6e); }
+        .card-light .card-header {
+            background: linear-gradient(135deg, #74b9ff, #a29bfe);
+        }
+
+        .card-insight .card-header {
+            background: linear-gradient(135deg, #ff6b6b, #ff9ff3);
+        }
+
+        .card-star .card-header {
+            background: linear-gradient(135deg, #ffeaa7, #fdcb6e);
+        }
 
         .card-icon {
             font-size: 3.5rem;
@@ -125,10 +172,12 @@
         .card-name {
             font-size: 2rem;
             color: white;
-            text-shadow: 2px 2px 0px rgba(0,0,0,0.15);
+            text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.15);
         }
 
-        .card-star .card-name { color: #2d3436; }
+        .card-star .card-name {
+            color: #2d3436;
+        }
 
         .card-badge {
             display: inline-block;
@@ -139,9 +188,18 @@
             color: white;
         }
 
-        .card-light .card-badge { background: var(--light-color); }
-        .card-insight .card-badge { background: var(--insight-color); }
-        .card-star .card-badge { background: var(--star-dark); color: #2d3436; }
+        .card-light .card-badge {
+            background: var(--light-color);
+        }
+
+        .card-insight .card-badge {
+            background: var(--insight-color);
+        }
+
+        .card-star .card-badge {
+            background: var(--star-dark);
+            color: #2d3436;
+        }
 
         .game-list {
             list-style: none;
@@ -155,7 +213,9 @@
             border-bottom: 2px dashed #f1f2f6;
         }
 
-        .game-list li:last-child { border-bottom: none; }
+        .game-list li:last-child {
+            border-bottom: none;
+        }
 
         .play-btn {
             display: inline-block;
@@ -227,16 +287,27 @@
 
         /* Responsive */
         @media (max-width: 768px) {
-            .hero h1 { font-size: 2rem; }
-            .hero p { font-size: 1rem; }
-            .floating-emoji { font-size: 1.5rem; }
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .floating-emoji {
+                font-size: 1.5rem;
+            }
 
             .cards-container {
                 flex-direction: column;
                 align-items: center;
             }
 
-            .card { width: 90%; max-width: 400px; }
+            .card {
+                width: 90%;
+                max-width: 400px;
+            }
         }
     </style>
 </head>
@@ -297,6 +368,7 @@
             <div class="game-preview">
                 <span class="game-tag">🏃 점프맵</span>
                 <span class="game-tag">⚔️ 헌터즈</span>
+                <span class="game-tag">⚔️ 3D 배드워즈</span>
                 <span class="game-tag">🛏️ 배드워즈</span>
                 <span class="game-tag">🏎️ 카트</span>
                 <span class="game-tag">🧟 좀비탈출</span>

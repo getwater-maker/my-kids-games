@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D 배드워즈: 휴먼 서바이벌 ⚔️</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div id="game-container">
+        <!-- Crosshair -->
+        <div id="crosshair">+</div>
+
+        <!-- Start Screen -->
+        <div id="start-screen" class="overlay">
+            <div class="menu-box">
+                <h1>⚔️ 3D 배드워즈</h1>
+                <p>커비가 아닌 우리들의 3D 생존 전투!</p>
+                <div class="controls-info">
+                    [W A S D]: 이동<br>
+                    [SPACE]: 점프<br>
+                    [왼쪽 클릭]: 공격 / 블록 설치<br>
+                    [숫자 1, 2]: 칼 / 양털 선택<br>
+                    [SHIFT]: 블록 설치 모드 전환
+                </div>
+                <button id="start-btn">게임 시작!</button>
+            </div>
+        </div>
+
+        <!-- HUD -->
+        <div id="hud" class="hidden">
+            <div class="status-top">
+                <div id="hp-bar-container">
+                    <div id="hp-bar-fill"></div>
+                    <span id="hp-text">HP: 100</span>
+                </div>
+            </div>
+            <div class="inventory">
+                <div class="inv-slot selected" id="slot-0">⚔️ 칼</div>
+                <div class="inv-slot" id="slot-1">🧶 양털 (<span id="wool-count">24</span>)</div>
+            </div>
+            <div id="msg">블록 설치: SHIFT (공격과 전환)</div>
+        </div>
+
+        <!-- Game Over -->
+        <div id="game-over" class="overlay hidden">
+            <div class="menu-box">
+                <h1 id="result-title">탈락했습니다!</h1>
+                <p id="result-msg">다시 도전해 보세요.</p>
+                <button onclick="location.reload()">다시 하기</button>
+                <button onclick="location.href='../index.html'" style="background: #555;">메인으로</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Three.js Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- PointerLockControls (First Person) -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/PointerLockControls.js"></script>
+    <!-- Game JS -->
+    <script src="js/main.js"></script>
+</body>
+
+</html>
