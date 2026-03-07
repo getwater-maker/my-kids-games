@@ -282,6 +282,7 @@ class Player {
         this.jumpPower = -10;
         this.gravity = 0.5;
         this.isGrounded = false;
+        this.jumpDebounce = false; // Add jump debounce flag
 
         // Stats
         this.hp = 100;
@@ -319,8 +320,8 @@ class Player {
         this.vy += this.gravity;
         if (this.vy > 10) this.vy = 10;
 
-        // 상하 충돌 검사
-        if (checkMapCollision(this.x, this.y + this.vy, this.w, this.h)) {
+        // 상하 충돌 검사 (좌우로 2픽셀 줄여서 벽에 비빌 때 점프되는 버그 방지)
+        if (checkMapCollision(this.x + 2, this.y + this.vy, this.w - 4, this.h)) {
             if (this.vy > 0) {
                 this.isGrounded = true;
                 this.y = Math.floor((this.y + this.h) / TILE_SIZE) * TILE_SIZE - this.h;
@@ -334,15 +335,20 @@ class Player {
         }
 
         // 점프 & 호버링 로직
-        if (keys.Space || keys.w) {
-            if (this.isGrounded) {
-                // 땅에서는 일반 점프
+        let jumpKey = keys.Space || keys.w;
+        if (jumpKey) {
+            if (this.isGrounded && !this.jumpDebounce) {
+                // 땅에서는 톡 눌렀을 때만 점프 (점프 후 키를 떼야 다시 점프 가능)
                 this.vy = this.jumpPower;
                 this.isGrounded = false;
-            } else {
-                // 공중에서는 호버링 (꾹 누르면 천천히 상승)
+                this.jumpDebounce = true;
+            } else if (!this.isGrounded) {
+                // 공중에서는 무한 호버링
                 this.vy = -3.5;
             }
+        } else {
+            // 키를 떼면 점프 권한 복구
+            this.jumpDebounce = false;
         }
 
         // Action (Build / Attack)
@@ -505,7 +511,7 @@ class EnemyPlayer extends Player {
         this.vy += this.gravity;
         if (this.vy > 8) this.vy = 8;
 
-        if (checkMapCollision(this.x, this.y + this.vy, this.w, this.h)) {
+        if (checkMapCollision(this.x + 2, this.y + this.vy, this.w - 4, this.h)) {
             if (this.vy > 0) {
                 this.isGrounded = true;
                 this.y = Math.floor((this.y + this.h) / TILE_SIZE) * TILE_SIZE - this.h;
