@@ -295,9 +295,12 @@ class Player {
         this.emerald = 0;
 
         // Combat
-        this.swordLevel = 0; // 0: 목검, 1: 돌검, 2: 철검
+        this.swordLevel = 0; // 0: 목검, 1: 돌검, 2: 철검, 3: 다검, 4: 레이지 블레이드
         this.attackCooldown = 0;
         this.facingRight = true;
+
+        this.kills = 0;
+        this.kit = 'Barbarian';
     }
 
     update() {
@@ -418,7 +421,12 @@ class Player {
 
         if (enemy && hitBoxX < enemy.x + enemy.w && hitBoxX + hitBoxW > enemy.x &&
             hitBoxY < enemy.y + enemy.h && hitBoxY + hitBoxH > enemy.y) {
-            enemy.hp -= 15 + (this.swordLevel * 5);
+
+            let damage = 15 + (this.swordLevel * 5);
+            // Rage Blade Special Damage (75)
+            if (this.swordLevel >= 4) damage = 75;
+
+            enemy.hp -= damage;
             enemy.vy = -5;
             enemy.x += this.facingRight ? 20 : -20; // 넉백
         }
@@ -478,7 +486,10 @@ class Player {
 
         // 검
         if (this.attackCooldown > 10) {
-            ctx.fillStyle = '#9e9e9e'; // 은색 검
+            // Sword colors for different levels
+            let swordColors = ['#8d6e63', '#9e9e9e', '#cfd8dc', '#00bcd4', '#7e57c2'];
+            ctx.fillStyle = swordColors[this.swordLevel] || '#9e9e9e';
+
             if (this.facingRight) {
                 ctx.fillRect(px + this.w, py + 10, 20, 5);
             } else {
@@ -538,7 +549,7 @@ class EnemyPlayer extends Player {
 
         // 플레이어가 가까우면 공격
         let distToPlayer = Math.hypot(this.x - player.x, this.y - player.y);
-        if (distToPlayer < 60 && this.attackCooldown <= 0) {
+        if (distToPlayer < 70 && this.attackCooldown <= 0) {
             this.vx = 0; // 멈춰서 공격
             this.attack();
         }
@@ -595,6 +606,18 @@ class EnemyPlayer extends Player {
     }
 
     handleDeath() {
+        // Barbarian Kill logic
+        if (player.kit === 'Barbarian') {
+            player.kills++;
+            // Upgrade Sword based on kills
+            if (player.kills >= 5) player.swordLevel = 4; // Rage Blade
+            else if (player.kills >= 3) player.swordLevel = 3; // Diamond Blade
+            else if (player.kills >= 2) player.swordLevel = 2; // Iron Blade
+            else if (player.kills >= 1) player.swordLevel = 1; // Stone Blade
+
+            announce(`[Barbarian] 킬 보너스! (총 ${player.kills}킬)`);
+        }
+
         if (redBed) {
             this.reset();
         } else {
@@ -634,7 +657,7 @@ function toggleShop() {
 }
 
 function updateHUD() {
-    ui.playerHp.textContent = `HP: ${player.hp}`;
+    ui.playerHp.textContent = `HP: ${player.hp} | Kills: ${player.kills} (Kit: ${player.kit})`;
     ui.resIron.textContent = player.iron;
     ui.resGold.textContent = player.gold;
     ui.resEmerald.textContent = player.emerald;
