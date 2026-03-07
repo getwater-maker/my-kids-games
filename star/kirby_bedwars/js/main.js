@@ -310,7 +310,7 @@ class Player {
         else if (keys.d) { this.vx = this.speed; this.facingRight = true; }
         else { this.vx = 0; }
 
-        if (!checkMapCollision(this.x + this.vx, this.y, this.w, this.h)) {
+        if (!checkMapCollision(this.x + this.vx, this.y, this.w, this.h - 1)) {
             this.x += this.vx;
         }
 
@@ -322,10 +322,15 @@ class Player {
         if (!checkMapCollision(this.x, this.y + this.vy, this.w, this.h)) {
             this.y += this.vy;
         } else {
-            if (this.vy > 0) this.isGrounded = true;
+            if (this.vy > 0) {
+                this.isGrounded = true;
+                // 바닥에 정확히 붙게 스냅
+                this.y = Math.floor((this.y + this.h) / TILE_SIZE) * TILE_SIZE - this.h;
+            } else if (this.vy < 0) {
+                // 천장에 정확히 붙게 스냅
+                this.y = Math.ceil(this.y / TILE_SIZE) * TILE_SIZE;
+            }
             this.vy = 0;
-            // 스냅 (위/아래 벽에 붙기)
-            this.y = Math.round(this.y);
         }
 
         if (keys.Space || keys.w) {
@@ -487,7 +492,7 @@ class EnemyPlayer extends Player {
         this.aiLogic();
 
         // 물리 적용
-        if (!checkMapCollision(this.x + this.vx, this.y, this.w, this.h)) {
+        if (!checkMapCollision(this.x + this.vx, this.y, this.w, this.h - 1)) {
             this.x += this.vx;
         }
 
@@ -498,9 +503,13 @@ class EnemyPlayer extends Player {
         if (!checkMapCollision(this.x, this.y + this.vy, this.w, this.h)) {
             this.y += this.vy;
         } else {
-            if (this.vy > 0) this.isGrounded = true;
+            if (this.vy > 0) {
+                this.isGrounded = true;
+                this.y = Math.floor((this.y + this.h) / TILE_SIZE) * TILE_SIZE - this.h;
+            } else if (this.vy < 0) {
+                this.y = Math.ceil(this.y / TILE_SIZE) * TILE_SIZE;
+            }
             this.vy = 0;
-            this.y = Math.round(this.y);
         }
 
         if (this.attackCooldown > 0) this.attackCooldown--;
