@@ -306,26 +306,37 @@ class Player {
             return;
         }
 
-        // Horizontal Movement (Simplified & Stable)
-        if (keys.a) { this.vx = -this.speed; this.facingRight = false; }
-        else if (keys.d) { this.vx = this.speed; this.facingRight = true; }
-        else { this.vx = 0; }
+        // 1. 가로 이동 결정
+        if (this === player) {
+            if (keys.a) { this.vx = -this.speed; this.facingRight = false; }
+            else if (keys.d) { this.vx = this.speed; this.facingRight = true; }
+            else { this.vx = 0; }
+        } else {
+            this.aiLogic();
+        }
 
-        // 가로 충돌 검사 시 발밑과 머리 끝 타일에 걸리지 않도록 범위를 살짝 줄임 (y+2, h-4)
-        if (!checkMapCollision(this.x + this.vx, this.y + 2, this.w, this.h - 4)) {
+        // 2. 가로 충돌 해결 (벽에 비빌 때 튀는 현상 방지)
+        // 캐릭터의 높이를 살짝 줄여서(상하 5px씩) 발밑/머리 끝 타일에 걸리지 않게 함
+        if (!checkMapCollision(this.x + this.vx, this.y + 5, this.w, this.h - 10)) {
             this.x += this.vx;
+        } else {
+            // 벽에 부딪힘: 좌표 정밀 스냅
+            if (this.vx > 0) this.x = Math.floor((this.x + this.w) / TILE_SIZE) * TILE_SIZE - this.w;
+            else if (this.vx < 0) this.x = Math.ceil(this.x / TILE_SIZE) * TILE_SIZE;
+            this.vx = 0;
         }
 
         // Vertical Movement & Gravity
         this.vy += this.gravity;
         if (this.vy > 10) this.vy = 10;
 
-        // 상하 충돌 검사 (좌우로 2픽셀 줄여서 벽에 비빌 때 점프되는 버그 방지)
-        if (checkMapCollision(this.x + 2, this.y + this.vy, this.w - 4, this.h)) {
-            if (this.vy > 0) {
+        // 4. 세로 충돌 해결 (발밑 판정)
+        // 가로 길이를 살짝 줄여서(좌우 5px씩) 옆 벽 타일을 바닥으로 인식하는 버그 방지
+        if (checkMapCollision(this.x + 5, this.y + this.vy, this.w - 10, this.h)) {
+            if (this.vy > 0) { // 하강 중 충돌 (바닥)
                 this.isGrounded = true;
                 this.y = Math.floor((this.y + this.h) / TILE_SIZE) * TILE_SIZE - this.h;
-            } else if (this.vy < 0) {
+            } else if (this.vy < 0) { // 상승 중 충돌 (천장)
                 this.y = Math.ceil(this.y / TILE_SIZE) * TILE_SIZE;
             }
             this.vy = 0;
@@ -334,41 +345,35 @@ class Player {
             this.isGrounded = false;
         }
 
-        // 점프 & 호버링 로직
-        let jumpKey = keys.Space || keys.w;
-        if (jumpKey) {
-            if (this.isGrounded && !this.jumpDebounce) {
-                // 땅에서는 톡 눌렀을 때만 점프 (점프 후 키를 떼야 다시 점프 가능)
-                this.vy = this.jumpPower;
-                this.isGrounded = false;
-                this.jumpDebounce = true;
-            } else if (!this.isGrounded) {
-                // 공중에서는 무한 호버링
-                this.vy = -3.5;
+        // 5. 점프 및 호버링 로직 (플레이어 전용)
+        if (this === player) {
+            let jumpKey = keys.Space || keys.w;
+            if (jumpKey) {
+                if (this.isGrounded && !this.jumpDebounce) {
+                    // 땅에서 첫 점프
+                    this.vy = this.jumpPower;
+                    this.isGrounded = false;
+                    this.jumpDebounce = true;
+                } else if (!this.isGrounded) {
+                    // 공중 무한 호버링
+                    this.vy = -3.5;
+                }
+            } else {
+                this.jumpDebounce = false;
             }
-        } else {
-            // 키를 떼면 점프 권한 복구
-            this.jumpDebounce = false;
         }
 
-        // Action (Build / Attack)
+        // 6. 기타 액션 (쿨타임, 공격, 설치 등)
         if (this.attackCooldown > 0) this.attackCooldown--;
 
-        if (mouse.leftDown && this.attackCooldown <= 0) {
-            this.attack();
-        }
-        if (mouse.rightDown) {
-            this.buildBlock();
-        }
+        if (this === player) {
+            if (mouse.leftDown && this.attackCooldown <= 0) this.attack();
+            if (mouse.rightDown) this.buildBlock();
 
-        // Fall Death
-        if (this.y > MAP_ROWS * TILE_SIZE) {
-            this.hp = 0;
+            // 카메라 업데이트
+            camera.x = this.x + this.w / 2 - canvas.width / 2;
+            camera.y = this.y + this.h / 2 - canvas.height / 2;
         }
-
-        // Camera Update
-        camera.x = this.x + this.w / 2 - canvas.width / 2;
-        camera.y = this.y + this.h / 2 - canvas.height / 2;
     }
 
     attack() {
@@ -495,40 +500,7 @@ class EnemyPlayer extends Player {
     }
 
     update() {
-        if (this.hp <= 0) {
-            this.handleDeath();
-            return;
-        }
-
-        this.aiLogic();
-
-        // AI 가로 이동 충돌 검사 보정
-        if (!checkMapCollision(this.x + this.vx, this.y + 2, this.w, this.h - 4)) {
-            this.x += this.vx;
-        }
-
-        // Vertical
-        this.vy += this.gravity;
-        if (this.vy > 8) this.vy = 8;
-
-        if (checkMapCollision(this.x + 2, this.y + this.vy, this.w - 4, this.h)) {
-            if (this.vy > 0) {
-                this.isGrounded = true;
-                this.y = Math.floor((this.y + this.h) / TILE_SIZE) * TILE_SIZE - this.h;
-            } else if (this.vy < 0) {
-                this.y = Math.ceil(this.y / TILE_SIZE) * TILE_SIZE;
-            }
-            this.vy = 0;
-        } else {
-            this.y += this.vy;
-            this.isGrounded = false;
-        }
-
-        if (this.attackCooldown > 0) this.attackCooldown--;
-
-        if (this.y > MAP_ROWS * TILE_SIZE) {
-            this.hp = 0;
-        }
+        super.update(); // 부모 클래스의 통합된 물리 엔진 사용
     }
 
     aiLogic() {
