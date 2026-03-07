@@ -4,7 +4,7 @@
 const TILE_SIZE = 1; // 3D Unit size
 const GRAVITY = 0.02;
 const JUMP_FORCE = 0.35;
-const WALK_SPEED = 0.15;
+const WALK_SPEED = 0.08; // Reduced speed as requested
 
 // --- Three.js Setup ---
 let scene, camera, renderer, controls;
@@ -80,6 +80,7 @@ function init() {
         gameOverScreen.classList.add('hidden');
         crosshair.style.display = 'block';
         hud.classList.remove('hidden');
+        updateModeText();
         gameState = 'PLAYING';
     });
 
@@ -94,6 +95,8 @@ function init() {
     window.addEventListener('keydown', onKeyDown);
     window.addEventListener('keyup', onKeyUp);
     window.addEventListener('mousedown', onMouseDown);
+    // Prevent context menu on right click to allow block placing
+    window.addEventListener('contextmenu', (e) => e.preventDefault());
     window.addEventListener('wheel', (e) => {
         if (e.deltaY > 0) selectSlot(1);
         else selectSlot(0);
@@ -217,29 +220,20 @@ function onKeyUp(e) {
 
 function selectSlot(idx) {
     player.selectedSlot = idx;
-    invSlots.forEach((slot, i) => {
-        if (i === idx) slot.classList.add('selected');
-        else slot.classList.remove('selected');
-    });
 }
 
 function updateModeText() {
     const msg = document.getElementById('msg');
-    if (player.isPlacingMode) {
-        msg.textContent = "⚙️ 현재 모드: 블록 설치 (SHIFT로 전환)";
-        msg.style.color = "#ffeb3b";
-    } else {
-        msg.textContent = "⚔️ 현재 모드: 공격 (SHIFT로 전환)";
-        msg.style.color = "#fff";
-    }
+    msg.textContent = "🖱️ 왼쪽 클릭: 공격 / 오른쪽 클릭: 양털 설치";
+    msg.style.color = "#fff";
 }
 
 function onMouseDown(e) {
     if (gameState !== 'PLAYING') return;
 
-    if (player.isPlacingMode && player.selectedSlot === 1) {
+    if (e.button === 2) { // Right Click
         placeBlock();
-    } else {
+    } else if (e.button === 0) { // Left Click
         performAttack();
     }
 }
