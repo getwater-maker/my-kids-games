@@ -4,7 +4,7 @@
 const TILE_SIZE = 1; // 3D Unit size
 const GRAVITY = 0.02;
 const JUMP_FORCE = 0.35;
-const WALK_SPEED = 0.02; // Very slow/precise as requested (Speed '5')
+const WALK_SPEED = 0.05; // Adjusted to 'Speed 5' feel
 
 // --- Three.js Setup ---
 let scene, camera, renderer, controls;
@@ -304,21 +304,28 @@ function placeBlock() {
     let intersects = raycaster.intersectObjects(objects);
     let hit, normal, pos;
 
+    // Detect current ground level for bridging
+    let currentGroundY = 0;
+    const groundRay = new THREE.Raycaster(camera.position, new THREE.Vector3(0, -1, 0));
+    const groundHits = groundRay.intersectObjects(objects);
+    if (groundHits.length > 0) {
+        currentGroundY = groundHits[0].object.position.y + 1; // Center + half height (1)
+    }
+
     if (intersects.length > 0 && intersects[0].distance < 6) {
         hit = intersects[0];
         normal = hit.face.normal.clone();
         normal.applyEuler(hit.object.rotation);
         pos = hit.point.clone().add(normal.multiplyScalar(0.5));
     } else {
-        // "Easy Front Bridging": If looking at air, allow placing 2 units in front at floor level
+        // "Easy Front Bridging": Snap to current ground level
         const dir = new THREE.Vector3();
         camera.getWorldDirection(dir);
-        // Only if looking down a bit
-        if (dir.y < -0.2) {
+        if (dir.y < -0.1) {
             pos = camera.position.clone().add(dir.multiplyScalar(2.5));
-            pos.y = -0.5; // Snap to floor level
+            pos.y = currentGroundY - 0.5; // Snap to feet level
         } else {
-            return; // Too high
+            return;
         }
     }
 
@@ -378,6 +385,14 @@ function updatePlacementPreview() {
     const intersects = raycaster.intersectObjects(objects);
     let pos;
 
+    // Current ground level for preview snap
+    let currentGroundY = 0;
+    const groundRay = new THREE.Raycaster(camera.position, new THREE.Vector3(0, -1, 0));
+    const groundHits = groundRay.intersectObjects(objects);
+    if (groundHits.length > 0) {
+        currentGroundY = groundHits[0].object.position.y + 1;
+    }
+
     if (intersects.length > 0 && intersects[0].distance < 6) {
         const hit = intersects[0];
         const normal = hit.face.normal.clone();
@@ -387,9 +402,9 @@ function updatePlacementPreview() {
         // Preview for "Easy Front Bridging"
         const dir = new THREE.Vector3();
         camera.getWorldDirection(dir);
-        if (dir.y < -0.2) {
+        if (dir.y < -0.1) {
             pos = camera.position.clone().add(dir.multiplyScalar(2.5));
-            pos.y = -0.5;
+            pos.y = currentGroundY - 0.5;
         }
     }
 
