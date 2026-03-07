@@ -4,7 +4,7 @@
 const TILE_SIZE = 1; // 3D Unit size
 const GRAVITY = 0.02;
 const JUMP_FORCE = 0.35;
-const WALK_SPEED = 0.04; // Even slower as requested (Speed '10')
+const WALK_SPEED = 0.02; // Very slow/precise as requested (Speed '5')
 
 // --- Three.js Setup ---
 let scene, camera, renderer, controls;
@@ -301,16 +301,31 @@ function placeBlock() {
         return;
     }
 
-    raycaster.setFromCamera(new THREE.Vector2(0, 0), camera);
-    const intersects = raycaster.intersectObjects(objects);
+    let intersects = raycaster.intersectObjects(objects);
+    let hit, normal, pos;
 
     if (intersects.length > 0 && intersects[0].distance < 6) {
-        const hit = intersects[0];
-        const normal = hit.face.normal.clone();
+        hit = intersects[0];
+        normal = hit.face.normal.clone();
         normal.applyEuler(hit.object.rotation);
+        pos = hit.point.clone().add(normal.multiplyScalar(0.5));
+    } else {
+        // "Easy Front Bridging": If looking at air, allow placing 2 units in front at floor level
+        const dir = new THREE.Vector3();
+        camera.getWorldDirection(dir);
+        // Only if looking down a bit
+        if (dir.y < -0.2) {
+            pos = camera.position.clone().add(dir.multiplyScalar(2.5));
+            pos.y = -0.5; // Snap to floor level
+        } else {
+            return; // Too high
+        }
+    }
 
-        // Target position based on normal (snap to grid-ish)
-        const pos = hit.point.clone().add(normal.multiplyScalar(0.5));
+    if (pos) {
+        pos.x = Math.round(pos.x);
+        pos.y = Math.round(pos.y * 2) / 2;
+        pos.z = Math.round(pos.z);
         pos.x = Math.round(pos.x);
         pos.y = Math.round(pos.y * 2) / 2; // half unit snap or just round
         pos.z = Math.round(pos.z);
@@ -361,13 +376,24 @@ function updatePlacementPreview() {
 
     raycaster.setFromCamera(new THREE.Vector2(0, 0), camera);
     const intersects = raycaster.intersectObjects(objects);
+    let pos;
 
     if (intersects.length > 0 && intersects[0].distance < 6) {
         const hit = intersects[0];
         const normal = hit.face.normal.clone();
         normal.applyEuler(hit.object.rotation);
+        pos = hit.point.clone().add(normal.multiplyScalar(0.5));
+    } else {
+        // Preview for "Easy Front Bridging"
+        const dir = new THREE.Vector3();
+        camera.getWorldDirection(dir);
+        if (dir.y < -0.2) {
+            pos = camera.position.clone().add(dir.multiplyScalar(2.5));
+            pos.y = -0.5;
+        }
+    }
 
-        const pos = hit.point.clone().add(normal.multiplyScalar(0.5));
+    if (pos) {
         pos.x = Math.round(pos.x);
         pos.y = Math.round(pos.y * 2) / 2;
         pos.z = Math.round(pos.z);
