@@ -38,7 +38,8 @@ let objects = [];
 let enemies = [];
 let resources = [];
 let spawners = [];
-let placementGhost; // Block placement preview
+let beds = [];
+let placementGhost;
 
 // --- UI Elements ---
 const startScreen = document.getElementById('start-screen');
@@ -100,6 +101,7 @@ function init() {
         crosshair.style.display = 'block';
         hud.classList.remove('hidden');
         updateModeText();
+        selectSlot(0); // Starting selection
         gameState = 'PLAYING';
     });
 
@@ -270,6 +272,10 @@ function onKeyUp(e) {
 
 function selectSlot(idx) {
     player.selectedSlot = idx;
+    invSlots.forEach((slot, i) => {
+        if (i === idx) slot.classList.add('selected');
+        else slot.classList.remove('selected');
+    });
 }
 
 function updateModeText() {
@@ -589,16 +595,17 @@ function animate() {
             }
         });
 
-        // Collection
-        resources.forEach((r, idx) => {
+        // Collection (Iterate backward for safe splice)
+        for (let i = resources.length - 1; i >= 0; i--) {
+            const r = resources[i];
             r.mesh.rotation.y += 0.05;
             if (r.mesh.position.distanceTo(camera.position) < 2.5) {
                 player[r.type]++;
                 scene.remove(r.mesh);
-                resources.splice(idx, 1);
+                resources.splice(i, 1);
                 updateHUD();
             }
-        });
+        }
     }
 
     renderer.render(scene, camera);
