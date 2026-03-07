@@ -314,30 +314,34 @@ class Player {
             this.x += this.vx;
         }
 
-        // Vertical
+        // Vertical Movement & Gravity
         this.vy += this.gravity;
-        if (this.vy > 12) this.vy = 12;
+        if (this.vy > 8) this.vy = 8; // 낙하 속도 제한
 
-        this.isGrounded = false;
-        if (!checkMapCollision(this.x, this.y + this.vy, this.w, this.h)) {
-            this.y += this.vy;
-        } else {
+        // 상하 충돌 검사
+        if (checkMapCollision(this.x, this.y + this.vy, this.w, this.h)) {
             if (this.vy > 0) {
                 this.isGrounded = true;
-                // 바닥에 정확히 붙게 스냅
                 this.y = Math.floor((this.y + this.h) / TILE_SIZE) * TILE_SIZE - this.h;
             } else if (this.vy < 0) {
-                // 천장에 정확히 붙게 스냅
                 this.y = Math.ceil(this.y / TILE_SIZE) * TILE_SIZE;
             }
             this.vy = 0;
+        } else {
+            this.y += this.vy;
+            this.isGrounded = false;
         }
 
+        // 점프 & 비행 로직 (계속 점프할 수 있게)
         if (keys.Space || keys.w) {
             if (this.isGrounded) {
-                this.vy = this.jumpPower;
+                this.vy = this.jumpPower; // 첫 점프는 강하게
                 this.isGrounded = false;
+            } else {
+                // 공중에서 계속 누르면 비행 (조금씩 떠오름)
+                this.vy = -3;
             }
+            // 점프 키를 누르는 동안은 중력 영향을 덜 받게 (선택 사항)
         }
 
         // Action (Build / Attack)
@@ -496,13 +500,11 @@ class EnemyPlayer extends Player {
             this.x += this.vx;
         }
 
+        // Vertical
         this.vy += this.gravity;
-        if (this.vy > 12) this.vy = 12;
+        if (this.vy > 8) this.vy = 8;
 
-        this.isGrounded = false;
-        if (!checkMapCollision(this.x, this.y + this.vy, this.w, this.h)) {
-            this.y += this.vy;
-        } else {
+        if (checkMapCollision(this.x, this.y + this.vy, this.w, this.h)) {
             if (this.vy > 0) {
                 this.isGrounded = true;
                 this.y = Math.floor((this.y + this.h) / TILE_SIZE) * TILE_SIZE - this.h;
@@ -510,6 +512,9 @@ class EnemyPlayer extends Player {
                 this.y = Math.ceil(this.y / TILE_SIZE) * TILE_SIZE;
             }
             this.vy = 0;
+        } else {
+            this.y += this.vy;
+            this.isGrounded = false;
         }
 
         if (this.attackCooldown > 0) this.attackCooldown--;
