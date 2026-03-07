@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>슬리퍼 꾸미기 🩴</title>
+    <link rel="stylesheet" href="slipper.css">
+    <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="app-container">
+        <header class="game-header">
+            <h1>🩴 폭신폭신 슬리퍼 공방</h1>
+            <div class="actions">
+                <button onclick="location.href='index.html'" class="action-btn">⬅️ 뒤로가기</button>
+                <button id="clearBtn" class="action-btn clear-btn">🗑️ 새 슬리퍼 꺼내기</button>
+                <button id="saveBtn" class="action-btn save-btn">📸 찰칵! 저장</button>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <!-- Left Toolbar -->
+            <aside class="sidebar">
+                <div class="panel">
+                    <h2>🌈 슬리퍼 색상</h2>
+                    <p style="font-size: 0.9rem; color: #666; margin-bottom: 10px;">바탕색을 골라보세요!</p>
+                    <div class="color-list" id="shoeColors">
+                        <div class="color-btn active" style="background: #ffeaa7;" data-color="yellow"></div>
+                        <div class="color-btn" style="background: #ffb8b8;" data-color="pink"></div>
+                        <div class="color-btn" style="background: #81ecec;" data-color="mint"></div>
+                        <div class="color-btn" style="background: #a29bfe;" data-color="purple"></div>
+                        <div class="color-btn" style="background: #dfe6e9;" data-color="white"></div>
+                        <div class="color-btn" style="background: #2d3436;" data-color="black"></div>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <h2>🎨 마법 펜 & 스프레이</h2>
+                    <div class="tool-list">
+                        <button class="tool-btn active" data-tool="marker" data-color="#2d3436">✏️ 검정펜</button>
+                        <button class="tool-btn" data-tool="marker" data-color="#ffffff">✏️ 하얀펜</button>
+                        <button class="tool-btn" data-tool="spray" data-color="#ff7675">💨 빨강 락카</button>
+                        <button class="tool-btn" data-tool="spray" data-color="#0984e3">💨 파랑 락카</button>
+                        <button class="tool-btn" data-tool="spray" data-color="#00b894">💨 초록 락카</button>
+                        <button class="tool-btn" data-tool="spray" data-color="#fdcb6e">💨 노랑 락카</button>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <h2>✨ 귀여운 지비츠(참)</h2>
+                    <p style="font-size: 0.9rem; color: #666; margin-bottom: 10px;">원하는 곳에 콕콕 눌러 찍어봐!</p>
+                    <div class="sticker-list" id="stickerTools">
+                        <button class="tool-btn sticker-btn" data-tool="sticker" data-val="🌼">🌼 데이지</button>
+                        <button class="tool-btn sticker-btn" data-tool="sticker" data-val="🎀">🎀 리본</button>
+                        <button class="tool-btn sticker-btn" data-tool="sticker" data-val="🐻">🐻 곰돌이</button>
+                        <button class="tool-btn sticker-btn" data-tool="sticker" data-val="🍓">🍓 딸기</button>
+                        <button class="tool-btn sticker-btn" data-tool="sticker" data-val="⭐">⭐ 별빛</button>
+                        <button class="tool-btn sticker-btn" data-tool="sticker" data-val="⚽">⚽ 축구공</button>
+                        <button class="tool-btn sticker-btn" data-tool="sticker" data-val="🍒">🍒 체리</button>
+                        <button class="tool-btn sticker-btn" data-tool="sticker" data-val="💎">💎 보석</button>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Center Stage -->
+            <section class="preview-area">
+                <div class="shoe-wrapper" id="shoeWrapper">
+
+                    <!-- CSS Slipper (Slider with Holes!) -->
+                    <div class="shoe-base" id="shoeCase">
+                        <div class="shoe-sole" id="shoeSole"></div>
+                        <div class="shoe-strap" id="shoeStrap">
+                            <!-- Holes for Croc/Jibbitz feel -->
+                            <div class="hole"></div>
+                            <div class="hole"></div>
+                            <div class="hole"></div>
+                            <div class="hole"></div>
+                            <div class="hole"></div>
+                            <div class="hole"></div>
+                            <div class="hole"></div>
+                            <div class="hole"></div>
+                            <div class="hole"></div>
+                        </div>
+                    </div>
+
+                    <!-- Canvas overlay for drawing / stamping -->
+                    <canvas id="shoeCanvas" width="360" height="600"></canvas>
+
+                    <!-- Cursor Hint Bubble -->
+                    <div id="cursorHint" class="cursor-hint">✏️</div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Sounds! -->
+    <audio id="sfx-draw" src="https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3" loop></audio>
+    <audio id="sfx-pop" src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3"></audio>
+
+    <script src="slipper.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>폰케이스 꾸미기 📱🎀</title>
+    <link rel="stylesheet" href="phonecase.css">
+    <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="app-container">
+        <header class="game-header">
+            <h1>📱 나만의 폰케이스 공방</h1>
+            <div class="actions">
+                <button onclick="location.href='index.html'" class="action-btn">⬅️ 뒤로가기</button>
+                <button id="clearBtn" class="action-btn clear-btn">🗑️ 새 폰으로!</button>
+                <button id="saveBtn" class="action-btn save-btn">📸 찰칵! 저장</button>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <!-- Left Toolbar -->
+            <aside class="sidebar">
+                <div class="panel">
+                    <h2>🌈 케이스 색상</h2>
+                    <div class="color-list" id="caseColors">
+                        <div class="color-btn active" style="background: linear-gradient(135deg, #ffffff, #f1f2f6);"
+                            data-color="white"></div>
+                        <div class="color-btn" style="background: linear-gradient(135deg, #ff9a9e, #fecfef);"
+                            data-color="pink"></div>
+                        <div class="color-btn" style="background: linear-gradient(135deg, #a18cd1, #fbc2eb);"
+                            data-color="purple"></div>
+                        <div class="color-btn" style="background: linear-gradient(135deg, #84fab0, #8fd3f4);"
+                            data-color="mint"></div>
+                        <div class="color-btn" style="background: linear-gradient(135deg, #fccb90, #d57eeb);"
+                            data-color="sunset"></div>
+                        <div class="color-btn" style="background: linear-gradient(135deg, #30cfd0, #330867);"
+                            data-color="night"></div>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <h2>🍦 데코덴 생크림 (그리기)</h2>
+                    <div class="tool-list">
+                        <button class="tool-btn active" data-tool="piping" data-color="#ffffff">🤍 하얀 크림</button>
+                        <button class="tool-btn" data-tool="piping" data-color="#ffb8b8">💖 핑크 크림</button>
+                        <button class="tool-btn" data-tool="piping" data-color="#badc58">💚 초록 크림</button>
+                        <button class="tool-btn" data-tool="piping" data-color="#74b9ff">💙 파란 크림</button>
+                        <button class="tool-btn" data-tool="piping" data-color="#ffeaa7">💛 노란 크림</button>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <h2>🎨 마법 락카 (스프레이)</h2>
+                    <div class="tool-list">
+                        <button class="tool-btn" data-tool="spray" data-color="#ff7675">❤️ 빨강</button>
+                        <button class="tool-btn" data-tool="spray" data-color="#74b9ff">💙 파랑</button>
+                        <button class="tool-btn" data-tool="spray" data-color="#55efc4">💚 초록</button>
+                        <button class="tool-btn" data-tool="spray" data-color="#ffeaa7">💛 노랑</button>
+                        <button class="tool-btn" data-tool="spray" data-color="#a29bfe">💜 보라</button>
+                        <button class="tool-btn" data-tool="spray" data-color="#2d3436">🖤 검정</button>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <h2>✨ 예쁜 지비츠/스티커 </h2>
+                    <p style="font-size: 0.9rem; color: #666;">원하는 곳에 콕콕 눌러 찍어봐!</p>
+                    <div class="sticker-list" id="stickerTools">
+                        <button class="tool-btn sticker-btn" data-tool="sticker" data-val="🎀">🎀 리본</button>
+                        <button class="tool-btn sticker-btn" data-tool="sticker" data-val="💖">💖 하트</button>
+                        <button class="tool-btn sticker-btn" data-tool="sticker" data-val="⭐">⭐ 별빛</button>
+                        <button class="tool-btn sticker-btn" data-tool="sticker" data-val="🐰">🐰 토끼</button>
+                        <button class="tool-btn sticker-btn" data-tool="sticker" data-val="🐻">🐻 곰돌</button>
+                        <button class="tool-btn sticker-btn" data-tool="sticker" data-val="💎">💎 보석</button>
+                        <button class="tool-btn sticker-btn" data-tool="sticker" data-val="🌸">🌸 벚꽃</button>
+                        <button class="tool-btn sticker-btn" data-tool="sticker" data-val="🌙">🌙 달님</button>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Center Stage -->
+            <section class="preview-area">
+                <div class="phone-wrapper" id="phoneWrapper">
+
+                    <!-- CSS Phone -->
+                    <div class="phone-case-container" id="phoneCase">
+                        <div class="volume-buttons"></div>
+                        <div class="power-button"></div>
+
+                        <!-- Camera Bump -->
+                        <div class="camera-bump">
+                            <div class="camera-lens"></div>
+                            <div class="camera-lens"></div>
+                            <div class="flash"></div>
+                        </div>
+
+                        <!-- Canvas overlay for drawing / stamping -->
+                        <canvas id="caseCanvas" width="320" height="640"></canvas>
+                    </div>
+
+                    <!-- Decoden Decorating Cursor Hint -->
+                    <div id="cursorHint" class="cursor-hint">🍦</div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Sounds! -->
+    <audio id="sfx-cream" src="https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3" loop></audio>
+    <audio id="sfx-pop" src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3"></audio>
+
+    <script src="phonecase.js"></script>
+</body>
+
+</html>
