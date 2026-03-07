@@ -4,7 +4,7 @@
 const TILE_SIZE = 1; // 3D Unit size
 const GRAVITY = 0.02;
 const JUMP_FORCE = 0.35;
-const WALK_SPEED = 0.08; // Reduced speed as requested
+const WALK_SPEED = 0.04; // Even slower as requested (Speed '10')
 
 // --- Three.js Setup ---
 let scene, camera, renderer, controls;
@@ -30,6 +30,7 @@ let player = {
 let objects = []; // For collision (islands, blocks)
 let enemies = [];
 let beds = [];
+let placementGhost; // Block placement preview
 
 // --- UI Elements ---
 const startScreen = document.getElementById('start-screen');
@@ -58,6 +59,13 @@ function init() {
     renderer.domElement.style.left = '0';
     renderer.domElement.style.zIndex = '1';
     document.getElementById('game-container').prepend(renderer.domElement);
+
+    // Placement Ghost
+    const ghostGeo = new THREE.BoxGeometry(1.01, 1.01, 1.01);
+    const ghostMat = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.4, wireframe: true });
+    placementGhost = new THREE.Mesh(ghostGeo, ghostMat);
+    placementGhost.visible = false;
+    scene.add(placementGhost);
 
     // Lights
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
@@ -345,11 +353,38 @@ function announce(text) {
     setTimeout(() => hudMsg.remove(), 2000);
 }
 
+function updatePlacementPreview() {
+    if (gameState !== 'PLAYING') {
+        placementGhost.visible = false;
+        return;
+    }
+
+    raycaster.setFromCamera(new THREE.Vector2(0, 0), camera);
+    const intersects = raycaster.intersectObjects(objects);
+
+    if (intersects.length > 0 && intersects[0].distance < 6) {
+        const hit = intersects[0];
+        const normal = hit.face.normal.clone();
+        normal.applyEuler(hit.object.rotation);
+
+        const pos = hit.point.clone().add(normal.multiplyScalar(0.5));
+        pos.x = Math.round(pos.x);
+        pos.y = Math.round(pos.y * 2) / 2;
+        pos.z = Math.round(pos.z);
+
+        placementGhost.position.copy(pos);
+        placementGhost.visible = true;
+    } else {
+        placementGhost.visible = false;
+    }
+}
+
 // --- Animation Loop ---
 function animate() {
     requestAnimationFrame(animate);
 
     if (gameState === 'PLAYING' && controls.isLocked) {
+        updatePlacementPreview();
         const time = performance.now();
         const delta = 1.0; // Simplified
 
