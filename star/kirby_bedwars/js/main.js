@@ -305,18 +305,19 @@ class Player {
             return;
         }
 
-        // Horizontal
+        // Horizontal Movement (Simplified & Stable)
         if (keys.a) { this.vx = -this.speed; this.facingRight = false; }
         else if (keys.d) { this.vx = this.speed; this.facingRight = true; }
         else { this.vx = 0; }
 
-        if (!checkMapCollision(this.x + this.vx, this.y, this.w, this.h - 1)) {
+        // 가로 충돌 검사 시 발밑과 머리 끝 타일에 걸리지 않도록 범위를 살짝 줄임 (y+2, h-4)
+        if (!checkMapCollision(this.x + this.vx, this.y + 2, this.w, this.h - 4)) {
             this.x += this.vx;
         }
 
         // Vertical Movement & Gravity
         this.vy += this.gravity;
-        if (this.vy > 8) this.vy = 8; // 낙하 속도 제한
+        if (this.vy > 10) this.vy = 10;
 
         // 상하 충돌 검사
         if (checkMapCollision(this.x, this.y + this.vy, this.w, this.h)) {
@@ -332,16 +333,16 @@ class Player {
             this.isGrounded = false;
         }
 
-        // 점프 & 비행 로직 (계속 점프할 수 있게)
+        // 점프 & 호버링 로직
         if (keys.Space || keys.w) {
             if (this.isGrounded) {
-                this.vy = this.jumpPower; // 첫 점프는 강하게
+                // 땅에서는 일반 점프
+                this.vy = this.jumpPower;
                 this.isGrounded = false;
             } else {
-                // 공중에서 계속 누르면 비행 (조금씩 떠오름)
-                this.vy = -3;
+                // 공중에서는 호버링 (꾹 누르면 천천히 상승)
+                this.vy = -3.5;
             }
-            // 점프 키를 누르는 동안은 중력 영향을 덜 받게 (선택 사항)
         }
 
         // Action (Build / Attack)
@@ -495,8 +496,8 @@ class EnemyPlayer extends Player {
 
         this.aiLogic();
 
-        // 물리 적용
-        if (!checkMapCollision(this.x + this.vx, this.y, this.w, this.h - 1)) {
+        // AI 가로 이동 충돌 검사 보정
+        if (!checkMapCollision(this.x + this.vx, this.y + 2, this.w, this.h - 4)) {
             this.x += this.vx;
         }
 
