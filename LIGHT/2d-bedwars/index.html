@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D 배드워즈</title>
+    <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <!-- Three.js from CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- PointerLockControls -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/PointerLockControls.js"></script>
+</head>
+
+<body>
+    <div id="crosshair">✛</div>
+
+    <!-- UI Overlay for Game -->
+    <div id="ui-layer" class="hidden">
+        <div id="player-stats">
+            <h2>RED TEAM (You)</h2>
+            <div class="health-bar-container">
+                <div id="health-bar"></div>
+            </div>
+            <p style="text-align: center; font-size: 14px; margin-top: -20px; position: relative; z-index: 2;"><span
+                    id="hp-val">100</span> / 100</p>
+            <p>🔲 철: <span id="iron-val">0</span> | 🟡 금: <span id="gold-val">0</span></p>
+            <p>🧱 블록: <span id="blocks-val">20</span></p>
+            <div style="border-top: 1px solid #555; margin-top: 10px; padding-top: 10px;">
+                <p>내 침대 (RED): <span id="my-bed">✅</span></p>
+                <p>적 침대 (BLUE): <span id="enemy-bed">✅</span></p>
+            </div>
+        </div>
+
+        <div id="game-message"></div>
+    </div>
+
+    <!-- Shop Menu -->
+    <div id="shop-ui" class="hidden">
+        <button id="close-shop-btn" onclick="closeShop()">X</button>
+        <h2>🛠️ 상점 🛠️</h2>
+        <div id="shop-items">
+            <button onclick="buyItem('blocks')">양털 블록 x16 (철 4개)</button>
+            <button onclick="buyItem('sword')">상급 검 (철 10개)</button>
+            <button onclick="buyItem('armor')">갑옷 (금 4개)</button>
+        </div>
+        <p style="margin-top:20px; font-size:14px; color: #aaa;">상점을 닫으려면 <kbd>ESC</kbd> 또는 바탕을 클릭하세요.</p>
+    </div>
+
+    <!-- Start / Instruction Screen -->
+    <div id="blocker">
+        <div id="instructions">
+            <h1 style="font-size: 60px; margin-bottom:10px;">3D 배드워즈</h1>
+            <p style="font-size: 24px; color: #ffdd44; margin-bottom: 30px;">[ 화면을 클릭하여 시작하세요 ]</p>
+
+            <div class="controls-grid">
+                <div><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> 이동</div>
+                <div><kbd>SPACE</kbd> 점프</div>
+                <div><kbd>좌클릭</kbd> 공격 / 블록 파괴</div>
+                <div><kbd>우클릭</kbd> 블록 설치</div>
+                <div style="grid-column: span 2; text-align: center; color: #88ff88;">🛒 초록색 큐브 (상점 NPC) 좌클릭으로 상점 오픈
+                </div>
+            </div>
+
+            <p style="margin-top: 30px; font-size: 18px;">🔥 파란색 AI를 무찌르고 상대의 침대를 파괴하세요!</p>
+        </div>
+    </div>
+
+    <!-- Overlay when dead -->
+    <div id="death-overlay" class="hidden">
+        <h1>사망했습니다!</h1>
+        <p>부활 대기 중... <span id="respawn-timer">5</span>초</p>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
