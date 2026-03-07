@@ -65,6 +65,7 @@ class Fighter {
         this.state = 'IDLE'; // IDLE, MOVE, JUMP, GUARD, ATK_P, ATK_K, HIT, DEAD
         this.stateTimer = 0;
         this.facingRight = isPlayer;
+        this.isHovering = false; // Add hovering
 
         // AI variables
         this.aiCooldown = 0;
@@ -89,7 +90,10 @@ class Fighter {
         if (this.stateTimer < 0) this.stateTimer = 0;
 
         // Apply Gravity
-        this.vy += this.gravity;
+        let currentGravity = (this.isHovering) ? 0.2 : this.gravity;
+        this.vy += currentGravity;
+        if (this.vy > 10) this.vy = 10;
+
         if (this.y + this.h + this.vy >= GROUND_Y) {
             this.y = GROUND_Y - this.h;
             this.vy = 0;
@@ -160,11 +164,19 @@ class Fighter {
             if (this.isGrounded) this.state = 'IDLE';
         }
 
-        // Jump
-        if (keys.w && this.isGrounded) {
-            this.vy = this.jumpPower;
-            this.isGrounded = false;
-            this.state = 'JUMP';
+        // Jump & Hover
+        if (keys.w) {
+            if (this.isGrounded) {
+                this.vy = this.jumpPower;
+                this.isGrounded = false;
+                this.state = 'JUMP';
+            } else {
+                // Infinite Hovering
+                this.vy = -3.5;
+                this.isHovering = true;
+            }
+        } else {
+            this.isHovering = false;
         }
     }
 

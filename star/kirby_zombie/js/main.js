@@ -29,15 +29,17 @@ const MAP_HEIGHT = 2000;
 let camera = { x: 0, y: 0, width: canvas.width, height: canvas.height };
 
 // -- Input --
-const keys = { w: false, a: false, s: false, d: false };
+const keys = { w: false, a: false, s: false, d: false, space: false };
 const mouse = { x: 0, y: 0, isDown: false, lastX: 0, lastY: 0 };
 
 window.addEventListener('keydown', (e) => {
     let key = e.key.toLowerCase();
+    if (key === ' ') key = 'space';
     if (keys.hasOwnProperty(key)) keys[key] = true;
 });
 window.addEventListener('keyup', (e) => {
     let key = e.key.toLowerCase();
+    if (key === ' ') key = 'space';
     if (keys.hasOwnProperty(key)) keys[key] = false;
 });
 
@@ -79,6 +81,7 @@ class Entity {
         // AI Tracking
         this.target = null;
         this.changeDirTimer = 0;
+        this.isHovering = false;
     }
 
     turnIntoZombie() {
@@ -100,6 +103,9 @@ class Entity {
             if (keys.s) this.dy = this.speed;
             if (keys.a) this.dx = -this.speed;
             if (keys.d) this.dx = this.speed;
+
+            // Hovering check (Space to fly/ignore walls)
+            this.isHovering = keys.space;
 
             // Diagonal normalize
             if (this.dx !== 0 && this.dy !== 0) {

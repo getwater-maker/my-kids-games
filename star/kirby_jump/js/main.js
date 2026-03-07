@@ -322,7 +322,9 @@ class Player {
         }
 
         // Vertical Movement & Gravity
-        this.isHovering = !this.isGrounded && this.vy > 0 && (keys.ArrowUp || keys.Space);
+        // Infinite Hovering check
+        let jumpKey = keys.ArrowUp || keys.Space;
+        this.isHovering = !this.isGrounded && jumpKey;
 
         let currentGravity = this.isHovering ? HOVER_GRAVITY : GRAVITY;
         this.vy += currentGravity;
@@ -379,10 +381,11 @@ class Player {
             // Normal Jump
             this.vy = this.jumpPower;
             this.isGrounded = false;
+            this.isHovering = false;
         } else {
-            // Hover (Mid-air jump)
-            this.vy = this.hoverPower;
-            // TODO: 호버링 횟수 제한이나 게이지를 넣을 수도 있음
+            // Infinite Hovering
+            this.vy = -4;
+            this.isHovering = true;
         }
     }
 

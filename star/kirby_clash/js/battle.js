@@ -48,16 +48,23 @@ class Character {
         this.isAttacking = false;
         this.attackCooldown = 0;
         this.facingRight = true;
+        this.isHovering = false; // Add hovering state
     }
 
     update() {
         // Gravity
-        this.vy += GRAVITY;
+        let currentGravity = (this.isHovering) ? 0.2 : GRAVITY;
+        this.vy += currentGravity;
+        if (this.vy > 10) this.vy = 10;
+
         this.y += this.vy;
 
         if (this.y + this.height > GROUND_Y) {
             this.y = GROUND_Y - this.height;
             this.vy = 0;
+            this.isGrounded = true;
+        } else {
+            this.isGrounded = false;
         }
 
         this.x += this.vx;
@@ -713,13 +720,15 @@ window.addEventListener('keydown', e => {
     if (keys.hasOwnProperty(e.key)) keys[e.key] = true;
     if (e.key === 'z') keys['z'] = true;
 
-    if (isBattleActive && player && player.role === 'sword') { // 플레이어만 적용
+    if (isBattleActive && player) {
         if (e.key === 'ArrowUp') {
-            player.vy = player.jumpPower * 0.8; // 호버링 (공기 빨아들이기)
+            player.isHovering = true;
+            player.vy = -4; // Infinite Hovering Power
             spawnParticles(player.x + player.width / 2, player.y + player.height, '#ffffff');
         }
         if (e.key === 'ArrowDown') {
-            player.vy += 15; // 아래로 급강하 (누를때마다 아래로 내려감)
+            player.vy += 15; // Fast fall
+            // Keep the apple bonus if it was there
             state.inventory.light += 50;
             state.inventory.water += 50;
             state.inventory.fire += 50;
@@ -732,6 +741,9 @@ window.addEventListener('keydown', e => {
 window.addEventListener('keyup', e => {
     if (keys.hasOwnProperty(e.key)) keys[e.key] = false;
     if (e.key === 'z') keys['z'] = false;
+    if (e.key === 'ArrowUp' && player) {
+        player.isHovering = false;
+    }
 });
 
 function initBattle() {

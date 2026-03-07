@@ -144,10 +144,13 @@ function onKeyDown(e) {
 
         // Trigger jump immediately on key down to prevent holding consuming multiple jumps
         if (e.key === 'w' || e.key === 'ArrowUp' || e.key === ' ') {
-            if (player.jumpCount < player.maxJumps) {
+            if (player.isGrounded) {
                 player.vy = player.jumpPower;
                 player.isGrounded = false;
-                player.jumpCount++;
+                player.jumpCount = 1;
+            } else {
+                // Infinite Hovering (Infinite mid-air jump)
+                player.vy = -4;
             }
         }
     }
