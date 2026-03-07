@@ -141,15 +141,7 @@
 
         .card-light .card-badge { background: var(--light-color); }
         .card-insight .card-badge { background: var(--insight-color); }
-        .card-star .card-badge {
-            background: var(--star-dark);
-            animation: pulse 2s ease-in-out infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.7; transform: scale(1.05); }
-        }
+        .card-star .card-badge { background: var(--star-dark); color: #2d3436; }
 
         .game-list {
             list-style: none;
@@ -194,25 +186,13 @@
             box-shadow: 0 4px 0 var(--insight-dark);
         }
 
-        .card-star .coming-soon-text {
-            font-size: 1.1rem;
-            color: #b2bec3;
-            margin-top: 15px;
-            font-style: italic;
+        .card-star .play-btn {
+            background: var(--star-dark);
+            box-shadow: 0 4px 0 #e17055;
+            color: #2d3436;
         }
 
-        .card-star .card-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(255, 255, 255, 0.3);
-            pointer-events: none;
-            border-radius: var(--border-radius);
-        }
-
-        /* Game preview list for insight */
+        /* Game preview list */
         .game-preview {
             display: flex;
             flex-wrap: wrap;
@@ -222,11 +202,19 @@
         }
 
         .game-tag {
-            background: #ffeef0;
-            color: var(--insight-dark);
             padding: 4px 10px;
             border-radius: 10px;
             font-size: 0.85rem;
+        }
+
+        .card-insight .game-tag {
+            background: #ffeef0;
+            color: var(--insight-dark);
+        }
+
+        .card-star .game-tag {
+            background: #fff8e1;
+            color: #e17055;
         }
 
         /* Footer */
@@ -301,13 +289,23 @@
 
         <!-- star -->
         <div class="card card-star">
-            <div class="card-overlay"></div>
             <div class="card-header">
                 <span class="card-icon">⭐</span>
                 <span class="card-name">star</span>
             </div>
-            <span class="card-badge">Coming Soon</span>
-            <p class="coming-soon-text">곧 멋진 게임이 올라올 거예요!</p>
+            <span class="card-badge">20 Games</span>
+            <div class="game-preview">
+                <span class="game-tag">🏃 점프맵</span>
+                <span class="game-tag">⚔️ 헌터즈</span>
+                <span class="game-tag">🛏️ 배드워즈</span>
+                <span class="game-tag">🏎️ 카트</span>
+                <span class="game-tag">🧟 좀비탈출</span>
+                <span class="game-tag">🍡 탕후루</span>
+                <span class="game-tag">🍜 라면</span>
+                <span class="game-tag">🍧 빙수</span>
+            </div>
+            <p style="color: #b2bec3; font-size: 0.9rem;">외 12개 커비 게임 더!</p>
+            <a href="star/" class="play-btn">게임하러 가기!</a>
         </div>
     </section>
 
