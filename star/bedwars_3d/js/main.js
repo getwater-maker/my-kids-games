@@ -301,44 +301,28 @@ function placeBlock() {
         return;
     }
 
-    let intersects = raycaster.intersectObjects(objects);
-    let hit, normal, pos;
-
-    // Detect current ground level for bridging
-    let currentGroundY = 0;
-    const groundRay = new THREE.Raycaster(camera.position, new THREE.Vector3(0, -1, 0));
-    const groundHits = groundRay.intersectObjects(objects);
-    if (groundHits.length > 0) {
-        currentGroundY = groundHits[0].object.position.y + 1; // Center + half height (1)
-    }
+    raycaster.setFromCamera(new THREE.Vector2(0, 0), camera);
+    const intersects = raycaster.intersectObjects(objects);
+    let pos;
 
     if (intersects.length > 0 && intersects[0].distance < 6) {
-        hit = intersects[0];
-        normal = hit.face.normal.clone();
+        const hit = intersects[0];
+        const normal = hit.face.normal.clone();
         normal.applyEuler(hit.object.rotation);
         pos = hit.point.clone().add(normal.multiplyScalar(0.5));
     } else {
-        // "Easy Front Bridging": Snap to current ground level
         const dir = new THREE.Vector3();
         camera.getWorldDirection(dir);
-        if (dir.y < -0.1) {
-            pos = camera.position.clone().add(dir.multiplyScalar(2.5));
-            pos.y = currentGroundY - 0.5; // Snap to feet level
-        } else {
-            return;
-        }
+        pos = camera.position.clone().add(dir.multiplyScalar(3.5));
     }
 
     if (pos) {
         pos.x = Math.round(pos.x);
-        pos.y = Math.round(pos.y * 2) / 2;
-        pos.z = Math.round(pos.z);
-        pos.x = Math.round(pos.x);
-        pos.y = Math.round(pos.y * 2) / 2; // half unit snap or just round
+        pos.y = Math.round(pos.y);
         pos.z = Math.round(pos.z);
 
         const geo = new THREE.BoxGeometry(1, 1, 1);
-        const mat = new THREE.MeshPhongMaterial({ color: 0xeeeeee }); // White wool
+        const mat = new THREE.MeshPhongMaterial({ color: 0xeeeeee });
         const wool = new THREE.Mesh(geo, mat);
         wool.position.copy(pos);
         wool.castShadow = true;
@@ -385,32 +369,20 @@ function updatePlacementPreview() {
     const intersects = raycaster.intersectObjects(objects);
     let pos;
 
-    // Current ground level for preview snap
-    let currentGroundY = 0;
-    const groundRay = new THREE.Raycaster(camera.position, new THREE.Vector3(0, -1, 0));
-    const groundHits = groundRay.intersectObjects(objects);
-    if (groundHits.length > 0) {
-        currentGroundY = groundHits[0].object.position.y + 1;
-    }
-
     if (intersects.length > 0 && intersects[0].distance < 6) {
         const hit = intersects[0];
         const normal = hit.face.normal.clone();
         normal.applyEuler(hit.object.rotation);
         pos = hit.point.clone().add(normal.multiplyScalar(0.5));
     } else {
-        // Preview for "Easy Front Bridging"
         const dir = new THREE.Vector3();
         camera.getWorldDirection(dir);
-        if (dir.y < -0.1) {
-            pos = camera.position.clone().add(dir.multiplyScalar(2.5));
-            pos.y = currentGroundY - 0.5;
-        }
+        pos = camera.position.clone().add(dir.multiplyScalar(3.5));
     }
 
     if (pos) {
         pos.x = Math.round(pos.x);
-        pos.y = Math.round(pos.y * 2) / 2;
+        pos.y = Math.round(pos.y);
         pos.z = Math.round(pos.z);
 
         placementGhost.position.copy(pos);
@@ -420,19 +392,17 @@ function updatePlacementPreview() {
     }
 }
 
-// --- Animation Loop ---
 function animate() {
     requestAnimationFrame(animate);
 
     if (gameState === 'PLAYING' && controls.isLocked) {
         updatePlacementPreview();
         const time = performance.now();
-        const delta = 1.0; // Simplified
+        const delta = 1.0;
 
         velocity.x -= velocity.x * 0.1;
         velocity.z -= velocity.z * 0.1;
 
-        // Apply Gravity
         velocity.y -= GRAVITY;
 
         direction.z = Number(moveForward) - Number(moveBackward);
@@ -447,12 +417,10 @@ function animate() {
 
         camera.position.y += velocity.y;
 
-        // Collision detection with islands/blocks
         if (camera.position.y < -20) {
             triggerGameOver("허공에 빠졌습니다!");
         }
 
-        // Simple Ground Check
         let grounded = false;
         raycaster.set(camera.position, new THREE.Vector3(0, -1, 0));
         const intersects = raycaster.intersectObjects(objects);
@@ -463,9 +431,7 @@ function animate() {
             grounded = true;
         }
 
-        // Enemy AI
         enemies.forEach(enemy => {
-            // Move toward player island if far
             let distToPlayer = enemy.mesh.position.distanceTo(camera.position);
             if (distToPlayer < 20 && distToPlayer > 1.5) {
                 let dir = new THREE.Vector3().subVectors(camera.position, enemy.mesh.position).normalize();
@@ -474,7 +440,6 @@ function animate() {
             }
 
             if (distToPlayer < 1.5) {
-                // Damage player
                 player.hp -= 0.5;
                 updateHUD();
                 if (player.hp <= 0) triggerGameOver("적에게 당했습니다!");
