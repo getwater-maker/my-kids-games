@@ -53,7 +53,7 @@ function init() {
     renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.shadowMap.enabled = true;
-    document.body.appendChild(renderer.domElement);
+    document.getElementById('game-container').prepend(renderer.domElement); // Append to container, not body
 
     // Lights
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
@@ -251,15 +251,42 @@ function performAttack() {
         let hitMesh = intersects[0].object;
         let enemy = enemies.find(e => e.mesh === hitMesh || e.mesh.children.includes(hitMesh));
         if (enemy) {
-            enemy.hp -= player.inventory[0].damage;
+            let damage = player.inventory[0].damage;
+            if (player.inventory[0].level === 4) damage = 75; // Rage Blade
+
+            enemy.hp -= damage;
             spawnEffect(intersects[0].point, 0xff0000);
             if (enemy.hp <= 0) {
                 scene.remove(enemy.mesh);
                 enemies = enemies.filter(e => e !== enemy);
-                announce("🔴 적을 처치했습니다!");
+
+                // Barbarian Progression
+                player.kills++;
+                upgradeSword();
+                announce(`🔴 적을 처치했습니다! (${player.kills}킬)`);
+                updateHUD();
             }
         }
     }
+}
+
+function upgradeSword() {
+    if (player.kills >= 5) {
+        player.inventory[0].level = 4;
+        player.inventory[0].name = "레이지 블레이드";
+    } else if (player.kills >= 3) {
+        player.inventory[0].level = 3;
+        player.inventory[0].name = "다이아몬드 검";
+    } else if (player.kills >= 2) {
+        player.inventory[0].level = 2;
+        player.inventory[0].name = "철검";
+    } else if (player.kills >= 1) {
+        player.inventory[0].level = 1;
+        player.inventory[0].name = "돌검";
+    }
+
+    // Update inventory slot text
+    invSlots[0].textContent = `⚔️ ${player.inventory[0].name}`;
 }
 
 function placeBlock() {
@@ -386,8 +413,9 @@ function animate() {
 
 function updateHUD() {
     hpBarFill.style.width = player.hp + '%';
-    hpText.textContent = `HP: ${Math.ceil(player.hp)}`;
+    hpText.textContent = `HP: ${Math.ceil(player.hp)} | 🎯 Kills: ${player.kills}`;
     if (player.hp < 30) hpBarFill.style.background = '#ff4757';
+    else hpBarFill.style.background = '#2ed573';
 }
 
 function triggerGameOver(reason) {
