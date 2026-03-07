@@ -414,12 +414,25 @@ function buyArmor(type) {
     let resType = 'iron';
     let armorValue = 1;
     let name = "";
+    let nextTier = null;
 
     switch (type) {
-        case 'leather': cost = 50; armorValue = 0.8; name = "가죽 갑옷"; break;
-        case 'iron': cost = 120; armorValue = 0.6; name = "철 갑옷"; break;
-        case 'diamond': cost = 8; resType = 'emerald'; armorValue = 0.4; name = "다이아 갑옷"; break;
-        case 'emerald': cost = 40; resType = 'emerald'; armorValue = 0.2; name = "에메랄드 갑옷"; break;
+        case 'leather':
+            cost = 50; armorValue = 0.8; name = "가죽 갑옷";
+            nextTier = { id: 'iron', name: '철 갑옷', icon: '🛡️', cost: '🔘 120' };
+            break;
+        case 'iron':
+            cost = 120; armorValue = 0.6; name = "철 갑옷";
+            nextTier = { id: 'diamond', name: '다이아 갑옷', icon: '💎', cost: 'Emerald 8' };
+            break;
+        case 'diamond':
+            cost = 8; resType = 'emerald'; armorValue = 0.4; name = "다이아 갑옷";
+            nextTier = { id: 'emerald', name: '에메랄드 갑옷', icon: '👑', cost: 'Emerald 40' };
+            break;
+        case 'emerald':
+            cost = 40; resType = 'emerald'; armorValue = 0.2; name = "에메랄드 갑옷";
+            nextTier = null;
+            break;
     }
 
     if (player[resType] >= cost) {
@@ -427,8 +440,79 @@ function buyArmor(type) {
         player.armor = armorValue;
         updateHUD();
         announce(`🛡️ ${name} 구입 완료!`);
+
+        // Update Shop UI for next tier
+        const container = document.getElementById('armor-shop-container');
+        if (nextTier) {
+            container.innerHTML = `
+                <div class="shop-item" onclick="buyArmor('${nextTier.id}')">
+                    <div class="item-icon">${nextTier.icon}</div>
+                    <div class="item-name">${nextTier.name}</div>
+                    <div class="item-cost">${nextTier.cost}</div>
+                </div>
+            `;
+        } else {
+            container.innerHTML = `<div class="shop-item" style="opacity:0.5; cursor:default">구매 완료!</div>`;
+        }
     } else {
         announce("💰 재화가 부족합니다!");
+    }
+}
+
+function buyItem(item) {
+    if (item === 'wool') {
+        if (player.iron >= 4) {
+            player.iron -= 4;
+            player.inventory[1].count += 16;
+            woolCountText.textContent = player.inventory[1].count;
+            updateHUD();
+            announce("🧶 양털 16개 구입!");
+        } else {
+            announce("💰 철이 부족합니다!");
+        }
+    }
+}
+
+function buySword() {
+    const tiers = [
+        { name: "돌검", cost: 10, res: 'iron', level: 1, next: "철검", damage: 30 },
+        { name: "철검", cost: 50, res: 'iron', level: 2, next: "다이아몬드 검", damage: 45 },
+        { name: "다이아몬드 검", cost: 4, res: 'emerald', level: 3, next: "레이지 블레이드", damage: 60 },
+        { name: "레이지 블레이드", cost: 20, res: 'emerald', level: 4, next: null, damage: 75 }
+    ];
+
+    const currentLevel = player.inventory[0].level;
+    if (currentLevel >= 4) {
+        announce("이미 최고 등급 무기입니다!");
+        return;
+    }
+
+    const tier = tiers[currentLevel];
+    if (player[tier.res] >= tier.cost) {
+        player[tier.res] -= tier.cost;
+        player.inventory[0].level = tier.level;
+        player.inventory[0].name = tier.name;
+        player.inventory[0].damage = tier.damage;
+        invSlots[0].textContent = `⚔️ ${tier.name}`;
+        updateHUD();
+        announce(`⚔️ ${tier.name} 강화 완료!`);
+
+        // Update UI
+        const next = tiers[tier.level];
+        const swordBtn = document.getElementById('sword-shop-item');
+        if (next) {
+            const costIcon = next.res === 'iron' ? '🔘' : 'Emerald';
+            swordBtn.innerHTML = `
+                <div class="item-icon">🗡️</div>
+                <div class="item-name">${next.name}</div>
+                <div class="item-cost">${costIcon} ${next.cost}</div>
+            `;
+        } else {
+            swordBtn.innerHTML = `<div class="item-name">최고 등급!</div>`;
+        }
+    } else {
+        const costIcon = tier.res === 'iron' ? '철(🔘)' : '에메랄드';
+        announce(`💰 ${costIcon}이(가) 부족합니다!`);
     }
 }
 

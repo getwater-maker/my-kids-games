@@ -52,28 +52,34 @@
         <div id="shop-screen" class="overlay hidden">
             <div class="menu-box shop-box">
                 <h2>🏬 상점 (B키로 닫기)</h2>
-                <div class="shop-grid">
-                    <div class="shop-item" onclick="buyArmor('leather')">
-                        <div class="item-icon">🧥</div>
-                        <div class="item-name">가죽 갑옷</div>
-                        <div class="item-cost">🔘 50</div>
-                    </div>
-                    <div class="shop-item" onclick="buyArmor('iron')">
-                        <div class="item-icon">🛡️</div>
-                        <div class="item-name">철 갑옷</div>
-                        <div class="item-cost">🔘 120</div>
-                    </div>
-                    <div class="shop-item" onclick="buyArmor('diamond')">
-                        <div class="item-icon">💎</div>
-                        <div class="item-name">다이아 갑옷</div>
-                        <div class="item-cost">Emerald 8</div>
-                    </div>
-                    <div class="shop-item" onclick="buyArmor('emerald')">
-                        <div class="item-icon">👑</div>
-                        <div class="item-name">에메랄드 갑옷</div>
-                        <div class="item-cost">Emerald 40</div>
+
+                <div class="shop-section">
+                    <h3>🛡️ 갑옷 업그레이드</h3>
+                    <div id="armor-shop-container" class="shop-grid">
+                        <div class="shop-item" onclick="buyArmor('leather')">
+                            <div class="item-icon">🧥</div>
+                            <div class="item-name">가죽 갑옷</div>
+                            <div class="item-cost">🔘 50</div>
+                        </div>
                     </div>
                 </div>
+
+                <div class="shop-section">
+                    <h3>⚔️ 무기 & 블록</h3>
+                    <div class="shop-grid">
+                        <div class="shop-item" onclick="buyItem('wool')">
+                            <div class="item-icon">🧶</div>
+                            <div class="item-name">양털 x16</div>
+                            <div class="item-cost">🔘 4</div>
+                        </div>
+                        <div id="sword-shop-item" class="shop-item" onclick="buySword()">
+                            <div class="item-icon">🗡️</div>
+                            <div class="item-name">돌검</div>
+                            <div class="item-cost">🔘 10</div>
+                        </div>
+                    </div>
+                </div>
+
                 <button onclick="toggleShop()">닫기</button>
             </div>
         </div>

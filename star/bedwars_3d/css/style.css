@@ -192,7 +192,21 @@ canvas {
 /* SHOP */
 .shop-box {
     max-width: 650px;
-    background: #f8f9fa;
+    background: #f1f2f6;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.shop-section {
+    margin-top: 25px;
+    text-align: left;
+}
+
+.shop-section h3 {
+    padding-bottom: 10px;
+    border-bottom: 2px solid #ddd;
+    margin-bottom: 15px;
+    color: #2f3542;
 }
 
 .shop-grid {
