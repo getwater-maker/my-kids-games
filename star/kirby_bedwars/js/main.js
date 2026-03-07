@@ -161,9 +161,9 @@ function drawMap(ctx) {
 // 충돌 AABB 검사 (개체와 맵)
 function checkMapCollision(x, y, w, h) {
     let leftTile = Math.floor(x / TILE_SIZE);
-    let rightTile = Math.floor((x + w - 1) / TILE_SIZE);
+    let rightTile = Math.floor((x + w - 0.01) / TILE_SIZE);
     let topTile = Math.floor(y / TILE_SIZE);
-    let bottomTile = Math.floor((y + h - 1) / TILE_SIZE);
+    let bottomTile = Math.floor((y + h - 0.01) / TILE_SIZE);
 
     for (let r = topTile; r <= bottomTile; r++) {
         for (let c = leftTile; c <= rightTile; c++) {
@@ -331,18 +331,23 @@ class Player {
         if (this.vy > 10) this.vy = 10;
 
         // 4. 세로 충돌 해결 (발밑 판정)
-        // 가로 길이를 살짝 줄여서(좌우 5px씩) 옆 벽 타일을 바닥으로 인식하는 버그 방지
-        if (checkMapCollision(this.x + 5, this.y + this.vy, this.w - 10, this.h)) {
+        // 충돌 여부를 먼저 확인
+        let verticalCollision = checkMapCollision(this.x + 8, this.y + this.vy, this.w - 16, this.h);
+
+        if (verticalCollision) {
             if (this.vy > 0) { // 하강 중 충돌 (바닥)
                 this.isGrounded = true;
-                this.y = Math.floor((this.y + this.h) / TILE_SIZE) * TILE_SIZE - this.h;
+                this.y = Math.floor((this.y + this.h + 0.1) / TILE_SIZE) * TILE_SIZE - this.h;
             } else if (this.vy < 0) { // 상승 중 충돌 (천장)
                 this.y = Math.ceil(this.y / TILE_SIZE) * TILE_SIZE;
             }
             this.vy = 0;
         } else {
             this.y += this.vy;
-            this.isGrounded = false;
+            // 바닥에서 아주 미세하게 떨어지는 경우(0.5px 미만)는 여전히 grounded로 간주하여 통통 튀는 걸 방지
+            if (!checkMapCollision(this.x + 8, this.y + 1, this.w - 16, this.h)) {
+                this.isGrounded = false;
+            }
         }
 
         // 5. 점프 및 호버링 로직 (플레이어 전용)
