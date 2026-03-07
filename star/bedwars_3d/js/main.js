@@ -13,6 +13,10 @@ let moveForward = false, moveBackward = false, moveLeft = false, moveRight = fal
 let canJump = false;
 let velocity = new THREE.Vector3();
 let direction = new THREE.Vector3();
+let isLeftMouseDown = false;
+let breakingTarget = null;
+let breakingProgress = 0;
+const BREAK_SPEED = 2; // Progress per frame
 
 // --- Game State ---
 let gameState = 'START';
@@ -110,6 +114,7 @@ function init() {
     window.addEventListener('keydown', onKeyDown);
     window.addEventListener('keyup', onKeyUp);
     window.addEventListener('mousedown', onMouseDown);
+    window.addEventListener('mouseup', onMouseUp);
     // Prevent context menu on right click to allow block placing
     window.addEventListener('contextmenu', (e) => e.preventDefault());
     window.addEventListener('wheel', (e) => {
@@ -279,7 +284,19 @@ function onMouseDown(e) {
     if (e.button === 2) { // Right Click
         placeBlock();
     } else if (e.button === 0) { // Left Click
-        performAttack();
+        isLeftMouseDown = true;
+        performAttack(); // Initial attack click
+    }
+}
+
+function onMouseUp(e) {
+    if (e.button === 0) {
+        isLeftMouseDown = false;
+        if (breakingTarget) {
+            breakingTarget.scale.set(1, 1, 1);
+            breakingTarget = null;
+            breakingProgress = 0;
+        }
     }
 }
 
@@ -470,6 +487,47 @@ function animate() {
 
     if (gameState === 'PLAYING' && controls.isLocked) {
         updatePlacementPreview();
+
+        // Block Breaking Logic (Left Click Hold)
+        if (isLeftMouseDown) {
+            raycaster.setFromCamera(new THREE.Vector2(0, 0), camera);
+            const intersects = raycaster.intersectObjects(objects);
+
+            // Only blocks (not islands/beds for now, or just wool)
+            if (intersects.length > 0 && intersects[0].distance < 4) {
+                const target = intersects[0].object;
+
+                // If it's a breakable block ( wool usually, check color or property )
+                if (target.geometry.type === "BoxGeometry" && target.material.color.getHex() === 0xeeeeee) {
+                    if (breakingTarget !== target) {
+                        if (breakingTarget) breakingTarget.scale.set(1, 1, 1);
+                        breakingTarget = target;
+                        breakingProgress = 0;
+                    }
+
+                    breakingProgress += BREAK_SPEED;
+
+                    // Visual feedback: wiggle/scale down
+                    const s = 1 - (breakingProgress / 120);
+                    target.scale.set(s, s, s);
+
+                    if (breakingProgress >= 100) {
+                        scene.remove(target);
+                        objects = objects.filter(o => o !== target);
+                        breakingTarget = null;
+                        breakingProgress = 0;
+                        announce("📢 블록을 파괴했습니다!");
+                    }
+                }
+            } else {
+                if (breakingTarget) {
+                    breakingTarget.scale.set(1, 1, 1);
+                    breakingTarget = null;
+                    breakingProgress = 0;
+                }
+            }
+        }
+
         const time = performance.now();
         const delta = 1.0;
 
