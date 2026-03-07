@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>커비 프렌즈 (술래잡기)</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div id="game-container">
+        <!-- 배경/포그 레이어 -->
+        <div id="fog"></div>
+
+        <!-- UI Layer -->
+        <div id="ui-layer">
+            <div id="hud">
+                <div class="hud-item yoyo-hud">
+                    <span>찾은 요요:</span>
+                    <span id="yoyo-count">0 / 10</span>
+                </div>
+                <!-- 옵션: 생존자 수 표시 (현재는 플레이어 혼자 요요를 찾지만 생존자는 15명 설정) -->
+                <div class="hud-item survivor-hud">
+                    <span>생존 커비:</span>
+                    <span id="survivor-count">15 / 15</span>
+                </div>
+            </div>
+
+            <div id="start-screen" class="screen active">
+                <h1>커비 프렌즈</h1>
+                <p>무서운 술래 커비를 피해<br><span style="color: #ffd54f;">숨겨진 요요 10개</span>를 모두 찾으세요!</p>
+                <div class="controls-guide">
+                    <p>조작: 방향키 또는 W,A,S,D 로 이동</p>
+                </div>
+                <button id="start-btn" class="action-btn">게임 시작</button>
+            </div>
+
+            <div id="game-over-screen" class="screen">
+                <h1 style="color: #d32f2f;">술래에게<br>잡혔습니다!</h1>
+                <p>게임 오버...</p>
+                <button id="restart-btn" class="action-btn">다시 도전</button>
+            </div>
+
+            <div id="game-clear-screen" class="screen">
+                <h1 style="color: #388e3c;">요요를 모두<br>찾았습니다!</h1>
+                <p>무사히 탈출 성공!</p>
+                <button id="home-btn" class="action-btn" onclick="location.href='../index.html'">처음으로</button>
+            </div>
+        </div>
+
+        <!-- Game Canvas -->
+        <canvas id="game-canvas" width="800" height="600"></canvas>
+    </div>
+
+    <script src="js/main.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,88 @@
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #fce4ec;
+    /* Soft pastel pink background */
+    font-family: 'Jua', sans-serif;
+    /* Friendly, round Korean font */
+    color: #4a4a4a;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    overflow: hidden;
+}
+
+#game-ui {
+    position: relative;
+    background-color: #fff0f5;
+    padding: 20px;
+    border-radius: 20px;
+    box-shadow: 0 15px 40px rgba(255, 182, 193, 0.4);
+    text-align: center;
+}
+
+canvas {
+    background-color: #e3f2fd;
+    /* Light pastel sky */
+    border: 6px solid #f8bbd0;
+    border-radius: 12px;
+    display: block;
+    margin: 0 auto;
+    cursor: default;
+    /* Change to pointer when hovering over clickable rides later */
+}
+
+#threeCanvas {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 900px;
+    height: 500px;
+    border: 6px solid #b39ddb;
+    /* Deep purple border for 3D mode */
+    border-radius: 12px;
+    box-sizing: border-box;
+}
+
+#controls-hint {
+    margin-top: 15px;
+    font-size: 18px;
+    color: #78909c;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* Button Styling for a relaxing feel */
+button {
+    margin-top: 15px;
+    padding: 12px 25px;
+    font-size: 18px;
+    font-family: 'Jua', sans-serif;
+    color: white;
+    background-color: #f06292;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    box-shadow: 0 5px 15px rgba(240, 98, 146, 0.4);
+    transition: all 0.3s ease;
+}
+
+button:hover {
+    background-color: #ec407a;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(236, 64, 122, 0.5);
+}
+
+#start-btn {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 24px;
+    padding: 20px 40px;
+    z-index: 100;
+}

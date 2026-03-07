@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>커비 좀비 탈출</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div id="game-container">
+        <!-- 스코어 빛 타이머 등 HUD -->
+        <div id="hud">
+            <div class="hud-item survivor-count">생존자: <span id="alive-survivors">30</span></div>
+            <div class="hud-item timer-box">남은 시간: <span id="match-timer">02:00</span></div>
+            <div class="hud-item zombie-count">좀비: <span id="alive-zombies">3</span></div>
+        </div>
+
+        <div id="announcement"></div>
+
+        <!-- 스크린들 -->
+        <div id="lobby-screen" class="screen active">
+            <h1>로비</h1>
+            <p>참가자 33명이 모두 모였습니다.<br>곧 게임이 시작됩니다!</p>
+            <p style="font-size: 16px; color: #ffeb3b;">생존자: 30명 | 좀비: 3명<br>조작: WASD 뱡향키 | 관전: 마우스 드래그</p>
+            <button id="start-btn" class="btn">게임 시작</button>
+            <button class="btn" style="background:#d32f2f;" onclick="location.href='../index.html'">뒤로가기</button>
+        </div>
+
+        <div id="spectator-screen" class="screen">
+            <h1 style="color:red;">사망했습니다...</h1>
+            <p>당신은 좀비에게 잡혔습니다!<br>현재 로비 공간에서 남은 생존자들의 플레이를 관전할 수 있습니다.</p>
+            <div style="font-size: 14px; margin-bottom: 20px;">* 드래그로 맵을 둘러보세요 *</div>
+            <button id="spectate-btn" class="btn" style="background: #2196f3;">관전하기</button>
+        </div>
+
+        <div id="game-over-screen" class="screen">
+            <h1 id="result-title">게임 종료</h1>
+            <button id="restart-btn" class="btn">대기실로 돌아가기</button>
+            <button class="btn" style="background:#d32f2f;" onclick="location.href='../index.html'">메인 화면</button>
+        </div>
+
+        <canvas id="game-canvas" width="800" height="600"></canvas>
+    </div>
+
+    <script src="js/main.js"></script>
+</body>
+
+</html>

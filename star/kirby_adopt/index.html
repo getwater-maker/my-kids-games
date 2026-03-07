@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>커비 입양하세요 (3D)</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Three.js for 3D Graphics -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+
+<body>
+    <div id="game-container">
+        <!-- HUD -->
+        <div id="hud">
+            <div id="money-box">돈: 🪙 <span id="money-count">500</span></div>
+            <div id="inventory"> 보유 플러시: <span id="pet-count">0</span> 마리</div>
+        </div>
+
+        <!-- Shop Screen Overlay -->
+        <div id="shop-panel">
+            <h2>알 상점</h2>
+            <div class="egg-item">
+                <div class="egg-icon">🥚</div>
+                <div>
+                    <strong>신비한 고대 알</strong><br>
+                    <span>가격: 🪙 100</span><br>
+                    <span style="font-size: 14px; color: #bbb;">(고대 드래곤 50% / 전설 유니콘 50%)</span>
+                </div>
+                <button id="buy-egg-btn" class="btn">구매하기</button>
+            </div>
+        </div>
+
+        <!-- Hatching cinematic overlay -->
+        <div id="hatching-screen" class="screen">
+            <h1 class="flash-text" id="hatch-title">알이 부화하고 있습니다...</h1>
+            <div class="egg-shake" id="hatch-egg-visual">🥚</div>
+        </div>
+
+        <div id="pet-reveal-screen" class="screen">
+            <h1 id="reveal-title" style="color: #ffd54f;">전설 유니콘 펫 획득!</h1>
+            <button id="close-reveal-btn" class="btn">확인</button>
+        </div>
+
+        <button id="back-home-btn" class="btn" onclick="location.href='../index.html'">메인화면으로</button>
+    </div>
+
+    <!-- WebGL Canvas will be injected here -->
+
+    <script src="js/main.js"></script>
+</body>
+
+</html>

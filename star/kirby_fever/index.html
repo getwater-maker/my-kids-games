@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>고열 커비 식히기</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div id="game-container">
+        <!-- HUD -->
+        <div id="hud">
+            <div class="hud-item timer">시간: <span id="time-left">20</span>초</div>
+            <div class="hud-item thermometer">온도: <span id="temperature">100</span>°C</div>
+        </div>
+
+        <!-- Ice ProgressBar -->
+        <div id="temp-bar-container">
+            <div id="temp-bar"></div>
+        </div>
+
+        <!-- The Hot Kirby Button -->
+        <div id="kirby-container">
+            <div id="kirby-body" class="hot">
+                <div class="eye left"></div>
+                <div class="eye right"></div>
+                <div class="blush left"></div>
+                <div class="blush right"></div>
+                <div class="mouthsweat">🥵</div>
+            </div>
+            <div id="click-instruction">클릭해서 열을 식혀주세요!! (20초 안에 100번 클릭!)</div>
+        </div>
+
+        <!-- Screens -->
+        <div id="start-screen" class="screen active">
+            <h1>고고고고열 커비 식히기!</h1>
+            <p>커비가 100°C 고열에 시달리고 있습니다!<br>20초 안에 100번을 미친 듯이 클릭해서<br>온도를 0°C로 낮춰주세요!</p>
+            <button id="start-btn" class="btn">얼음 찜질 시작!</button>
+            <button class="btn" style="background:#555;" onclick="location.href='../index.html'">메인 화면</button>
+        </div>
+
+        <div id="game-over-screen" class="screen">
+            <h1 id="result-title">결과</h1>
+            <p id="result-desc"></p>
+            <button id="restart-btn" class="btn">다시 도전하기</button>
+            <button class="btn" style="background:#555;" onclick="location.href='../index.html'">메인 화면</button>
+        </div>
+    </div>
+
+    <!-- Confetti layer for win -->
+    <div id="confetti-layer"></div>
+
+    <script src="js/main.js"></script>
+</body>
+
+</html>

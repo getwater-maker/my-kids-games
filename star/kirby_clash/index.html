@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>커비 헌터즈 클론</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div id="game-container">
+        <!-- 로비 화면 -->
+        <div id="lobby-screen" class="screen active">
+            <h1>다함께! 커비 헌터즈 Web</h1>
+
+            <div class="resources">
+                <div class="resource-item"><span class="icon">🍎</span> <span id="apple-count">0</span></div>
+                <div class="resource-item"><span class="icon fire">🔥</span> <span id="fire-count">0</span></div>
+                <div class="resource-item"><span class="icon water">💧</span> <span id="water-count">0</span></div>
+                <div class="resource-item"><span class="icon light">✨</span> <span id="light-count">0</span></div>
+            </div>
+
+            <div class="waddle-dee-container" id="waddle-dee" title="클릭하여 보석 사과 획득!">
+                <div class="waddle-dee-sprite">
+                    <img src="images/waddle_new.png" id="waddle-dee-img" alt="웨이들디"
+                        onerror="this.onerror=null; this.src='https://i.pinimg.com/736x/8f/df/a5/8fdfa58f4b50cbf995ae40bcfcd149f1.jpg';"
+                        style="width: 120px; border-radius: 50%; object-fit: cover;">
+                </div>
+            </div>
+
+            <div class="shop-container">
+                <h2>업그레이드 상점</h2>
+                <div class="upgrades">
+                    <button class="upgrade-btn" id="upg-atk" onclick="buyUpgrade('atk')">
+                        공격력 강화 <br>
+                        <small>비용: 🔥5 🍎10</small><br>
+                        <span id="atk-level">Lv.1</span>
+                    </button>
+                    <button class="upgrade-btn" id="upg-hp" onclick="buyUpgrade('hp')">
+                        체력 강화 <br>
+                        <small>비용: 💧5 🍎10</small><br>
+                        <span id="hp-level">Lv.1</span>
+                    </button>
+                    <button class="upgrade-btn" id="upg-heal" onclick="buyUpgrade('heal')">
+                        회복력 강화 <br>
+                        <small>비용: ✨5 🍎10</small><br>
+                        <span id="heal-level">Lv.1</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="boss-selection">
+                <h2>토벌 퀘스트 선택</h2>
+                <div class="boss-list">
+                    <button class="boss-btn active" id="boss-btn-whispy" onclick="selectBoss('whispy')">
+                        🌳 위스피 우드
+                    </button>
+                    <button class="boss-btn" id="boss-btn-kracko" onclick="selectBoss('kracko')">
+                        ☁️ 크랙코
+                    </button>
+                    <button class="boss-btn" id="boss-btn-dedede" onclick="selectBoss('dedede')">
+                        🐧 디디디 대왕
+                    </button>
+                    <button class="boss-btn" id="boss-btn-metaknight" onclick="selectBoss('metaknight')">
+                        🦇 메타 나이트
+                    </button>
+                    <button class="boss-btn" id="boss-btn-marx" onclick="selectBoss('marx')">
+                        🤡 마르크
+                    </button>
+                    <button class="boss-btn" id="boss-btn-magolor" onclick="selectBoss('magolor')">
+                        🧙 마버로아
+                    </button>
+                    <button class="boss-btn" id="boss-btn-galacta" onclick="selectBoss('galacta')">
+                        👼 갤럭틱 나이트
+                    </button>
+                    <button class="boss-btn" id="boss-btn-darkmeta" onclick="selectBoss('darkmeta')">
+                        ⚔️ 다크 메타 나이트
+                    </button>
+                    <button class="boss-btn" id="boss-btn-sectonia" onclick="selectBoss('sectonia')">
+                        🐝 퀸 세크토니아
+                    </button>
+                    <button class="boss-btn" id="boss-btn-stardream" onclick="selectBoss('stardream')">
+                        ⚙️ 별의 꿈
+                    </button>
+                    <button class="boss-btn" id="boss-btn-void" onclick="selectBoss('void')">
+                        👁️ 엔드 닐
+                    </button>
+                    <button class="boss-btn" id="boss-btn-zero" onclick="selectBoss('zero')">
+                        🩸 제로 투
+                    </button>
+                    <button class="boss-btn" id="boss-btn-nightmare" onclick="selectBoss('nightmare')">
+                        🌑 나이트메어
+                    </button>
+                    <button class="boss-btn" id="boss-btn-darkmind" onclick="selectBoss('darkmind')">
+                        🔥 다크 마인드
+                    </button>
+                    <button class="boss-btn" id="boss-btn-drawcia" onclick="selectBoss('drawcia')">
+                        🎨 드로시아
+                    </button>
+                    <button class="boss-btn" id="boss-btn-magolorsoul" onclick="selectBoss('magolorsoul')">
+                        👻 마버로아 소울
+                    </button>
+                    <button class="boss-btn" id="boss-btn-chaos" onclick="selectBoss('chaos')">
+                        🌀 카오스 에피리스
+                    </button>
+                    <button class="boss-btn" id="boss-btn-finalboss" onclick="selectBoss('finalboss')"
+                        style="border-color: #ff0000; box-shadow: 0 0 10px red;">
+                        👑 마지막 대왕 보스
+                    </button>
+                </div>
+            </div>
+
+            <div class="start-btn-group">
+                <button id="start-solo-btn" class="main-btn">혼자 하기</button>
+                <button id="start-coop-btn" class="main-btn">같이 하기</button>
+            </div>
+        </div>
+
+        <!-- 전투 화면 -->
+        <div id="battle-screen" class="screen">
+            <div class="battle-ui">
+                <div class="timer">Time: <span id="battle-time">00.00</span></div>
+                <div class="boss-hp-container">
+                    <div id="boss-hp-bar" class="hp-bar-fill boss-hp"></div>
+                    <div id="boss-hp-text">BOSS HP: 100%</div>
+                </div>
+            </div>
+
+            <canvas id="game-canvas" width="800" height="400"></canvas>
+
+            <div class="player-hud">
+                <div class="char-status" id="hud-p1">
+                    <div class="char-name" style="color: #ff5555;">1P (검)</div>
+                    <div class="hp-bar-bg">
+                        <div id="hp-fill-p1" class="hp-bar-fill"></div>
+                    </div>
+                </div>
+                <div class="char-status" id="hud-p2">
+                    <div class="char-name" style="color: #ffdd55;">AI (해머)</div>
+                    <div class="hp-bar-bg">
+                        <div id="hp-fill-p2" class="hp-bar-fill"></div>
+                    </div>
+                </div>
+                <div class="char-status" id="hud-p3">
+                    <div class="char-name" style="color: #55ff55;">AI (마법봉)</div>
+                    <div class="hp-bar-bg">
+                        <div id="hp-fill-p3" class="hp-bar-fill"></div>
+                    </div>
+                </div>
+                <div class="char-status" id="hud-p4">
+                    <div class="char-name" style="color: #55aaff;">AI (마법병)</div>
+                    <div class="hp-bar-bg">
+                        <div id="hp-fill-p4" class="hp-bar-fill"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="controls-help">방향키(이동) / Z(공격)</div>
+            <button id="return-lobby-btn" class="main-btn small hidden">로비로 도망치기</button>
+        </div>
+
+        <!-- 결과 화면 모달 -->
+        <div id="result-modal" class="modal hidden">
+            <div class="modal-content">
+                <h2 id="result-title">Victory!</h2>
+                <div class="badge-container">
+                    <div id="result-badge" class="badge">🥇</div>
+                    <div id="result-rank">골드 등급!</div>
+                </div>
+                <div class="clear-time" id="result-time">Clear Time: 00.00s</div>
+                <div class="rewards-list" id="result-rewards">
+                    <!-- Javascript로 보상 추가됨 -->
+                </div>
+                <button id="result-ok-btn" class="main-btn">로비로</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/main.js"></script>
+    <script src="js/lobby.js"></script>
+    <script src="js/battle.js"></script>
+</body>
+
+</html>

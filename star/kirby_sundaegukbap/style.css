@@ -1,0 +1,344 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
+    background-color: #d7ccc8;
+    /* 뚝배기 받침 느낌의 갈색 배경 */
+    color: #333;
+    overflow: hidden;
+    user-select: none;
+}
+
+#game-container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.bg-pattern {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 300px;
+    font-weight: bold;
+    color: rgba(93, 64, 55, 0.05);
+    /* 진한 갈색 투명 */
+    white-space: nowrap;
+    z-index: -1;
+    pointer-events: none;
+}
+
+#title-text {
+    margin-top: 20px;
+    font-size: 36px;
+    color: #4e342e;
+    /* 깊은 뚝배기 색상 */
+    text-shadow: 2px 2px 0px #fff;
+    z-index: 10;
+}
+
+/* Palette Area */
+#palette-area {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 10px;
+    padding: 15px 30px;
+    background: rgba(255, 255, 255, 0.7);
+    border-radius: 20px;
+    border: 3px solid #8d6e63;
+    z-index: 10;
+    width: 80%;
+}
+
+.ingredient-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.ingredient {
+    width: 80px;
+    height: 80px;
+    border-radius: 15px;
+    cursor: grab;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    color: #fff;
+    text-align: center;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2), inset -5px -5px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s;
+    user-select: none;
+    font-size: 14px;
+}
+
+.ingredient:hover {
+    transform: scale(1.1);
+}
+
+.ingredient:active {
+    cursor: grabbing;
+    transform: scale(0.9);
+}
+
+/* specific ingredients */
+.kirby-sundae {
+    background: #424242;
+    border-radius: 50%;
+    border: 3px dashed #bdbdbd;
+    color: transparent;
+    text-shadow: none;
+}
+
+.pork {
+    background: #ffccbc;
+    border-radius: 20px 50px 20px 50px;
+    color: #3e2723;
+    text-shadow: none;
+    border: 2px solid #d84315;
+}
+
+.chives {
+    background: #4caf50;
+    border-radius: 10px;
+    height: 40px;
+    width: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.perilla {
+    background: #8d6e63;
+    border-radius: 50%;
+    opacity: 0.9;
+}
+
+.shrimp {
+    background: #ff8a80;
+    border-radius: 30px 10px 10px 30px;
+    width: 60px;
+    height: 30px;
+}
+
+.dadaegi {
+    background: #b71c1c;
+    border-radius: 50%;
+    box-shadow: inset -5px -5px 20px #7f0000;
+}
+
+/* Kirby Face inside Sundae */
+.kirby-sundae::before {
+    content: "순대";
+    position: absolute;
+    top: -25px;
+    color: #333;
+    font-size: 14px;
+    text-shadow: none;
+}
+
+.kirby-sundae::after {
+    /* fake eyes and blush */
+    content: "•   •";
+    position: absolute;
+    top: 25px;
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+    letter-spacing: 15px;
+}
+
+
+/* Pot Area (Ttukbaegi) */
+#pot-area {
+    position: relative;
+    margin-top: 40px;
+    width: 550px;
+    height: 350px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Back rim of Ttukbaegi */
+#ttukbaegi-back {
+    position: absolute;
+    width: 450px;
+    height: 200px;
+    background: #3e2723;
+    /* Very dark brown/black classic clay pot */
+    border-radius: 50%;
+    top: 40px;
+    box-shadow: inset 0 20px 30px rgba(0, 0, 0, 0.8);
+}
+
+/* White Pork Broth */
+#broth {
+    position: absolute;
+    width: 420px;
+    height: 180px;
+    background: #fff9c4;
+    /* milky white-ish yellow */
+    border-radius: 50%;
+    top: 30px;
+    left: 15px;
+    opacity: 0.95;
+    transition: background-color 2s ease-in-out;
+    overflow: hidden;
+}
+
+#broth.spicy {
+    background: #e64a19;
+    /* turns red when Dadaegi is added */
+}
+
+/* Bubbles inside broth */
+#broth .bubble {
+    position: absolute;
+    bottom: -20px;
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 50%;
+    animation: boilUp 1s infinite ease-in;
+}
+
+@keyframes boilUp {
+    0% {
+        transform: translateY(0) scale(0.5);
+        opacity: 0;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    100% {
+        transform: translateY(-180px) scale(1.5);
+        opacity: 0;
+    }
+}
+
+#pot-contents {
+    position: absolute;
+    width: 400px;
+    height: 170px;
+    top: 35px;
+    left: 25px;
+    border-radius: 50%;
+}
+
+.dropped-item {
+    position: absolute;
+    z-index: 5;
+}
+
+/* Front of Ttukbaegi */
+#ttukbaegi-front {
+    position: absolute;
+    width: 450px;
+    height: 160px;
+    background: #4e342e;
+    /* dark clay */
+    border-radius: 0 0 225px 225px;
+    bottom: 20px;
+    box-shadow: 0 20px 30px rgba(0, 0, 0, 0.5), inset 0 -15px 30px rgba(0, 0, 0, 0.9);
+    z-index: 10;
+    pointer-events: none;
+}
+
+/* Base Ttukbaegi plate */
+#ttukbaegi-front::after {
+    content: '';
+    position: absolute;
+    bottom: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 350px;
+    height: 60px;
+    background: #d7ccc8;
+    border-radius: 50%;
+    z-index: -1;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+
+/* Controls */
+#controls-area {
+    position: absolute;
+    bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    z-index: 30;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.btn {
+    padding: 10px 20px;
+    font-size: 18px;
+    font-weight: bold;
+    border: 3px solid rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: transform 0.1s;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+    color: white;
+}
+
+.btn:hover {
+    transform: scale(1.05);
+    filter: brightness(1.1);
+}
+
+.btn:active {
+    transform: scale(0.95);
+}
+
+.btn-action {
+    padding: 15px 30px;
+    font-size: 24px;
+    background: #c62828;
+    border-radius: 20px;
+}
+
+/* Confetti */
+#confetti-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 40;
+}
+
+.confetti {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    animation: fall 3s linear forwards;
+}
+
+@keyframes fall {
+    0% {
+        transform: translateY(-50px) rotate(0);
+        opacity: 1;
+    }
+
+    100% {
+        transform: translateY(100vh) rotate(720deg);
+        opacity: 0;
+    }
+}

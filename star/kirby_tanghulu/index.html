@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>커비 탕후루 만들기</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div id="game-container">
+        <!-- Background Decor -->
+        <div class="bg-shape shape1"></div>
+        <div class="bg-shape shape2"></div>
+
+        <h1 id="title-text">과일을 꼬치에 꽂아보세요! (최대 4개)</h1>
+
+        <!-- Top Area: Fruits Palette -->
+        <div id="palette-area">
+            <div class="draggable-fruit fruit-strawberry" draggable="true" data-type="strawberry">
+                <div class="f-eye left"></div>
+                <div class="f-eye right"></div>
+                <div class="f-blush left"></div>
+                <div class="f-blush right"></div>
+            </div>
+            <div class="draggable-fruit fruit-grape" draggable="true" data-type="grape">
+                <div class="f-eye left"></div>
+                <div class="f-eye right"></div>
+                <div class="f-blush left"></div>
+                <div class="f-blush right"></div>
+            </div>
+            <div class="draggable-fruit fruit-orange" draggable="true" data-type="orange">
+                <div class="f-eye left"></div>
+                <div class="f-eye right"></div>
+            </div>
+        </div>
+
+        <!-- Center Area: Skewer -->
+        <div id="skewer-area">
+            <!-- The wooden stick -->
+            <div id="stick"></div>
+            <!-- Placed fruits container -->
+            <div id="stacked-fruits"></div>
+        </div>
+
+        <!-- Overlay: Liquid Sugar Animation -->
+        <div id="sugar-pour" class="hidden"></div>
+
+        <!-- Controls -->
+        <div id="controls">
+            <button id="sugar-btn" class="btn hidden">설탕 입히기! 🍯</button>
+            <button id="eat-btn" class="btn hidden">와그작 씹어먹기! 😋</button>
+            <button id="reset-btn" class="btn" style="background:#f44336;">다시 만들기</button>
+            <button class="btn" style="background:#555;" onclick="location.href='../index.html'">메인화면으로</button>
+        </div>
+
+        <div id="confetti-layer"></div>
+    </div>
+
+    <!-- Audio for crunch -->
+    <audio id="crunch-sound" src="https://cdn.pixabay.com/audio/2022/03/15/audio_2d815e9c0c.mp3" preload="auto"></audio>
+
+    <script src="js/main.js"></script>
+</body>
+
+</html>

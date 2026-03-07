@@ -1,0 +1,365 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
+    background-color: #ffd1dc;
+    /* 파스텔 딸기우유 배경 */
+    color: #333;
+    overflow: hidden;
+    user-select: none;
+    cursor: default;
+    /* We will use a custom element that follows cursor, but keep default base */
+}
+
+/* Custom Cursor Hiding on work area */
+#game-container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.bg-pattern {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(#fff 15%, transparent 16%) 0 0,
+        radial-gradient(#fff 15%, transparent 16%) 40px 40px;
+    background-color: #ffd1dc;
+    background-size: 80px 80px;
+    opacity: 0.4;
+    z-index: -1;
+}
+
+#title-text {
+    margin-top: 30px;
+    font-size: 40px;
+    color: #c2185b;
+    text-shadow: 2px 2px 0px #fff;
+    z-index: 10;
+}
+
+#work-area {
+    position: relative;
+    width: 100%;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: none;
+    /* Hide default cursor when in the work area! */
+}
+
+/* Custom Scooper Element */
+#scooper {
+    position: fixed;
+    width: 80px;
+    height: 80px;
+    pointer-events: none;
+    /* Let clicks pass through it to what's underneath */
+    z-index: 100;
+    /* Scooper hardware look */
+    background: radial-gradient(circle at 30% 30%, #f5f5f5, #bdbdbd);
+    border: 4px solid #9e9e9e;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2), inset -5px -5px 10px rgba(0, 0, 0, 0.2);
+    transition: transform 0.1s;
+    /* smooth pop effect */
+}
+
+/* When the scooper is carrying ice cream */
+#scooper.loaded.pink {
+    background: radial-gradient(circle at 30% 30%, #ff80ab, #f50057);
+    border-color: #c51162;
+}
+
+#scooper.loaded.yellow {
+    background: radial-gradient(circle at 30% 30%, #ffff8d, #ffea00);
+    border-color: #ffab00;
+}
+
+#scooper.loaded.blue {
+    background: radial-gradient(circle at 30% 30%, #84ffff, #00e5ff);
+    border-color: #00b0ff;
+}
+
+/* The visual kirby face sticking on the loaded scooper */
+#scooper.loaded::after {
+    content: " (>'-'<)";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-weight: bold;
+    font-size: 16px;
+    color: #fff;
+    text-shadow: 1px 1px 0 #000;
+}
+
+/* Tubs Container */
+#tubs-container {
+    display: flex;
+    gap: 50px;
+    margin-top: 50px;
+    z-index: 10;
+}
+
+.tub {
+    width: 150px;
+    height: 100px;
+    border-radius: 20px 20px 50px 50px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding-top: 100px;
+    /* space for label */
+    position: relative;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1), inset 0px 20px 20px rgba(255, 255, 255, 0.5);
+}
+
+.tub-label {
+    position: absolute;
+    bottom: -40px;
+    font-weight: bold;
+    font-size: 20px;
+    color: #fff;
+    text-shadow: 1px 1px 2px #000;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 5px 10px;
+    border-radius: 10px;
+}
+
+.tub.pink {
+    background: #ff4081;
+    border: 5px solid #c2185b;
+}
+
+.tub.yellow {
+    background: #ffeb3b;
+    border: 5px solid #fbc02d;
+}
+
+.tub.blue {
+    background: #00bcd4;
+    border: 5px solid #0097a7;
+}
+
+/* The Cone & Stacking Area */
+#stack-container {
+    position: absolute;
+    bottom: 50px;
+    display: flex;
+    flex-direction: column-reverse;
+    /* Stack upwards */
+    align-items: center;
+    z-index: 10;
+    width: 150px;
+    padding-bottom: 200px;
+    /* space for cone */
+}
+
+#cone {
+    position: absolute;
+    bottom: 0px;
+    width: 0;
+    height: 0;
+    border-left: 60px solid transparent;
+    border-right: 60px solid transparent;
+    border-top: 180px solid #ffa726;
+    /* Waffle color */
+    /* Add a crosshatch pattern via gradients for waffle look */
+    background-image: linear-gradient(45deg, rgba(0, 0, 0, 0.1) 25%, transparent 25%, transparent 50%, rgba(0, 0, 0, 0.1) 50%, rgba(0, 0, 0, 0.1) 75%, transparent 75%, transparent);
+    background-size: 20px 20px;
+    z-index: 5;
+    filter: drop-shadow(5px 10px 10px rgba(0, 0, 0, 0.3));
+}
+
+/* Placed Ice Cream Scoops */
+.scoop {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    position: relative;
+    z-index: 10;
+    margin-bottom: -50px;
+    /* overlap them */
+    box-shadow: inset -10px -10px 20px rgba(0, 0, 0, 0.2), 0 5px 10px rgba(0, 0, 0, 0.2);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: dropIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+@keyframes dropIn {
+    0% {
+        transform: translateY(-100px);
+        opacity: 0;
+    }
+
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.scoop.pink {
+    background: #ff80ab;
+}
+
+.scoop.yellow {
+    background: #ffff8d;
+}
+
+.scoop.blue {
+    background: #84ffff;
+}
+
+/* Kirby Face inside scoop */
+.scoop-face {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.sci-eye {
+    position: absolute;
+    top: 30px;
+    width: 10px;
+    height: 25px;
+    background: black;
+    border-radius: 50%;
+}
+
+.sci-eye.left {
+    left: 40px;
+}
+
+.sci-eye.right {
+    right: 40px;
+}
+
+.sci-blush {
+    position: absolute;
+    top: 50px;
+    width: 20px;
+    height: 10px;
+    background: #f50057;
+    border-radius: 50%;
+    opacity: 0.7;
+}
+
+.sci-blush.left {
+    left: 20px;
+}
+
+.sci-blush.right {
+    right: 20px;
+}
+
+.sci-mouth {
+    position: absolute;
+    top: 55px;
+    left: 55px;
+    width: 10px;
+    height: 5px;
+    background: #d50000;
+    border-radius: 0 0 10px 10px;
+}
+
+
+/* Controls */
+#controls {
+    position: absolute;
+    bottom: 20px;
+    display: flex;
+    gap: 20px;
+    z-index: 20;
+    /* above everything */
+}
+
+.btn {
+    padding: 15px 30px;
+    font-size: 24px;
+    font-weight: bold;
+    background: #4caf50;
+    color: white;
+    border: 4px solid rgba(0, 0, 0, 0.1);
+    border-radius: 15px;
+    cursor: pointer;
+    transition: transform 0.1s;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+}
+
+.btn.hidden {
+    display: none;
+}
+
+.btn:hover {
+    transform: scale(1.05);
+}
+
+.btn:active {
+    transform: scale(0.95);
+}
+
+/* Confetti */
+#confetti-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 30;
+}
+
+.confetti {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    animation: fall 3s linear forwards;
+}
+
+@keyframes fall {
+    0% {
+        transform: translateY(-50px) rotate(0);
+        opacity: 1;
+    }
+
+    100% {
+        transform: translateY(100vh) rotate(720deg);
+        opacity: 0;
+    }
+}
+
+/* End Customer */
+#customer-kirby {
+    position: absolute;
+    bottom: 100px;
+    right: -300px;
+    width: 250px;
+    height: 250px;
+    background: #f48fb1;
+    border-radius: 50%;
+    box-shadow: -10px -10px 20px rgba(0, 0, 0, 0.1) inset;
+    transition: right 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    z-index: 40;
+}
+
+#customer-kirby:after {
+    content: "ヽ(  ^o^)ﾉ";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 40px;
+    font-weight: bold;
+    color: #333;
+}
+
+#customer-kirby.arrive {
+    right: 50px;
+}

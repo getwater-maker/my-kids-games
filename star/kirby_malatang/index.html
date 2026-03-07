@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>커비 마라탕 만들기</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div id="game-container">
+        <!-- Background Decor -->
+        <div class="bg-pattern text-pattern">마라탕 🥘</div>
+
+        <h1 id="title-text">재료를 냄비에 담아주세요!</h1>
+
+        <!-- Ingredient Palette -->
+        <div id="palette-area">
+            <div class="ingredient kirby-fishcake" draggable="true" data-type="kirby-fishcake">
+                <div class="kf-eye left"></div>
+                <div class="kf-eye right"></div>
+                <div class="kf-blush left"></div>
+                <div class="kf-blush right"></div>
+                <div class="kf-mouth"></div>
+            </div>
+            <div class="ingredient bokchoy" draggable="true" data-type="bokchoy">청경채</div>
+            <div class="ingredient mushroom" draggable="true" data-type="mushroom">팽이버섯</div>
+            <div class="ingredient noodle" draggable="true" data-type="noodle">중국당면</div>
+            <div class="ingredient beef" draggable="true" data-type="beef">소고기</div>
+        </div>
+
+        <!-- The Pot Area -->
+        <div id="pot-area">
+            <div id="pot-back"></div>
+            <!-- Broth Layer -->
+            <div id="broth"></div>
+            <!-- Ingredients will be dropped here -->
+            <div id="pot-contents"></div>
+            <div id="pot-front"></div>
+        </div>
+
+        <!-- Spiciness & Controls -->
+        <div id="controls-area">
+            <div id="spice-selector" class="hidden">
+                <h2>맵기 단계를 선택하세요</h2>
+                <div class="spice-btns">
+                    <button class="spice-level btn" data-level="1" style="background:#ffcc80;color:#333;">1단계
+                        (백탕)</button>
+                    <button class="spice-level btn" data-level="2" style="background:#ff9800;">2단계 (보통)</button>
+                    <button class="spice-level btn" data-level="3" style="background:#f44336;">3단계 (매운맛)</button>
+                    <button class="spice-level btn" data-level="4" style="background:#b71c1c;">4단계 (지옥맛)</button>
+                </div>
+            </div>
+
+            <div id="action-btns" class="hidden">
+                <button id="cook-btn" class="btn btn-action">보글보글 끓이기 🔥</button>
+            </div>
+
+            <div id="eat-area" class="hidden">
+                <button id="eat-btn" class="btn btn-action">호로록 먹기 😋</button>
+            </div>
+
+            <div style="margin-top: 20px;">
+                <button id="reset-btn" class="btn" style="background:#d32f2f;">다시 담기</button>
+                <button class="btn" style="background:#555;" onclick="location.href='../index.html'">메인화면으로</button>
+            </div>
+        </div>
+
+        <div id="confetti-layer"></div>
+    </div>
+
+    <!-- Boiling Sound Effect -->
+    <audio id="boil-sound" src="https://cdn.pixabay.com/audio/2022/03/15/audio_1e596eb4c7.mp3" preload="auto"
+        loop></audio>
+
+    <script src="js/main.js"></script>
+</body>
+
+</html>

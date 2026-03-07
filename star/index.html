@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>커비 게임 선택하기</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #fce4ec;
+            /* 연한 핑크 배경 */
+            font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
+            text-align: center;
+        }
+
+        .container {
+            background-color: white;
+            padding: 50px 40px;
+            border-radius: 25px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #d81b60;
+            margin-bottom: 40px;
+            font-size: 32px;
+            line-height: 1.5;
+        }
+
+        .button-group {
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .btn-row {
+            display: flex;
+            gap: 25px;
+            justify-content: center;
+        }
+
+        .btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px 40px;
+            font-size: 22px;
+            font-weight: bold;
+            color: white;
+            background-color: #ff4081;
+            /* 헌터즈 색상 */
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 20px rgba(255, 64, 129, 0.3);
+            flex: 1;
+        }
+
+        .btn:hover {
+            transform: translateY(-5px);
+            background-color: #f50057;
+            box-shadow: 0 12px 25px rgba(255, 64, 129, 0.4);
+        }
+
+        .btn-jump {
+            background-color: #00bcd4;
+            /* 점프맵 색상 */
+            box-shadow: 0 8px 20px rgba(0, 188, 212, 0.3);
+        }
+
+        .btn-jump:hover {
+            background-color: #0097a7;
+            box-shadow: 0 12px 25px rgba(0, 188, 212, 0.4);
+        }
+
+        .btn-friends {
+            background-color: #7b1fa2;
+            /* 보라색 (호러 느낌) */
+            box-shadow: 0 8px 20px rgba(123, 31, 162, 0.3);
+        }
+
+        .btn-friends:hover {
+            background-color: #6a1b9a;
+            box-shadow: 0 12px 25px rgba(123, 31, 162, 0.4);
+        }
+
+        .btn-bedwars {
+            background-color: #d32f2f;
+            /* 레드 (전투, 침대파괴) */
+            box-shadow: 0 8px 20px rgba(211, 47, 47, 0.3);
+        }
+
+        .btn-bedwars:hover {
+            background-color: #b71c1c;
+            box-shadow: 0 12px 25px rgba(211, 47, 47, 0.4);
+        }
+
+        .btn-rivals {
+            background-color: #fbc02d;
+            /* 옐로우 (라이벌, 격투) */
+            color: #333;
+            /* 글씨색 대비를 위해 어둡게 */
+            box-shadow: 0 8px 20px rgba(251, 192, 45, 0.3);
+        }
+
+        .btn-rivals:hover {
+            background-color: #f57f17;
+            color: white;
+            box-shadow: 0 12px 25px rgba(245, 127, 23, 0.4);
+        }
+
+        .btn-jenga {
+            background-color: #795548;
+            /* 브라운 (나무 블록 느낌) */
+            box-shadow: 0 8px 20px rgba(121, 85, 72, 0.3);
+        }
+
+        .btn-jenga:hover {
+            background-color: #5d4037;
+            box-shadow: 0 12px 25px rgba(121, 85, 72, 0.4);
+        }
+
+        .btn-adopt {
+            background-color: #4caf50;
+            /* 그린 (입양, 펫 느낌) */
+            box-shadow: 0 8px 20px rgba(76, 175, 80, 0.3);
+        }
+
+        .btn-adopt:hover {
+            background-color: #388e3c;
+            box-shadow: 0 12px 25px rgba(76, 175, 80, 0.4);
+        }
+
+        .btn-zombie {
+            background-color: #000000;
+            /* 블랙 (좀비탈출, 다크) */
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-zombie:hover {
+            background-color: #333333;
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.4);
+        }
+
+        .btn-kart {
+            background-color: #1976d2;
+            /* 블루 (레이싱, 속도) */
+            box-shadow: 0 8px 20px rgba(25, 118, 210, 0.3);
+        }
+
+        .btn-kart:hover {
+            background-color: #0d47a1;
+            box-shadow: 0 12px 25px rgba(25, 118, 210, 0.4);
+        }
+
+        .btn-bingsu {
+            background-color: #00bcd4;
+            /* 시원한 하늘색 */
+            box-shadow: 0 8px 20px rgba(0, 188, 212, 0.3);
+            color: white;
+        }
+
+        .btn-bingsu:hover {
+            background-color: #0097a7;
+            box-shadow: 0 12px 25px rgba(0, 188, 212, 0.4);
+        }
+
+        .btn-fever {
+            background-color: #ff5252;
+            /* 고열을 나타내는 붉은색 */
+            box-shadow: 0 8px 20px rgba(255, 82, 82, 0.3);
+            color: white;
+            animation: pulse-hot 1s infinite alternate;
+        }
+
+        @keyframes pulse-hot {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 5px 15px rgba(255, 82, 82, 0.5);
+            }
+
+            100% {
+                transform: scale(1.05);
+                box-shadow: 0 10px 30px rgba(255, 82, 82, 0.8);
+            }
+        }
+
+        .btn-fever:hover {
+            background-color: #d50000;
+            box-shadow: 0 12px 25px rgba(213, 0, 0, 0.4);
+        }
+
+        .btn-icecream {
+            background-color: #f48fb1;
+            /* 부드러운 핑크 (아이스크림) */
+            box-shadow: 0 8px 20px rgba(244, 143, 177, 0.3);
+            color: #333;
+        }
+
+        .btn-icecream:hover {
+            background-color: #f06292;
+            color: white;
+            box-shadow: 0 12px 25px rgba(240, 98, 146, 0.4);
+        }
+
+        .btn-tanghulu {
+            background-color: #e53935;
+            /* 딸기 탕후루 같은 강렬한 빨강 */
+            box-shadow: 0 8px 20px rgba(229, 57, 53, 0.3);
+            color: white;
+        }
+
+        .btn-tanghulu:hover {
+            background-color: #c62828;
+            box-shadow: 0 12px 25px rgba(229, 57, 53, 0.4);
+        }
+
+        .btn-malatang {
+            background-color: #ff9800;
+            /* 마라탕 국물색 (주황/빨강) */
+            box-shadow: 0 8px 20px rgba(255, 152, 0, 0.3);
+            color: white;
+        }
+
+        .btn-malatang:hover {
+            background-color: #e65100;
+            box-shadow: 0 12px 25px rgba(230, 81, 0, 0.4);
+        }
+
+        .btn-ramen {
+            background-color: #ffc107;
+            /* 라면 국물색 (노랑/주황) */
+            box-shadow: 0 8px 20px rgba(255, 193, 7, 0.3);
+            color: #333;
+        }
+
+        .btn-ramen:hover {
+            background-color: #ff8f00;
+            box-shadow: 0 12px 25px rgba(255, 143, 0, 0.4);
+            color: white;
+        }
+
+        .btn-sundae {
+            background-color: #8d6e63;
+            /* 뚝배기 색상 느낌 */
+            box-shadow: 0 8px 20px rgba(141, 110, 99, 0.3);
+            color: #fff;
+        }
+
+        .btn-sundae:hover {
+            background-color: #5d4037;
+            box-shadow: 0 12px 25px rgba(93, 64, 55, 0.4);
+        }
+
+        .btn-tower3d {
+            background-color: #9c27b0;
+            /* 신비로운 타워 느낌의 보라색 */
+            box-shadow: 0 8px 20px rgba(156, 39, 176, 0.3);
+            color: #fff;
+        }
+
+        .btn-tower3d:hover {
+            background-color: #7b1fa2;
+            box-shadow: 0 12px 25px rgba(123, 31, 162, 0.4);
+        }
+
+        .btn-cops {
+            background-color: #34495e;
+            /* 경찰차/밤의 추격전 색상 */
+            box-shadow: 0 8px 20px rgba(52, 73, 94, 0.3);
+            color: #fff;
+        }
+
+        .btn-cops:hover {
+            background-color: #2c3e50;
+            box-shadow: 0 12px 25px rgba(44, 62, 80, 0.4);
+        }
+
+        .btn-amusement {
+            background-color: #f06292;
+            /* 힐링 핑크 색상 */
+            box-shadow: 0 8px 20px rgba(240, 98, 146, 0.3);
+            color: #fff;
+        }
+
+        .btn-amusement:hover {
+            background-color: #ec407a;
+            box-shadow: 0 12px 25px rgba(236, 64, 122, 0.4);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>어떤 게임을 하실 건가요?</h1>
+        <div class="button-group">
+            <div class="btn-row">
+                <a href="kirby_jump/index.html" class="btn btn-jump">커비 점프맵</a>
+                <a href="kirby_clash/index.html" class="btn">커비 헌터즈</a>
+            </div>
+            <div class="btn-row">
+                <a href="kirby_friends/index.html" class="btn btn-friends"
+                    style="flex: auto; max-width: 400px; margin: 0 auto;">커비 프렌즈 (술래잡기)</a>
+            </div>
+            <div class="btn-row">
+                <a href="kirby_bedwars/index.html" class="btn btn-bedwars">커비 배드워즈</a>
+                <a href="kirby_rivals/index.html" class="btn btn-rivals">커비 라이벌</a>
+            </div>
+            <div class="btn-row">
+                <a href="kirby_jenga/index.html" class="btn btn-jenga"
+                    style="flex: auto; max-width: 400px; margin: 0 auto;">커비 혼돈의 젠가</a>
+                <a href="kirby_adopt/index.html" class="btn btn-adopt"
+                    style="flex: auto; max-width: 400px; margin: 0 auto;">커비 입양하세요 (3D)</a>
+            </div>
+            <div class="btn-row">
+                <a href="kirby_zombie/index.html" class="btn btn-zombie"
+                    style="flex: auto; max-width: 400px; margin: 0 auto;">커비 좀비 탈출</a>
+                <a href="kirby_kart/index.html" class="btn btn-kart"
+                    style="flex: auto; max-width: 400px; margin: 0 auto;">슈퍼 커비 카트 (3D)</a>
+            </div>
+            <div class="btn-row">
+                <a href="kirby_bingsu/index.html" class="btn btn-bingsu"
+                    style="flex: auto; max-width: 400px; margin: 0 auto;">커비 빙수 만들기</a>
+                <a href="kirby_fever/index.html" class="btn btn-fever"
+                    style="flex: auto; max-width: 400px; margin: 0 auto;">고열 커비 식히기 (클릭!)</a>
+            </div>
+            <div class="btn-row">
+                <a href="kirby_icecream/index.html" class="btn btn-icecream"
+                    style="flex: auto; max-width: 400px; margin: 0 auto;">커비 아이스크림 🍦</a>
+                <a href="kirby_tanghulu/index.html" class="btn btn-tanghulu"
+                    style="flex: auto; max-width: 400px; margin: 0 auto;">커비 탕후루 🍓</a>
+            </div>
+            <div class="btn-row">
+                <a href="kirby_malatang/index.html" class="btn btn-malatang"
+                    style="flex: auto; max-width: 400px; margin: 0 auto;">커비 마라탕 🥘</a>
+                <a href="kirby_ramen/index.html" class="btn btn-ramen"
+                    style="flex: auto; max-width: 400px; margin: 0 auto;">커비 라면 🍜</a>
+            </div>
+            <div class="btn-row">
+                <a href="kirby_sundaegukbap/index.html" class="btn btn-sundae"
+                    style="flex: auto; max-width: 400px; margin: 0 auto;">커비 순대국밥 🍲</a>
+                <a href="kirby_tower3d/index.html" class="btn btn-tower3d"
+                    style="flex: auto; max-width: 400px; margin: 0 auto;">커비 3D 타워 점프 ☁️</a>
+            </div>
+            <div class="btn-row">
+                <a href="kirby_cops/index.html" class="btn btn-cops"
+                    style="flex: auto; max-width: 400px; margin: 0 auto;">경찰과 도둑 커비 🚔🏃</a>
+                <a href="kirby_amusement/index.html" class="btn btn-amusement"
+                    style="flex: auto; max-width: 400px; margin: 0 auto;">놀이동산 가는 커비 🎡</a>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
