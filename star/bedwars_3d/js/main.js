@@ -18,12 +18,12 @@ let direction = new THREE.Vector3();
 let gameState = 'START';
 let player = {
     hp: 100,
-    wool: 24,
+    kills: 0,
     selectedSlot: 0, // 0: Sword, 1: Wool
     isPlacingMode: false,
     inventory: [
-        { name: 'Sword', type: 'weapon', damage: 20 },
-        { name: 'Wool', type: 'block', count: 24 }
+        { name: '칼', type: 'weapon', damage: 20, level: 0 },
+        { name: '양털', type: 'block', count: 24 }
     ]
 };
 
@@ -53,10 +53,14 @@ function init() {
     renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.shadowMap.enabled = true;
-    document.getElementById('game-container').prepend(renderer.domElement); // Append to container, not body
+    renderer.domElement.style.position = 'absolute';
+    renderer.domElement.style.top = '0';
+    renderer.domElement.style.left = '0';
+    renderer.domElement.style.zIndex = '1';
+    document.getElementById('game-container').prepend(renderer.domElement);
 
     // Lights
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
     scene.add(ambientLight);
 
     const sunLight = new THREE.DirectionalLight(0xffffff, 0.8);
