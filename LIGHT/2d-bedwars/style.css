@@ -1,0 +1,287 @@
+body,
+html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: #87CEEB;
+    font-family: 'Jua', sans-serif;
+    user-select: none;
+}
+
+#crosshair {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 30px;
+    z-index: 10;
+    font-weight: bold;
+    pointer-events: none;
+    text-shadow: 1px 1px 2px #000;
+}
+
+#ui-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 5;
+    padding: 20px;
+    display: flex;
+    box-sizing: border-box;
+}
+
+#player-stats {
+    background: rgba(20, 20, 30, 0.8);
+    color: white;
+    padding: 20px;
+    border-radius: 12px;
+    border: 2px solid #555;
+    width: 260px;
+    pointer-events: none;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+}
+
+#player-stats h2 {
+    margin: 0 0 15px 0;
+    color: #ff5555;
+    text-shadow: 1px 1px 2px #000;
+    font-size: 24px;
+}
+
+#player-stats p {
+    margin: 8px 0;
+    font-size: 18px;
+    text-shadow: 1px 1px 2px #000;
+}
+
+.health-bar-container {
+    width: 100%;
+    height: 16px;
+    background: #333;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 5px;
+    border: 1px solid #000;
+}
+
+#health-bar {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to right, #cc0000, #ff0000);
+    transition: width 0.2s;
+}
+
+#game-message {
+    position: absolute;
+    top: 25%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 40px;
+    color: #ffdd44;
+    text-shadow: 3px 3px 6px #000;
+    transition: opacity 0.5s;
+    opacity: 0;
+}
+
+#game-message.show {
+    opacity: 1;
+}
+
+#blocker {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.8));
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#instructions {
+    background: rgba(30, 30, 45, 0.95);
+    padding: 50px;
+    border-radius: 20px;
+    border: 4px solid #ffaa00;
+    text-align: center;
+    cursor: pointer;
+    color: white;
+    box-shadow: 0 10px 50px rgba(0, 0, 0, 0.9);
+    transition: transform 0.2s;
+}
+
+#instructions:hover {
+    transform: scale(1.02);
+}
+
+kbd {
+    background: #eee;
+    color: #333;
+    padding: 3px 8px;
+    border-radius: 4px;
+    border-bottom: 3px solid #ccc;
+    font-family: sans-serif;
+    font-weight: bold;
+    margin: 0 3px;
+}
+
+.controls-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-top: 20px;
+    font-size: 20px;
+    text-align: left;
+    background: rgba(0, 0, 0, 0.3);
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.hidden {
+    display: none !important;
+}
+
+#shop-ui {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #333;
+    padding: 30px;
+    border-radius: 15px;
+    border: 3px solid #00dd00;
+    width: 400px;
+    text-align: center;
+    z-index: 50;
+    color: white;
+    box-shadow: 0 0 50px rgba(0, 255, 0, 0.3);
+}
+
+#shop-ui h2 {
+    margin-top: 0;
+    color: #00ff00;
+    font-size: 32px;
+    text-shadow: 2px 2px 4px #000;
+}
+
+#close-shop-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: #ff4444;
+    color: white;
+    border: 2px solid #aa0000;
+    font-weight: bold;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    padding: 5px 10px;
+}
+
+#close-shop-btn:hover {
+    background: #ff6666;
+}
+
+#shop-items button {
+    display: block;
+    width: 100%;
+    padding: 15px;
+    margin-bottom: 12px;
+    font-size: 20px;
+    font-family: inherit;
+    font-weight: bold;
+    color: white;
+    background: linear-gradient(to bottom, #448844, #225522);
+    border: 2px solid #55aa55;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.1s;
+}
+
+#shop-items button:hover {
+    background: linear-gradient(to bottom, #55aa55, #337733);
+    transform: scale(1.03);
+}
+
+#death-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 0, 0, 0.5);
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    text-shadow: 2px 2px 4px #000;
+}
+
+#death-overlay h1 {
+    font-size: 80px;
+    margin-bottom: 10px;
+}
+
+#death-overlay p {
+    font-size: 30px;
+}
+
+@keyframes shake {
+    0% {
+        transform: translate(2px, 2px) rotate(0deg);
+    }
+
+    10% {
+        transform: translate(-2px, -3px) rotate(-1deg);
+    }
+
+    20% {
+        transform: translate(-4px, 0px) rotate(1deg);
+    }
+
+    30% {
+        transform: translate(4px, 3px) rotate(0deg);
+    }
+
+    40% {
+        transform: translate(2px, -2px) rotate(1deg);
+    }
+
+    50% {
+        transform: translate(-2px, 3px) rotate(-1deg);
+    }
+
+    60% {
+        transform: translate(-4px, 2px) rotate(0deg);
+    }
+
+    70% {
+        transform: translate(4px, 2px) rotate(-1deg);
+    }
+
+    80% {
+        transform: translate(-2px, -2px) rotate(1deg);
+    }
+
+    90% {
+        transform: translate(2px, 3px) rotate(0deg);
+    }
+
+    100% {
+        transform: translate(2px, -3px) rotate(-1deg);
+    }
+}
+
+.screen-shake {
+    animation: shake 0.3s cubic-bezier(.36, .07, .19, .97) both;
+}

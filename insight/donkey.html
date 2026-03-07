@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>당나귀 집 청소하기 🫏</title>
+    <link rel="stylesheet" href="donkey.css">
+    <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="app-container">
+        <header class="game-header">
+            <h1>🫏 당나귀 아저씨네 대청소</h1>
+            <div class="actions">
+                <button onclick="location.href='index.html'" class="action-btn">⬅️ 뒤로가기</button>
+                <div class="wallet-badge">지갑: <span id="walletAmt">0</span>원</div>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <div class="top-dashboard">
+                <div class="timer-box">
+                    ⏳ 남은 시간 <span id="timeDisplay">02:00</span>
+                </div>
+                <div class="progress-box">
+                    🧹 쓰레기 <span id="cleanCount">0</span> / <span id="totalCount">35</span>
+                </div>
+            </div>
+
+            <div class="room-container" id="roomContainer">
+                <!-- 당나귀 -->
+                <div class="donkey" id="donkey">🫏</div>
+                <!-- 쓰레기들이 자바스크립트에 의해 추가됩니다 -->
+
+                <div id="startOverlay" class="overlay">
+                    <h2>제한시간 2분!</h2>
+                    <p>마우스나 손가락으로 콕콕! 눌러서<br>방 안의 쓰레기를 모두 치워주세요!</p>
+                    <button id="startBtn" class="big-btn">빗자루 들고 청소 시작!</button>
+                </div>
+
+                <div id="resultOverlay" class="overlay hidden">
+                    <h2 id="resultTitle">수고하셨습니다🎉</h2>
+                    <p id="resultDesc">당나귀 아저씨가 용돈 10000원을 주셨어요!</p>
+                    <button id="restartBtn" class="big-btn">다시 아르바이트 하기</button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- 효과음 -->
+    <audio id="sfx-clean" src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3"></audio>
+    <audio id="sfx-win" src="https://assets.mixkit.co/active_storage/sfx/1435/1435-preview.mp3"></audio>
+    <audio id="sfx-fail" src="https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3"></audio>
+
+    <script src="donkey.js"></script>
+</body>
+
+</html>

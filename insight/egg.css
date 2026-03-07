@@ -1,0 +1,252 @@
+:root {
+    --bg-color: #ffeaa7;
+    /* Buttery yellow theme */
+    --shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    --border-radius: 20px;
+    --font-color: #2d3436;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Jua', sans-serif;
+    background-color: #ffda79;
+    background-image: linear-gradient(135deg, #ffb142 0%, #ffda79 100%);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    color: var(--font-color);
+}
+
+.app-container {
+    width: 95vw;
+    height: 95vh;
+    background-color: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border: 5px solid #ffa502;
+    position: relative;
+    user-select: none;
+}
+
+/* Header */
+.game-header {
+    background-color: #ff9f43;
+    /* bright orange header */
+    color: white;
+    padding: 15px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 4px solid #dfe6e9;
+    z-index: 10;
+}
+
+.game-header h1 {
+    font-size: 2rem;
+    text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.2);
+}
+
+.actions {
+    display: flex;
+    gap: 15px;
+}
+
+.action-btn {
+    font-family: 'Jua', sans-serif;
+    font-size: 1.2rem;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    background-color: #ffffff;
+    color: #ff7f50;
+    box-shadow: 0 4px 0 #fad390;
+    transition: all 0.2s;
+}
+
+.action-btn:active {
+    transform: translateY(4px);
+    box-shadow: none;
+}
+
+.clear-btn {
+    background-color: #ff7b25;
+    color: white;
+    box-shadow: 0 4px 0 #cc5f19;
+}
+
+.save-btn {
+    background-color: #7bed9f;
+    color: #2f3542;
+    box-shadow: 0 4px 0 #2ed573;
+}
+
+/* Main Layout */
+.main-content {
+    flex: 1;
+    display: flex;
+    overflow: hidden;
+    background-color: #f1f2f6;
+    /* Clean background */
+    background-image: linear-gradient(90deg, #eccc68 1px, transparent 1px),
+        linear-gradient(180deg, #eccc68 1px, transparent 1px);
+    background-size: 40px 40px;
+    /* simple grid */
+}
+
+/* Sidebar Tools */
+.sidebar {
+    width: 320px;
+    background-color: #fffaf0;
+    border-right: 4px dashed #ffb8b8;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    overflow-y: auto;
+    box-shadow: 5px 0 15px rgba(0, 0, 0, 0.05);
+}
+
+.panel h2 {
+    color: #ff6b81;
+    margin-bottom: 5px;
+    font-size: 1.3rem;
+}
+
+.hint-text {
+    font-size: 0.9rem;
+    color: #747d8c;
+    margin-bottom: 10px;
+}
+
+.tool-list,
+.sticker-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
+.tool-btn {
+    font-family: 'Jua', sans-serif;
+    font-size: 1rem;
+    padding: 10px 5px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    background-color: #f8efba;
+    color: #2c3e50;
+    box-shadow: 0 4px 0 #f6e58d;
+    transition: all 0.1s;
+    text-align: center;
+}
+
+.tool-btn.active {
+    background-color: #ff6b81;
+    box-shadow: 0 4px 0 #ff4757;
+    color: white;
+}
+
+.tool-btn:active {
+    transform: translateY(4px);
+    box-shadow: none;
+}
+
+/* Center Stage */
+.preview-area {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.pan-wrapper {
+    position: relative;
+    width: 700px;
+    height: 600px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Frying Pan Style */
+.pan-handle {
+    position: absolute;
+    width: 250px;
+    height: 45px;
+    background: #2f3542;
+    /* dark grey metal handle */
+    right: -100px;
+    /* extends to the right */
+    top: 50%;
+    transform: translateY(-50%) rotate(-15deg);
+    border-radius: 20px;
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3);
+    z-index: 1;
+}
+
+/* Handle hole */
+.pan-handle::after {
+    content: '';
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    background-color: #f1f2f6;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    border-radius: 50%;
+    box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.5);
+}
+
+.frying-pan {
+    position: absolute;
+    width: 520px;
+    height: 520px;
+    background: radial-gradient(#57606f, #2f3542);
+    /* Dark skillet interior */
+    border-radius: 50%;
+    border: 15px solid #1e272e;
+    /* Thicker pan rim */
+    box-shadow:
+        inset 0 0 40px rgba(0, 0, 0, 0.6),
+        /* Depth inside pan */
+        -10px -10px 15px rgba(255, 255, 255, 0.4),
+        /* Highlights on the side */
+        20px 20px 30px rgba(0, 0, 0, 0.4);
+    /* Shadow below */
+    z-index: 2;
+}
+
+
+/* Overlay canvas inside pan */
+#eggCanvas {
+    position: absolute;
+    z-index: 10;
+    pointer-events: auto;
+    cursor: crosshair;
+    border-radius: 50%;
+    /* 500x500 so fits almost perfectly within pan */
+}
+
+
+/* Cursor Hint Balloon */
+.cursor-hint {
+    position: absolute;
+    pointer-events: none;
+    font-size: 50px;
+    display: none;
+    z-index: 20;
+    transform: translate(-50%, -50%);
+    filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.3));
+}

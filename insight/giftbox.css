@@ -1,0 +1,238 @@
+:root {
+    --bg-color: #f78fb3;
+    --shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    --border-radius: 20px;
+    --font-color: #2f3640;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Jua', sans-serif;
+    background-color: #e55039;
+    background-image: linear-gradient(135deg, #f78fb3 0%, #e55039 100%);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    color: var(--font-color);
+}
+
+.app-container {
+    width: 95vw;
+    height: 95vh;
+    background-color: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border: 5px solid #c44569;
+    position: relative;
+    user-select: none;
+}
+
+/* Header */
+.game-header {
+    background-color: #c44569;
+    color: white;
+    padding: 15px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 4px solid #f1f2f6;
+    z-index: 10;
+}
+
+.game-header h1 {
+    font-size: 2rem;
+    text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.2);
+}
+
+.actions {
+    display: flex;
+    gap: 15px;
+}
+
+.action-btn {
+    font-family: 'Jua', sans-serif;
+    font-size: 1.2rem;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    background-color: #ffffff;
+    color: #c44569;
+    box-shadow: 0 4px 0 #f78fb3;
+    transition: all 0.2s;
+}
+
+.action-btn:active {
+    transform: translateY(4px);
+    box-shadow: none;
+}
+
+.clear-btn {
+    background-color: #e74c3c;
+    color: white;
+    box-shadow: 0 4px 0 #c0392b;
+}
+
+.save-btn {
+    background-color: #2ed573;
+    color: white;
+    box-shadow: 0 4px 0 #20bf6b;
+}
+
+/* Main Layout */
+.main-content {
+    flex: 1;
+    display: flex;
+    overflow: hidden;
+    background-color: #f1f2f6;
+    background-image: linear-gradient(0deg, #dcdde1 1px, transparent 1px),
+        linear-gradient(90deg, #dcdde1 1px, transparent 1px);
+    background-size: 40px 40px;
+}
+
+/* Sidebar Tools */
+.sidebar {
+    width: 320px;
+    background-color: #fffaf0;
+    border-right: 4px dashed #f78fb3;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    overflow-y: auto;
+    box-shadow: 5px 0 15px rgba(0, 0, 0, 0.05);
+}
+
+.panel h2 {
+    color: #e55039;
+    margin-bottom: 5px;
+    font-size: 1.3rem;
+}
+
+.hint-text {
+    font-size: 0.9rem;
+    color: #7f8fa6;
+    margin-bottom: 10px;
+}
+
+.color-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.color-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 4px 0 rgba(0, 0, 0, 0.1);
+    transition: transform 0.1s, box-shadow 0.1s;
+}
+
+.color-btn.active {
+    outline: 4px solid #fff;
+    box-shadow: 0 0 0 6px #e55039, 0 4px 10px rgba(0, 0, 0, 0.2);
+    transform: scale(1.1);
+}
+
+.color-btn:active {
+    transform: translateY(4px);
+    box-shadow: none;
+}
+
+.sticker-list {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+}
+
+.tool-btn {
+    font-family: 'Jua', sans-serif;
+    font-size: 1.5rem;
+    padding: 10px 5px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    background-color: #f8efba;
+    color: #2f3640;
+    box-shadow: 0 4px 0 #f6e58d;
+    transition: all 0.1s;
+    text-align: center;
+}
+
+.tool-btn.active {
+    background-color: #ff9ff3;
+    box-shadow: 0 4px 0 #f368e0;
+}
+
+.tool-btn:active {
+    transform: translateY(4px);
+    box-shadow: none;
+}
+
+/* Center Stage */
+.preview-area {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.box-wrapper {
+    position: relative;
+    width: 450px;
+    height: 450px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* The drop shadow under the box */
+.box-shadow-element {
+    position: absolute;
+    width: 420px;
+    height: 420px;
+    background-color: rgba(0, 0, 0, 0.15);
+    border-radius: 20px;
+    top: 25px;
+    left: 25px;
+    z-index: 1;
+    filter: blur(10px);
+}
+
+#giftCanvas {
+    position: absolute;
+    z-index: 10;
+    pointer-events: auto;
+    cursor: crosshair;
+    border-radius: 15px;
+    /* So the box edge isn't super sharp */
+    box-shadow:
+        inset -10px -10px 30px rgba(0, 0, 0, 0.1),
+        inset 10px 10px 20px rgba(255, 255, 255, 0.4);
+}
+
+/* Cursor Hint Balloon */
+.cursor-hint {
+    position: absolute;
+    pointer-events: none;
+    font-size: 40px;
+    display: none;
+    z-index: 20;
+    transform: translate(-50%, -50%);
+    filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.3));
+}

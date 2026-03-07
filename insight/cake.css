@@ -1,0 +1,17 @@
+/* 케이크 꾸미기 게임에만 있는 특별 마법가루! */
+.tool-btn[data-tool^="stamp_"] {
+    background-color: #ffeaa7;
+    border-color: #fdcb6e;
+}
+
+.tool-btn[data-tool^="stamp_"]:hover {
+    background-color: #fdcb6e;
+    transform: scale(1.1) rotate(5deg);
+    /* 통통 튀면서 귀엽게 기울어지는 마법 */
+}
+
+.tool-btn[data-tool^="stamp_"].active {
+    background-color: #ff9f43;
+    color: white;
+    box-shadow: 0 0 10px rgba(255, 159, 67, 0.5);
+}
