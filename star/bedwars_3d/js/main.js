@@ -19,7 +19,10 @@ let gameState = 'START';
 let player = {
     hp: 100,
     kills: 0,
-    selectedSlot: 0, // 0: Sword, 1: Wool
+    iron: 0,
+    emerald: 0,
+    armor: 1, // 1: None, 0.8: Leather, 0.6: Iron, 0.4: Diamond, 0.2: Emerald
+    selectedSlot: 0,
     isPlacingMode: false,
     inventory: [
         { name: '칼', type: 'weapon', damage: 20, level: 0 },
@@ -27,9 +30,10 @@ let player = {
     ]
 };
 
-let objects = []; // For collision (islands, blocks)
+let objects = [];
 let enemies = [];
-let beds = [];
+let resources = [];
+let spawners = [];
 let placementGhost; // Block placement preview
 
 // --- UI Elements ---
@@ -38,8 +42,11 @@ const gameOverScreen = document.getElementById('game-over');
 const crosshair = document.getElementById('crosshair');
 const hud = document.getElementById('hud');
 const woolCountText = document.getElementById('wool-count');
+const ironCountText = document.getElementById('iron-count');
+const emeraldCountText = document.getElementById('emerald-count');
 const hpBarFill = document.getElementById('hp-bar-fill');
 const hpText = document.getElementById('hp-text');
+const shopScreen = document.getElementById('shop-screen');
 const invSlots = [document.getElementById('slot-0'), document.getElementById('slot-1')];
 
 // --- Initialization ---
@@ -119,26 +126,55 @@ function init() {
 
 // --- Map Generation ---
 function generateMap() {
-    // Starting Island
-    createIsland(0, 0, 0, 10, 10, 0x4caf50); // Player Island
-    createBed(0, 1, -4, 'blue');
+    // Starting Island (Blue)
+    createIsland(0, 0, 0, 12, 12, 0x4caf50);
+    createBed(0, 1, -5, 'blue');
+    createSpawner(0, 1, -2, 'iron');
 
-    // Middle Island
-    createIsland(0, -5, 30, 15, 15, 0x9e9e9e); // Middle
+    // Side Island Left
+    createIsland(-30, 0, 15, 10, 10, 0x9e9e9e);
+    createSpawner(-30, 1, 15, 'iron');
 
-    // Enemy Island
-    createIsland(0, 0, 60, 10, 10, 0xef5350); // Enemy Island
-    createBed(0, 1, 64, 'red');
+    // Side Island Right
+    createIsland(30, 0, 15, 10, 10, 0x9e9e9e);
+    createSpawner(30, 1, 15, 'iron');
 
-    spawnEnemy(0, 1, 60);
+    // Middle Island (Diamond/Emerald Area)
+    createIsland(0, 0, 40, 20, 20, 0x546e7a);
+    createSpawner(0, 1, 40, 'emerald');
 
-    // Void floor (just a visual plane far down)
-    const voidGeo = new THREE.PlaneGeometry(2000, 2000);
-    const voidMat = new THREE.MeshBasicMaterial({ color: 0x222222, transparent: true, opacity: 0.3 });
+    // Enemy Island (Red)
+    createIsland(0, 0, 80, 12, 12, 0xef5350);
+    createBed(0, 1, 85, 'red');
+    createSpawner(0, 1, 82, 'iron');
+
+    spawnEnemy(0, 1, 75);
+    spawnEnemy(5, 1, 80);
+
+    const voidGeo = new THREE.PlaneGeometry(3000, 3000);
+    const voidMat = new THREE.MeshBasicMaterial({ color: 0x111111, transparent: true, opacity: 0.2 });
     const voidPlane = new THREE.Mesh(voidGeo, voidMat);
     voidPlane.rotation.x = -Math.PI / 2;
-    voidPlane.position.y = -50;
+    voidPlane.position.y = -40;
     scene.add(voidPlane);
+}
+
+function createSpawner(x, y, z, type) {
+    const geo = new THREE.CylinderGeometry(1, 1, 0.2, 8);
+    const mat = new THREE.MeshPhongMaterial({ color: type === 'iron' ? 0xbdc3c7 : 0x2ecc71 });
+    const mesh = new THREE.Mesh(geo, mat);
+    mesh.position.set(x, y - 0.9, z);
+    scene.add(mesh);
+    spawners.push({ x, y, z, type, lastSpawn: 0 });
+}
+
+function spawnResource(x, y, z, type) {
+    const geo = new THREE.IcosahedronGeometry(0.3);
+    const mat = new THREE.MeshPhongMaterial({ color: type === 'iron' ? 0xffffff : 0x00ff00, emissive: type === 'iron' ? 0x000000 : 0x003300 });
+    const mesh = new THREE.Mesh(geo, mat);
+    mesh.position.set(x, y + 0.5, z);
+    scene.add(mesh);
+    resources.push({ mesh, type });
 }
 
 function createIsland(x, y, z, w, d, color) {
@@ -208,6 +244,7 @@ function onKeyDown(e) {
         case 'Space': if (canJump) velocity.y += JUMP_FORCE; canJump = false; break;
         case 'Digit1': selectSlot(0); break;
         case 'Digit2': selectSlot(1); break;
+        case 'KeyB': toggleShop(); break;
         case 'ShiftLeft':
         case 'ShiftRight': player.isPlacingMode = !player.isPlacingMode; updateModeText(); break;
     }
@@ -336,6 +373,42 @@ function placeBlock() {
     }
 }
 
+// --- Shop Logic ---
+function toggleShop() {
+    if (gameState === 'GAME_OVER') return;
+
+    if (shopScreen.classList.contains('hidden')) {
+        shopScreen.classList.remove('hidden');
+        controls.unlock();
+    } else {
+        shopScreen.classList.add('hidden');
+        controls.lock();
+    }
+}
+
+function buyArmor(type) {
+    let cost = 0;
+    let resType = 'iron';
+    let armorValue = 1;
+    let name = "";
+
+    switch (type) {
+        case 'leather': cost = 50; armorValue = 0.8; name = "가죽 갑옷"; break;
+        case 'iron': cost = 120; armorValue = 0.6; name = "철 갑옷"; break;
+        case 'diamond': cost = 8; resType = 'emerald'; armorValue = 0.4; name = "다이아 갑옷"; break;
+        case 'emerald': cost = 40; resType = 'emerald'; armorValue = 0.2; name = "에메랄드 갑옷"; break;
+    }
+
+    if (player[resType] >= cost) {
+        player[resType] -= cost;
+        player.armor = armorValue;
+        updateHUD();
+        announce(`🛡️ ${name} 구입 완료!`);
+    } else {
+        announce("💰 재화가 부족합니다!");
+    }
+}
+
 function spawnEffect(pos, color) {
     const geo = new THREE.SphereGeometry(0.1, 8, 8);
     const mat = new THREE.MeshBasicMaterial({ color: color });
@@ -402,7 +475,6 @@ function animate() {
 
         velocity.x -= velocity.x * 0.1;
         velocity.z -= velocity.z * 0.1;
-
         velocity.y -= GRAVITY;
 
         direction.z = Number(moveForward) - Number(moveBackward);
@@ -414,7 +486,6 @@ function animate() {
 
         controls.moveRight(-velocity.x);
         controls.moveForward(-velocity.z);
-
         camera.position.y += velocity.y;
 
         if (camera.position.y < -20) {
@@ -431,18 +502,43 @@ function animate() {
             grounded = true;
         }
 
+        // Enemy AI logic
         enemies.forEach(enemy => {
             let distToPlayer = enemy.mesh.position.distanceTo(camera.position);
-            if (distToPlayer < 20 && distToPlayer > 1.5) {
-                let dir = new THREE.Vector3().subVectors(camera.position, enemy.mesh.position).normalize();
-                enemy.mesh.position.x += dir.x * 0.04;
-                enemy.mesh.position.z += dir.z * 0.04;
+            if (distToPlayer < 35 && distToPlayer > 2) {
+                let dir = new THREE.Vector3().subVectors(camera.position, enemy.mesh.position);
+                dir.y = 0;
+                dir.normalize();
+                enemy.mesh.position.x += dir.x * 0.1;
+                enemy.mesh.position.z += dir.z * 0.1;
+                enemy.mesh.lookAt(camera.position.x, enemy.mesh.position.y, camera.position.z);
             }
 
-            if (distToPlayer < 1.5) {
-                player.hp -= 0.5;
+            if (distToPlayer < 2) {
+                player.hp -= (0.5 * player.armor); // Armor reduction
                 updateHUD();
                 if (player.hp <= 0) triggerGameOver("적에게 당했습니다!");
+            }
+        });
+
+        // Resource Spawning
+        const now = time;
+        spawners.forEach(s => {
+            const interval = s.type === 'iron' ? 3000 : 15000;
+            if (now - s.lastSpawn > interval) {
+                spawnResource(s.x, s.y, s.z, s.type);
+                s.lastSpawn = now;
+            }
+        });
+
+        // Collection
+        resources.forEach((r, idx) => {
+            r.mesh.rotation.y += 0.05;
+            if (r.mesh.position.distanceTo(camera.position) < 2.5) {
+                player[r.type]++;
+                scene.remove(r.mesh);
+                resources.splice(idx, 1);
+                updateHUD();
             }
         });
     }
@@ -453,6 +549,9 @@ function animate() {
 function updateHUD() {
     hpBarFill.style.width = player.hp + '%';
     hpText.textContent = `HP: ${Math.ceil(player.hp)} | 🎯 Kills: ${player.kills}`;
+    ironCountText.textContent = player.iron;
+    emeraldCountText.textContent = player.emerald;
+
     if (player.hp < 30) hpBarFill.style.background = '#ff4757';
     else hpBarFill.style.background = '#2ed573';
 }

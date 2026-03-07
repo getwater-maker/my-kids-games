@@ -36,12 +36,46 @@
                     <div id="hp-bar-fill"></div>
                     <span id="hp-text">HP: 100</span>
                 </div>
+                <div class="resource-counter">
+                    <div class="res-item">🔘 철: <span id="iron-count">0</span></div>
+                    <div class="res-item">💎 에메랄드: <span id="emerald-count">0</span></div>
+                </div>
             </div>
             <div class="inventory">
                 <div class="inv-slot" id="slot-0">⚔️ 칼</div>
                 <div class="inv-slot" id="slot-1">🧶 양털 (<span id="wool-count">24</span>)</div>
             </div>
             <div id="msg">왼쪽 클릭: 공격 | 오른쪽 클릭: 설치</div>
+        </div>
+
+        <!-- Shop Screen -->
+        <div id="shop-screen" class="overlay hidden">
+            <div class="menu-box shop-box">
+                <h2>🏬 상점 (B키로 닫기)</h2>
+                <div class="shop-grid">
+                    <div class="shop-item" onclick="buyArmor('leather')">
+                        <div class="item-icon">🧥</div>
+                        <div class="item-name">가죽 갑옷</div>
+                        <div class="item-cost">🔘 50</div>
+                    </div>
+                    <div class="shop-item" onclick="buyArmor('iron')">
+                        <div class="item-icon">🛡️</div>
+                        <div class="item-name">철 갑옷</div>
+                        <div class="item-cost">🔘 120</div>
+                    </div>
+                    <div class="shop-item" onclick="buyArmor('diamond')">
+                        <div class="item-icon">💎</div>
+                        <div class="item-name">다이아 갑옷</div>
+                        <div class="item-cost">Emerald 8</div>
+                    </div>
+                    <div class="shop-item" onclick="buyArmor('emerald')">
+                        <div class="item-icon">👑</div>
+                        <div class="item-name">에메랄드 갑옷</div>
+                        <div class="item-cost">Emerald 40</div>
+                    </div>
+                </div>
+                <button onclick="toggleShop()">닫기</button>
+            </div>
         </div>
 
         <!-- Game Over -->
