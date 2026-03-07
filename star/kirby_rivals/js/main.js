@@ -171,8 +171,8 @@ class Fighter {
                 this.isGrounded = false;
                 this.state = 'JUMP';
             } else {
-                // Infinite Hovering
-                this.vy = -3.5;
+                // Infinite Hovering (only if falling or ascending slowly)
+                if (this.vy > -3.5) this.vy = -3.5;
                 this.isHovering = true;
             }
         } else {

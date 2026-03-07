@@ -355,8 +355,8 @@ class Player {
                     this.isGrounded = false;
                     this.jumpDebounce = true;
                 } else if (!this.isGrounded) {
-                    // 공중 무한 호버링
-                    this.vy = -3.5;
+                    // 공중 무한 호버링: 점프 힘보다 크지 않을 때만 (점프 힘을 방해하지 않게)
+                    if (this.vy > -3.5) this.vy = -3.5;
                 }
             } else {
                 this.jumpDebounce = false;

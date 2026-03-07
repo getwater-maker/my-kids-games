@@ -52,9 +52,12 @@ class Character {
     }
 
     update() {
-        // Gravity
-        let currentGravity = (this.isHovering) ? 0.2 : GRAVITY;
-        this.vy += currentGravity;
+        // Gravity & Hovering
+        if (this.isHovering) {
+            if (this.vy > -4) this.vy = -4; // Infinite upward lift if slow/falling
+        } else {
+            this.vy += GRAVITY;
+        }
         if (this.vy > 10) this.vy = 10;
 
         this.y += this.vy;
@@ -722,8 +725,13 @@ window.addEventListener('keydown', e => {
 
     if (isBattleActive && player) {
         if (e.key === 'ArrowUp') {
-            player.isHovering = true;
-            player.vy = -4; // Infinite Hovering Power
+            if (player.isGrounded) {
+                player.vy = player.jumpPower; // Strong Jump
+                player.isGrounded = false;
+            } else {
+                player.isHovering = true;
+                player.vy = -4; // Ascend
+            }
             spawnParticles(player.x + player.width / 2, player.y + player.height, '#ffffff');
         }
         if (e.key === 'ArrowDown') {
