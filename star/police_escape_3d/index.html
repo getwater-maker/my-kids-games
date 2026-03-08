@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D 경찰서 탈출: 감옥에서 탈출하라! 🚔⛓️</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Outfit:wght@400;700&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <div id="game-container">
+        <!-- HUD -->
+        <div id="hud" class="hidden">
+            <div class="top-info">
+                <div class="stat-badge">
+                    ⏱️ <span id="timer">00:00</span>
+                </div>
+                <div class="stat-badge">
+                    💀 <span id="death-count">0</span>
+                </div>
+            </div>
+            <div id="hint-msg">창살 너머의 발판을 밟고 점프하세요!</div>
+        </div>
+
+        <!-- Start Screen -->
+        <div id="start-screen" class="screen">
+            <div class="menu-card">
+                <h1 class="glow-text">🚔 경찰서 탈출 3D</h1>
+                <p>억울하게 갇힌 감옥에서 탈출하세요!<br>경찰관들이 설치한 함정과 절벽을 피해 경찰서를 빠져나가야 합니다.</p>
+                <div class="mission-info">
+                    현재 위치: <strong>1층 감방</strong>
+                </div>
+                <div class="tutorial-grid">
+                    <div class="tuto-item"><span>W A S D</span> 이동</div>
+                    <div class="tuto-item"><span>SPACE</span> 점프</div>
+                    <div class="tuto-item"><span>SHIFT</span> 달리기</div>
+                    <div class="tuto-item"><span>R</span> 리스폰</div>
+                </div>
+                <button id="start-btn" class="main-btn pulse">탈출 시작</button>
+            </div>
+        </div>
+
+        <!-- Success Screen -->
+        <div id="win-screen" class="screen hidden">
+            <div class="menu-card win">
+                <div class="big-icon">🎉</div>
+                <h2>탈출 성공!</h2>
+                <p>당신은 자유의 몸이 되었습니다!</p>
+                <div class="result-stats">
+                    소요 시간: <span id="final-time">00:00</span><br>
+                    실패 횟수: <span id="final-deaths">0</span>
+                </div>
+                <button onclick="location.reload()" class="main-btn">다시 하기</button>
+                <button onclick="location.href='../index.html'" class="sub-btn">메인으로</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Three.js & Controls -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/PointerLockControls.js"></script>
+    <script src="js/main.js"></script>
+</body>
+
+</html>
