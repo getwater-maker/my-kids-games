@@ -1,12 +1,12 @@
 // star/police_escape_3d/js/main.js
 
 const CONFIG = {
-    walkSpeed: 0.12,
-    runSpeed: 0.22,
-    jumpForce: 0.28,
-    gravity: 0.012,
+    walkSpeed: 0.01,
+    runSpeed: 0.01,
+    jumpForce: 0.2, // Adjusted for slower speed
+    gravity: 0.01,
     respawnY: -20,
-    startPos: { x: 0, y: 1, z: 0 }
+    startPos: { x: 0, y: 0.5, z: 0 } // Lowered start pos
 };
 
 let scene, camera, renderer, controls;
@@ -46,13 +46,28 @@ function init() {
     document.getElementById('game-container').appendChild(renderer.domElement);
 
     // Lights
-    const ambient = new THREE.AmbientLight(0xffffff, 0.4);
+    const ambient = new THREE.AmbientLight(0xffffff, 0.6); // Increased brightness
     scene.add(ambient);
 
-    const sun = new THREE.DirectionalLight(0xffffff, 0.8);
+    const hemiLight = new THREE.HemisphereLight(0x404040, 0x000000, 0.7);
+    scene.add(hemiLight);
+
+    const sun = new THREE.DirectionalLight(0xffffff, 1.0);
     sun.position.set(20, 50, 20);
     sun.castShadow = true;
     scene.add(sun);
+
+    // Flashlight (attached to camera)
+    const flashlight = new THREE.SpotLight(0xffffff, 1.5);
+    flashlight.position.set(0, 0, 0);
+    flashlight.angle = Math.PI / 6;
+    flashlight.penumbra = 0.5;
+    flashlight.decay = 2;
+    flashlight.distance = 50;
+    camera.add(flashlight);
+    camera.add(flashlight.target);
+    flashlight.target.position.set(0, 0, -1);
+    scene.add(camera);
 
     // Controls
     controls = new THREE.PointerLockControls(camera, document.body);
