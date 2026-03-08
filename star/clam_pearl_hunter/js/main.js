@@ -25,6 +25,7 @@ let inventory = {
     clams: parseInt(localStorage.getItem('clamCount')) || 0,
     items: JSON.parse(localStorage.getItem('clamItems')) || []
 };
+let ownedLuxury = JSON.parse(localStorage.getItem('ownedLuxury')) || [];
 
 // 3D Objects
 let mudflatGroup, homeGroup;
@@ -81,6 +82,10 @@ function init() {
     document.getElementById('close-shop').onclick = () => toggleShop(false);
     document.getElementById('sell-all-btn').onclick = sellAllItems;
 
+    // Shop Tabs
+    document.getElementById('tab-sell').onclick = () => showShopTab('sell');
+    document.getElementById('tab-buy').onclick = () => showShopTab('buy');
+
     animate();
 }
 
@@ -90,6 +95,81 @@ function updateUI() {
     localStorage.setItem('clamMoney', money);
     localStorage.setItem('clamCount', inventory.clams);
     localStorage.setItem('clamItems', JSON.stringify(inventory.items));
+    localStorage.setItem('ownedLuxury', JSON.stringify(ownedLuxury));
+
+    // Render owned luxury display
+    const ownedDisplay = document.getElementById('owned-luxury');
+    if (ownedDisplay) {
+        ownedDisplay.innerHTML = '';
+        ownedLuxury.forEach(item => {
+            const badge = document.createElement('div');
+            badge.className = 'icon-badge';
+            const icons = { car: '🏎️', yacht: '🛥️', jet: '✈️', castle: '🏰', rocket: '🚀' };
+            badge.textContent = icons[item] || '🏆';
+            ownedDisplay.appendChild(badge);
+        });
+    }
+}
+
+function showShopTab(tab) {
+    const sellSec = document.getElementById('sell-section');
+    const buySec = document.getElementById('buy-section');
+    const selTab = document.getElementById('tab-sell');
+    const buyTab = document.getElementById('tab-buy');
+
+    if (tab === 'sell') {
+        sellSec.classList.remove('hidden');
+        buySec.classList.add('hidden');
+        selTab.classList.add('active');
+        buyTab.classList.remove('active');
+        renderShopItems();
+    } else {
+        sellSec.classList.add('hidden');
+        buySec.classList.remove('hidden');
+        selTab.classList.remove('active');
+        buyTab.classList.add('active');
+        updateLuxuryButtons();
+    }
+}
+
+function updateLuxuryButtons() {
+    const btns = document.querySelectorAll('.buy-luxury-btn');
+    const prices = { car: 5000000, yacht: 50000000, jet: 500000000, castle: 1000000000, rocket: 10000000000 };
+
+    btns.forEach(btn => {
+        const type = btn.getAttribute('onclick').match(/'([^']+)'/)[1];
+        const cost = prices[type];
+
+        if (ownedLuxury.includes(type)) {
+            btn.textContent = "소유함";
+            btn.disabled = true;
+        } else if (money < cost) {
+            btn.disabled = true;
+            btn.textContent = "자금 부족";
+        } else {
+            btn.disabled = false;
+            btn.textContent = "구매";
+        }
+    });
+}
+
+window.buyLuxury = function (type, cost) {
+    if (money >= cost && !ownedLuxury.includes(type)) {
+        money -= cost;
+        ownedLuxury.push(type);
+        updateUI();
+        updateLuxuryButtons();
+        alert("구매 완료! 진정한 부자의 로망을 달성하셨습니다!");
+    }
+};
+
+function toggleShop(show = true) {
+    if (show) {
+        shopScreen.classList.remove('hidden');
+        showShopTab('sell');
+    } else {
+        shopScreen.classList.add('hidden');
+    }
 }
 
 function startGame() {
@@ -100,8 +180,6 @@ function startGame() {
 function travel(target) {
     if (gameState !== 'PLAYING') return;
 
-    // Fix: If called as an event listener, 'target' will be an event object
-    // Handle both manual calls and click events
     let newLoc = (typeof target === 'string') ? target : null;
 
     if (!newLoc) {
@@ -123,15 +201,6 @@ function travel(target) {
     }
 }
 
-function toggleShop(show = true) {
-    if (show) {
-        shopScreen.classList.remove('hidden');
-        renderShopItems();
-    } else {
-        shopScreen.classList.add('hidden');
-    }
-}
-
 function setupMudflat() {
     mudflatGroup = new THREE.Group();
 
@@ -143,7 +212,7 @@ function setupMudflat() {
     ground.receiveShadow = true;
     mudflatGroup.add(ground);
 
-    // Random Dig Points (Cracks in the mud)
+    // Random Dig Points
     for (let i = 0; i < CONFIG.maxClamsPerMudflat; i++) {
         createDigPoint();
     }
@@ -181,14 +250,12 @@ function onMouseDown(e) {
 }
 
 function digClam(mesh) {
-    // Digging Animation
     mesh.material.color.set(0x4e342e);
     mesh.scale.set(1.5, 0.5, 1.5);
 
     inventory.clams++;
     updateUI();
 
-    // Remove point and spawn new one later
     digPoints = digPoints.filter(p => p !== mesh);
 
     setTimeout(() => {
@@ -197,7 +264,6 @@ function digClam(mesh) {
     }, 300);
 }
 
-// HOME LOGIC: Opening Clams
 function renderHomeClams() {
     clamsGrid.innerHTML = '';
     for (let i = 0; i < inventory.clams; i++) {
@@ -226,15 +292,14 @@ function openClam(element) {
         element.classList.add('found-jewel');
         element.style.borderColor = 'gold';
     } else {
-        element.textContent = '💨'; // empty
+        element.textContent = '💨';
         element.style.opacity = '0.3';
     }
 
-    element.onclick = null; // Disable after opening
+    element.onclick = null;
     updateUI();
 }
 
-// SHOP LOGIC
 function renderShopItems() {
     jewelList.innerHTML = '';
     const counts = {};

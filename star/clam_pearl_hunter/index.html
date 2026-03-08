@@ -56,16 +56,74 @@
     <!-- Shop Screen -->
     <div id="shop-overlay" class="overlay hidden">
         <div class="glass-panel shop-panel">
-            <h2>💎 보석 매입소</h2>
-            <p>찾은 보석을 팔아 부자가 되세요!</p>
-            <div id="jewel-list" class="jewel-list">
-                <!-- Jewels gathered for sale -->
+            <div class="shop-tabs">
+                <button id="tab-sell" class="tab-btn active">💎 보석 팔기</button>
+                <button id="tab-buy" class="tab-btn">🏰 로망 구매하기</button>
             </div>
-            <div class="shop-actions">
+
+            <!-- Sell Jewels Section -->
+            <div id="sell-section" class="shop-content">
+                <p>찾은 보석을 팔아 부자가 되세요!</p>
+                <div id="jewel-list" class="jewel-list"></div>
                 <button id="sell-all-btn" class="sell-btn">전부 판매하기</button>
+            </div>
+
+            <!-- Buy Luxury Section -->
+            <div id="buy-section" class="shop-content hidden">
+                <p>진정한 부자의 로망을 실현하세요!</p>
+                <div id="luxury-list" class="luxury-list">
+                    <div class="luxury-item">
+                        <span class="icon">🏎️</span>
+                        <div class="info">
+                            <span class="name">슈퍼카 (Sports Car)</span>
+                            <span class="price">₩ 5,000,000</span>
+                        </div>
+                        <button class="buy-luxury-btn" onclick="buyLuxury('car', 5000000)">구매</button>
+                    </div>
+                    <div class="luxury-item">
+                        <span class="icon">🛥️</span>
+                        <div class="info">
+                            <span class="name">초호화 요트 (Luxury Yacht)</span>
+                            <span class="price">₩ 50,000,000</span>
+                        </div>
+                        <button class="buy-luxury-btn" onclick="buyLuxury('yacht', 50000000)">구매</button>
+                    </div>
+                    <div class="luxury-item">
+                        <span class="icon">✈️</span>
+                        <div class="info">
+                            <span class="name">개인용 전용기 (Private Jet)</span>
+                            <span class="price">₩ 500,000,000</span>
+                        </div>
+                        <button class="buy-luxury-btn" onclick="buyLuxury('jet', 500000000)">구매</button>
+                    </div>
+                    <div class="luxury-item">
+                        <span class="icon">🏰</span>
+                        <div class="info">
+                            <span class="name">중세 성 (Medieval Castle)</span>
+                            <span class="price">₩ 1,000,000,000</span>
+                        </div>
+                        <button class="buy-luxury-btn" onclick="buyLuxury('castle', 1000000000)">구매</button>
+                    </div>
+                    <div class="luxury-item">
+                        <span class="icon">🚀</span>
+                        <div id="rocket-item" class="info">
+                            <span class="name">우주선 (Space Rocket)</span>
+                            <span class="price">₩ 10,000,000,000</span>
+                        </div>
+                        <button class="buy-luxury-btn" onclick="buyLuxury('rocket', 10000000000)">구매</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="shop-actions">
                 <button id="close-shop" class="secondary-btn">닫기</button>
             </div>
         </div>
+    </div>
+
+    <!-- Owned Luxury Display -->
+    <div id="owned-luxury" class="owned-luxury">
+        <!-- Icons of owned items appear here -->
     </div>
 
     <!-- Start/Message Screen -->
