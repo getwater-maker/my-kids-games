@@ -158,10 +158,91 @@ h1.neon-text {
     color: var(--neon-pink);
 }
 
+.wins-box .value {
+    color: #FFD700;
+}
+
 .unit {
     font-size: 0.8rem;
     color: #666;
     margin-top: -5px;
+}
+
+.shop-trigger {
+    position: fixed;
+    top: 30px;
+    right: 30px;
+    padding: 10px 20px;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    color: white;
+    font-family: 'Orbitron', sans-serif;
+    cursor: pointer;
+    backdrop-filter: blur(10px);
+    pointer-events: all;
+    transition: 0.3s;
+}
+
+.shop-trigger:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.05);
+}
+
+.shop-card {
+    min-width: 400px;
+}
+
+.wins-current {
+    margin: 10px 0 20px;
+    color: #FFD700;
+    font-size: 1.2rem;
+    font-family: 'Orbitron', sans-serif;
+}
+
+.pet-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.pet-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 15px;
+    border-radius: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.pet-icon {
+    font-size: 1.5rem;
+    margin-right: 15px;
+}
+
+.pet-name {
+    flex: 1;
+    text-align: left;
+    font-size: 0.9rem;
+}
+
+.buy-btn {
+    padding: 8px 15px;
+    background: var(--neon-blue);
+    border: none;
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+    font-family: 'Orbitron' sans-serif;
+    font-weight: bold;
+    transition: 0.2s;
+}
+
+.buy-btn:hover {
+    background: var(--neon-pink);
+    transform: scale(1.1);
 }
 
 .exercise-indicator {

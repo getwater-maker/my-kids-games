@@ -17,20 +17,51 @@
 
     <!-- UI Overlay -->
     <div id="hud" class="hidden">
+        <div class="stat-box wins-box">
+            <span class="label">WINS</span>
+            <span id="wins-value" class="value">0</span>
+        </div>
         <div class="stat-box speed-box">
-            <span class="label">CURRENT SPEED</span>
+            <span class="label">SPEED</span>
             <span id="speed-value" class="value">0</span>
             <span class="unit">KM/H</span>
         </div>
         <div class="stat-box record-box">
             <span class="label">MAX RECORD</span>
             <span id="max-speed" class="value">0</span>
-            <span class="unit">KM/H</span>
         </div>
 
         <div class="exercise-indicator">
             <div id="gauge-bar"></div>
             <div class="action-hint">TAP <span class="key">SPACE</span> TO RUN!</div>
+        </div>
+
+        <button id="pet-shop-btn" class="shop-trigger">🐶 PET SHOP</button>
+    </div>
+
+    <!-- Pet Shop Screen -->
+    <div id="shop-screen" class="overlay hidden">
+        <div class="glass-card shop-card">
+            <h2>PET SHOP</h2>
+            <div class="wins-current">Current Wins: <span id="shop-wins">0</span></div>
+            <div class="pet-list">
+                <div class="pet-item">
+                    <span class="pet-icon">🧊</span>
+                    <span class="pet-name">Slime (Speed +5%)</span>
+                    <button class="buy-btn" onclick="buyPet('slime', 1)">Buy: 1 Win</button>
+                </div>
+                <div class="pet-item">
+                    <span class="pet-icon">🐶</span>
+                    <span class="pet-name">Puppy (Speed +10%)</span>
+                    <button class="buy-btn" onclick="buyPet('puppy', 3)">Buy: 3 Wins</button>
+                </div>
+                <div class="pet-item">
+                    <span class="pet-icon">🐉</span>
+                    <span class="pet-name">Dragon (Speed +25%)</span>
+                    <button class="buy-btn" onclick="buyPet('dragon', 10)">Buy: 10 Wins</button>
+                </div>
+            </div>
+            <button id="close-shop" class="secondary-btn">Close Shop</button>
         </div>
     </div>
 
