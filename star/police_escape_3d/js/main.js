@@ -4,9 +4,9 @@ const CONFIG = {
     walkSpeed: 0.05,
     runSpeed: 0.08,
     jumpForce: 0.22,
-    gravity: 0.01,
-    respawnY: -20,
-    startPos: { x: 0, y: 0.25, z: 0 } // Adjusted to floor top (0 + 0.5/2)
+    gravity: 0.012,
+    respawnY: -30,
+    startPos: { x: 0, y: 0.25, z: 0 }
 };
 
 let scene, camera, renderer, controls;
@@ -34,8 +34,8 @@ function init() {
     finalDeaths = document.getElementById('final-deaths');
 
     scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x1e3799); // Vibrant Police Blue
-    scene.fog = new THREE.Fog(0x1e3799, 5, 60);
+    scene.background = new THREE.Color(0x7fb3d5); // Lighter, clearer Blue
+    scene.fog = new THREE.Fog(0x7fb3d5, 20, 150); // Much further fog
 
     camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
     // Initial camera height: Floor top (0.25) + Player Eye Height (1.2) = 1.45
@@ -47,14 +47,14 @@ function init() {
     document.getElementById('game-container').appendChild(renderer.domElement);
 
     // Lights
-    const ambient = new THREE.AmbientLight(0xffffff, 0.6); // Increased brightness
+    const ambient = new THREE.AmbientLight(0xffffff, 0.7);
     scene.add(ambient);
 
-    const hemiLight = new THREE.HemisphereLight(0x404040, 0x000000, 0.7);
+    const hemiLight = new THREE.HemisphereLight(0xffffff, 0x000000, 0.8);
     scene.add(hemiLight);
 
-    const sun = new THREE.DirectionalLight(0xffffff, 1.0);
-    sun.position.set(20, 50, 20);
+    const sun = new THREE.DirectionalLight(0xffffff, 1.2);
+    sun.position.set(50, 100, 50);
     sun.castShadow = true;
     scene.add(sun);
 
@@ -93,46 +93,45 @@ function init() {
 
 function createMap() {
     // 1. Initial Jail Cell
-    createBox(0, 0, 0, 10, 0.5, 10, 0x7f8c8d); // Floor
-    createBox(-5, 3, 0, 0.5, 6, 10, 0x95a5a6); // Back wall
-    createBox(0, 3, -5, 10, 6, 0.5, 0x95a5a6); // Side wall
-    createBox(0, 3, 5, 10, 6, 0.5, 0x95a5a6);  // Side wall
+    createBox(0, 0, 0, 10, 0.5, 10, 0x4a4a4a); // Floor
+    createBox(-5, 3, 0, 0.5, 6, 10, 0x333333); // Back wall
+    createBox(0, 3, -5, 10, 6, 0.5, 0x333333); // Side wall
+    createBox(0, 3, 5, 10, 6, 0.5, 0x333333);  // Side wall
+    createBox(0, 6, 0, 10, 0.5, 10, 0x333333); // Ceiling
 
-    // Jail Bars (partial)
-    for (let i = -4; i <= 4; i += 1.5) {
-        createBox(5, 3, i, 0.2, 6, 0.2, 0x2c3e50);
+    // Front Exit (Bars with gaps)
+    for (let i = -4; i <= 4; i += 2) {
+        if (i === 0) continue; // Small gap to exit
+        createBox(5, 3, i, 0.2, 6, 0.2, 0x111111);
     }
 
     const path = [
         // --- STAGE 1: CONCRETE ESCAPE ---
-        { x: 10, y: 1, z: 0, w: 3, d: 3, color: 0xbdc3c7 },
-        { x: 15, y: 2.5, z: 2, w: 2, d: 2 },
-        { x: 20, y: 4, z: -1, w: 2, d: 2 },
-        { x: 26, y: 5, z: 1, w: 4, d: 4, checkpoint: true, color: 0x2980b9 }, // Checkpoint 1
+        { x: 10, y: 0.8, z: 0, w: 4, d: 4, color: 0xbdc3c7 },
+        { x: 16, y: 2, z: 2, w: 3, d: 3 },
+        { x: 22, y: 3.5, z: -1, w: 3, d: 3 },
+        { x: 28, y: 5, z: 1, w: 4, d: 4, checkpoint: true, color: 0x2980b9 }, // Checkpoint 1
 
         // --- STAGE 2: POLICE CAR ROOFTOPS ---
-        { x: 32, y: 4.5, z: 3, w: 2, d: 3, color: 0x2c3e50 },
-        { x: 38, y: 4, z: 1, w: 2, d: 3, color: 0x2c3e50 },
-        { x: 44, y: 5.5, z: -2, w: 2, d: 3, color: 0x2c3e50 },
-        { x: 50, y: 6.5, z: 0, w: 5, d: 5, checkpoint: true, color: 0x2980b9 }, // Checkpoint 2
+        { x: 35, y: 4.5, z: 4, w: 3, d: 4, color: 0x2c3e50 },
+        { x: 42, y: 5, z: 1, w: 3, d: 4, color: 0x2c3e50 },
+        { x: 48, y: 6.5, z: -2, w: 3, d: 4, color: 0x2c3e50 },
+        { x: 55, y: 7.5, z: 0, w: 6, d: 6, checkpoint: true, color: 0x2980b9 }, // Checkpoint 2
 
         // --- STAGE 3: INDUSTRIAL PIPES ---
-        { x: 58, y: 7.5, z: 2, w: 1, d: 6, color: 0xe67e22 },
-        { x: 65, y: 9, z: -1, w: 1, d: 6, color: 0xe67e22 },
-        { x: 72, y: 10, z: 2, w: 1, d: 6, color: 0xe67e22 },
-        { x: 78, y: 11, z: 0, w: 5, d: 5, checkpoint: true, color: 0x2980b9 }, // Checkpoint 3 (Closer)
+        { x: 64, y: 8.5, z: 3, w: 1.5, d: 7, color: 0xe67e22 },
+        { x: 72, y: 10, z: -2, w: 1.5, d: 7, color: 0xe67e22 },
+        { x: 80, y: 11.5, z: 0, w: 6, d: 6, checkpoint: true, color: 0x2980b9 }, // Checkpoint 3
 
         // --- STAGE 4: HIGH-VOLTAGE WIRES ---
-        { x: 85, y: 12, z: 3, w: 6, d: 0.5, color: 0x1e272e },
-        { x: 92, y: 13, z: -2, w: 6, d: 0.5, color: 0x1e272e },
-        { x: 99, y: 14, z: 1, w: 6, d: 0.5, color: 0x1e272e },
-        { x: 106, y: 15, z: 0, w: 6, d: 6, checkpoint: true, color: 0x2980b9 }, // Checkpoint 4 (Closer)
+        { x: 88, y: 12.5, z: 3, w: 7, d: 1, color: 0x1e272e },
+        { x: 97, y: 14, z: -3, w: 7, d: 1, color: 0x1e272e },
+        { x: 106, y: 15.5, z: 1, w: 7, d: 7, checkpoint: true, color: 0x2980b9 }, // Checkpoint 4
 
         // --- STAGE 5: FINAL ROOFTOP & HELIPAD ---
-        { x: 114, y: 16, z: 3, w: 3, d: 3, color: 0xc0392b },
-        { x: 122, y: 17, z: -2, w: 2.5, d: 2.5, color: 0xc0392b },
-        { x: 129, y: 18, z: 2, w: 2, d: 2, color: 0xc0392b },
-        { x: 138, y: 19.5, z: 0, w: 8, d: 8, color: 0xf1c40f, isGoal: true } // FINAL GOAL (Closer)
+        { x: 115, y: 16.5, z: 4, w: 4, d: 4, color: 0xc0392b },
+        { x: 125, y: 18, z: -2, w: 4, d: 4, color: 0xc0392b },
+        { x: 135, y: 20, z: 0, w: 10, d: 10, color: 0xf1c40f, isGoal: true } // FINAL GOAL
     ];
 
     path.forEach(p => {
@@ -170,6 +169,7 @@ function updateMovement() {
     if (gameState !== 'PLAYING') return;
 
     const speed = keys['ShiftLeft'] ? CONFIG.runSpeed : CONFIG.walkSpeed;
+    const oldPos = camera.position.clone();
 
     // Gravity & Vertical Movement
     velocity.y -= CONFIG.gravity;
@@ -180,6 +180,8 @@ function updateMovement() {
         isJumping = true;
     }
 
+    camera.position.y += velocity.y;
+
     // Horizontal Movement
     direction.z = Number(keys['KeyW']) - Number(keys['KeyS']);
     direction.x = Number(keys['KeyD']) - Number(keys['KeyA']);
@@ -188,10 +190,11 @@ function updateMovement() {
     if (keys['KeyW'] || keys['KeyS']) controls.moveForward(direction.z * speed);
     if (keys['KeyA'] || keys['KeyD']) controls.moveRight(direction.x * speed);
 
-    camera.position.y += velocity.y;
+    // X/Z Wall/Platform Collision
+    checkWallCollision(oldPos);
 
-    // Ceiling / Floor Collision Logic (Simple)
-    checkCollision();
+    // Ceiling / Floor Collision
+    checkFloorCollision();
 
     // Respawn if fell
     if (camera.position.y < CONFIG.respawnY) {
@@ -199,26 +202,45 @@ function updateMovement() {
     }
 }
 
-function checkCollision() {
+function checkWallCollision(oldPos) {
+    platforms.forEach(p => {
+        const box = new THREE.Box3().setFromObject(p);
+        const playerBoxXZ = new THREE.Box3().setFromCenterAndSize(
+            camera.position.clone(),
+            new THREE.Vector3(0.6, 1.0, 0.6) // Smaller height for XZ check
+        );
+
+        if (box.intersectsBox(playerBoxXZ)) {
+            // If the collision wasn't from above/below, block horizontal movement
+            if (Math.abs(oldPos.y - camera.position.y) < 0.1) {
+                camera.position.x = oldPos.x;
+                camera.position.z = oldPos.z;
+            }
+        }
+    });
+}
+
+function checkFloorCollision() {
     let onFloor = false;
 
     platforms.forEach(p => {
         const box = new THREE.Box3().setFromObject(p);
-        const playerBox = new THREE.Box3().setFromCenterAndSize(
-            camera.position.clone().setY(camera.position.y - 0.8),
-            new THREE.Vector3(0.6, 1.8, 0.6)
-        );
+        const playerFeetPos = camera.position.clone().setY(camera.position.y - 1.2);
 
-        if (box.intersectsBox(playerBox)) {
-            // Check if jumping on top
-            if (velocity.y <= 0 && camera.position.y > p.position.y) {
-                camera.position.y = p.position.y + 0.5 + 1.2; // Platform top + player half height
-                velocity.y = 0;
-                isJumping = false;
-                onFloor = true;
+        // Simple overlap check with tolerance
+        if (playerFeetPos.x >= box.min.x && playerFeetPos.x <= box.max.x &&
+            playerFeetPos.z >= box.min.z && playerFeetPos.z <= box.max.z) {
 
-                if (p.isCheckpoint) currentCheckpointIdx = p.cpIdx;
-                if (p.isGoal) triggerWin();
+            const floorTop = box.max.y;
+            if (camera.position.y - 1.2 <= floorTop && camera.position.y - 1.2 >= floorTop - 0.5) {
+                if (velocity.y <= 0) {
+                    camera.position.y = floorTop + 1.2;
+                    velocity.y = 0;
+                    isJumping = false;
+                    onFloor = true;
+                    if (p.isCheckpoint) currentCheckpointIdx = p.cpIdx;
+                    if (p.isGoal) triggerWin();
+                }
             }
         }
     });
