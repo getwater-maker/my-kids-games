@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SQUID GAME : SEASON 1 - 극한의 서바이벌</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Noto+Sans+KR:wght@300;500;700&display=swap"
+        rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+
+<body>
+    <div id="game-container"></div>
+
+    <!-- UI Overlay for Game Selection -->
+    <div id="lobby-screen" class="overlay">
+        <div class="lobby-card">
+            <h1 class="pink-neon-text">SQUID GAME</h1>
+            <p class="subtitle">모든 게임에 참가하시겠습니까? 탈락은 곧 죽음입니다.</p>
+
+            <div class="game-grid">
+                <div class="game-button locked" id="select-game-1">
+                    <span class="number">01</span>
+                    <span class="name">무궁화 꽃이 피었습니다</span>
+                    <span class="status">활성화</span>
+                </div>
+                <div class="game-button locked" id="select-game-2">
+                    <span class="number">02</span>
+                    <span class="name">달고나 뽑기</span>
+                    <span class="status">잠금 해제 필요</span>
+                </div>
+                <div class="game-button locked" id="select-game-3">
+                    <span class="number">03</span>
+                    <span class="name">줄다리기 (연타)</span>
+                    <span class="status">잠금 해제 필요</span>
+                </div>
+                <div class="game-button locked" id="select-game-4">
+                    <span class="number">04</span>
+                    <span class="name">구슬치기 (홀짝)</span>
+                    <span class="status">잠금 해제 필요</span>
+                </div>
+                <div class="game-button locked" id="select-game-5">
+                    <span class="number">05</span>
+                    <span class="name">징검다리 (기억력)</span>
+                    <span class="status">잠금 해제 필요</span>
+                </div>
+                <div class="game-button locked" id="select-game-6">
+                    <span class="number">06</span>
+                    <span class="name">오징어 게임 (Final)</span>
+                    <span class="status">최종 단계</span>
+                </div>
+            </div>
+
+            <div class="current-wins">총 획득 상금: <span id="total-cash">0</span> ₩</div>
+            <button id="main-back-btn" class="secondary-btn" onclick="location.href='../index.html'">메인 메뉴로</button>
+        </div>
+    </div>
+
+    <!-- HUD -->
+    <div id="hud" class="hidden">
+        <div id="game-info">
+            <span id="game-title">게임 진행 중</span>
+            <div class="timer-box">남은 시간: <span id="timer">60</span>s</div>
+        </div>
+        <div id="status-indicator">GREEN LIGHT</div>
+        <div id="interaction-prompt">멈추세요! (STOP)</div>
+    </div>
+
+    <!-- Game Over Screen -->
+    <div id="result-screen" class="overlay hidden">
+        <div class="glass-box">
+            <h2 id="result-title">탈락</h2>
+            <p id="result-desc">주최측에 의해 처단되었습니다.</p>
+            <div class="reward-box">보상: <span id="reward-amount">0</span> ₩</div>
+            <button id="retry-game-btn" class="pink-btn">다시 참가</button>
+            <button id="lobby-back-btn" class="secondary-btn">로비로</button>
+        </div>
+    </div>
+
+    <!-- Dalgona Interactive Layer -->
+    <div id="dalgona-layer" class="hidden">
+        <canvas id="dalgona-canvas"></canvas>
+        <div class="dalgona-hint">도형의 외곽선을 정밀하게 클릭하세요! (정밀도 필요)</div>
+    </div>
+
+    <script src="js/main.js"></script>
+</body>
+
+</html>
