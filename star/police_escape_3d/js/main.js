@@ -7,7 +7,7 @@ const CONFIG = {
     gravity: 42.0,
     respawnY: -50,
     eyeHeight: 1.8, // Slightly higher for better perspective
-    startPos: { x: 0, y: 0.25, z: 0 }
+    startPos: { x: 0, y: 0.025, z: 0 } // Top of 0.05 thick floor
 };
 
 let scene, camera, renderer, controls, clock;
@@ -88,21 +88,20 @@ function createMap() {
     checkpoints = []; // Clear and rebuild
 
     // Stage 1 Start: The Jail
-    // Stage 1 Start: The Jail
-    // Floor is MUCH thicker (4.0) to prevent tunneling
-    createBox(0, -1.75, 0, 20, 4.0, 20, 0x4a4a4a); // Floor (top is still at 0.25)
-    createBox(-10, 3, 0, 2.0, 6, 20, 0x333333); // Thicker Back wall
-    createBox(0, 3, -10, 20, 6, 2.0, 0x333333); // Thicker Side wall
-    createBox(0, 3, 10, 20, 6, 2.0, 0x333333);  // Thicker Side wall
-    createBox(0, 6.25, 0, 20, 1.0, 20, 0x333333); // Ceiling
+    // Floor and Ceiling are 5cm (0.05) thick as requested
+    createBox(0, 0, 0, 20, 0.05, 20, 0x4a4a4a); // Floor
+    createBox(-10, 3, 0, 1.0, 6, 20, 0x333333); // Back wall
+    createBox(0, 3, -10, 20, 6, 1.0, 0x333333); // Side wall
+    createBox(0, 3, 10, 20, 6, 1.0, 0x333333);  // Side wall
+    createBox(0, 6, 0, 20, 0.05, 20, 0x333333); // Ceiling
 
-    // Prison Bars with an Exit
+    // Prison Bars
     for (let i = -9; i <= 9; i += 2.5) {
-        if (Math.abs(i) < 1.5) continue; // Exit gap
+        if (Math.abs(i) < 1.5) continue;
         createBox(10, 3, i, 0.3, 6, 0.3, 0x222222);
     }
 
-    checkpoints.push({ x: 0, y: 0.25, z: 0 }); // CP 0: Jail
+    checkpoints.push({ x: 0, y: 0.025, z: 0 }); // CP 0: Jail Top
 
     const path = [
         // --- STAGE 1: CONCRETE ---
@@ -131,11 +130,12 @@ function createMap() {
     ];
 
     path.forEach(p => {
-        const mesh = createBox(p.x, p.y, p.z, p.w || 2, 0.5, p.d || 2, p.color || 0xbdc3c7);
+        // All platforms are 5cm (0.05) thick
+        const mesh = createBox(p.x, p.y, p.z, p.w || 2, 0.05, p.d || 2, p.color || 0xbdc3c7);
         if (p.checkpoint) {
             mesh.isCheckpoint = true;
             mesh.cpIdx = checkpoints.length;
-            checkpoints.push({ x: p.x, y: p.y + 1, z: p.z });
+            checkpoints.push({ x: p.x, y: p.y + 0.025, z: p.z }); // y + half thickness
         }
         if (p.isGoal) mesh.isGoal = true;
     });
