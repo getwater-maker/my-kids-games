@@ -9,6 +9,9 @@ let direction = new THREE.Vector3();
 let chaos = 0;
 let gameState = 'START';
 let interactables = [];
+let doctorObj;
+let scoldingTimer = 0;
+let scoldTriggered = false;
 
 // UI
 const chaosFill = document.getElementById('chaos-fill');
@@ -73,7 +76,7 @@ function createHospitalRoom() {
     createInteractable('wheelchair', -5, 0, -5, 0x2d3436);
     createInteractable('tv', 5, 2, -14, 0x0984e3);
     createInteractable('medicine', -2, 1, -8, 0xd63031);
-    createInteractable('doctor', 8, 0, -5, 0xffffff);
+    doctorObj = createInteractable('doctor', 8, 0, -5, 0xffffff);
 }
 
 function createWall(x, z, w, h, d, color) {
@@ -111,6 +114,7 @@ function createInteractable(type, x, y, z, color) {
 
     scene.add(group);
     interactables.push(group);
+    return group;
 }
 
 function setupInput() {
@@ -141,11 +145,26 @@ function performPrank() {
 
         if (target.userData.type && !target.userData.active) {
             triggerPrankEffect(target);
-            chaos += 20;
+            chaos += 10;
             updateHUD();
-            if (chaos >= 100) triggerWin();
+
+            if (chaos >= 60 && !scoldTriggered) {
+                triggerScolding();
+            } else if (chaos >= 100) {
+                triggerWin();
+            }
         }
     }
+}
+
+function triggerScolding() {
+    scoldTriggered = true;
+    gameState = 'SCOLDING';
+    scoldingTimer = performance.now();
+    announce("👨‍⚕️ 의사: 야!! 너 정체가 뭐야! 여기서 뭐 하는 거야!!");
+
+    // Doctor looks at player
+    doctorObj.lookAt(camera.position.x, doctorObj.position.y, camera.position.z);
 }
 
 function triggerPrankEffect(obj) {
@@ -186,9 +205,15 @@ function triggerWin() {
 }
 
 function updateMovement() {
-    if (gameState !== 'PLAYING') return;
+    const activeStates = ['PLAYING', 'CHASE', 'SCOLDING'];
+    if (!activeStates.includes(gameState)) return;
 
     const delta = 0.1;
+    let currentSpeed = 100.0;
+
+    // Slow down during scolding
+    if (gameState === 'SCOLDING') currentSpeed = 20.0;
+
     velocity.x -= velocity.x * 10.0 * delta;
     velocity.z -= velocity.z * 10.0 * delta;
 
@@ -196,11 +221,34 @@ function updateMovement() {
     direction.x = Number(moveRight) - Number(moveLeft);
     direction.normalize();
 
-    if (moveForward || moveBackward) velocity.z -= direction.z * 400.0 * delta;
-    if (moveLeft || moveRight) velocity.x -= direction.x * 400.0 * delta;
+    if (moveForward || moveBackward) velocity.z -= direction.z * currentSpeed * delta;
+    if (moveLeft || moveRight) velocity.x -= direction.x * currentSpeed * delta;
 
     controls.moveRight(-velocity.x * delta);
     controls.moveForward(-velocity.z * delta);
+}
+
+function updateAI() {
+    if (gameState === 'SCOLDING') {
+        const now = performance.now();
+        if (now - scoldingTimer > 3000) {
+            gameState = 'CHASE';
+            announce("🏃‍♂️ 미친 의사: 거기 안 서!! 따라와!!");
+        }
+    }
+
+    if (gameState === 'CHASE') {
+        // Doctor follows player
+        const dir = new THREE.Vector3().subVectors(camera.position, doctorObj.position);
+        dir.y = 0;
+        dir.normalize();
+        doctorObj.position.add(dir.multiplyScalar(0.08));
+        doctorObj.lookAt(camera.position.x, doctorObj.position.y, camera.position.z);
+
+        if (doctorObj.position.distanceTo(camera.position) < 1.5) {
+            triggerGameOver();
+        }
+    }
 
     // Update animated objects
     interactables.forEach(obj => {
@@ -211,9 +259,17 @@ function updateMovement() {
     });
 }
 
+function triggerGameOver() {
+    gameState = 'LOSE';
+    announce("💀 의사 선생님께 잡혔습니다...");
+    controls.unlock();
+    setTimeout(() => location.reload(), 2000);
+}
+
 function animate() {
     requestAnimationFrame(animate);
     updateMovement();
+    updateAI();
     renderer.render(scene, camera);
 }
 
