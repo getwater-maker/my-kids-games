@@ -2,7 +2,7 @@
 
 const CONFIG = {
     walkSpeed: 0.05,
-    runSpeed: 1.0,
+    runSpeed: 0.09,
     jumpForce: 0.22,
     gravity: 0.01,
     respawnY: -20,
@@ -102,23 +102,36 @@ function createMap() {
         createBox(5, 3, i, 0.2, 6, 0.2, 0x2c3e50);
     }
 
-    // 2. Jump Section 1: Concrete Platforms
     const path = [
+        // --- STAGE 1: CONCRETE ESCAPE ---
         { x: 10, y: 1, z: 0, w: 3, d: 3, color: 0xbdc3c7 },
         { x: 15, y: 2.5, z: 2, w: 2, d: 2 },
         { x: 20, y: 4, z: -1, w: 2, d: 2 },
         { x: 26, y: 5, z: 1, w: 4, d: 4, checkpoint: true, color: 0x2980b9 }, // Checkpoint 1
 
-        // 3. Jump Section 2: Police Car Roofs (themed)
-        { x: 32, y: 4, z: 3, w: 2, d: 3, color: 0x2c3e50 },
-        { x: 38, y: 3.5, z: 1, w: 2, d: 3, color: 0x2c3e50 },
-        { x: 44, y: 4.5, z: -2, w: 2, d: 3, color: 0x2c3e50 },
-        { x: 50, y: 6, z: 0, w: 5, d: 5, checkpoint: true, color: 0x2980b9 }, // Checkpoint 2
+        // --- STAGE 2: POLICE CAR ROOFTOPS ---
+        { x: 32, y: 4.5, z: 3, w: 2, d: 3, color: 0x2c3e50 },
+        { x: 38, y: 4, z: 1, w: 2, d: 3, color: 0x2c3e50 },
+        { x: 44, y: 5.5, z: -2, w: 2, d: 3, color: 0x2c3e50 },
+        { x: 50, y: 6.5, z: 0, w: 5, d: 5, checkpoint: true, color: 0x2980b9 }, // Checkpoint 2
 
-        // 4. Jump Section 3: Floating Pipes & High Stakes
-        { x: 58, y: 7, z: 2, w: 1, d: 5, color: 0xe67e22 },
-        { x: 65, y: 8.5, z: -1, w: 1, d: 5, color: 0xe67e22 },
-        { x: 72, y: 10, z: 3, w: 5, d: 5, color: 0xf1c40f, isGoal: true } // GOAL
+        // --- STAGE 3: INDUSTRIAL PIPES ---
+        { x: 58, y: 7.5, z: 2, w: 1, d: 6, color: 0xe67e22 },
+        { x: 65, y: 9, z: -1, w: 1, d: 6, color: 0xe67e22 },
+        { x: 72, y: 10, z: 2, w: 1, d: 6, color: 0xe67e22 },
+        { x: 80, y: 11, z: 0, w: 5, d: 5, checkpoint: true, color: 0x2980b9 }, // Checkpoint 3
+
+        // --- STAGE 4: HIGH-VOLTAGE WIRES (Thin platforms) ---
+        { x: 88, y: 12, z: 3, w: 6, d: 0.5, color: 0x1e272e },
+        { x: 97, y: 13, z: -2, w: 6, d: 0.5, color: 0x1e272e },
+        { x: 106, y: 14.5, z: 1, w: 6, d: 0.5, color: 0x1e272e },
+        { x: 115, y: 15.5, z: 0, w: 6, d: 6, checkpoint: true, color: 0x2980b9 }, // Checkpoint 4
+
+        // --- STAGE 5: FINAL ROOFTOP & HELIPAD ---
+        { x: 125, y: 16.5, z: 3, w: 3, d: 3, color: 0xc0392b },
+        { x: 132, y: 17.5, z: -2, w: 2.5, d: 2.5, color: 0xc0392b },
+        { x: 139, y: 19, z: 4, w: 2, d: 2, color: 0xc0392b },
+        { x: 148, y: 20, z: 0, w: 8, d: 8, color: 0xf1c40f, isGoal: true } // FINAL GOAL (Helipad)
     ];
 
     path.forEach(p => {
