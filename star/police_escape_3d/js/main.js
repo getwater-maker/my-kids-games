@@ -1,12 +1,12 @@
 // star/police_escape_3d/js/main.js
 
 const CONFIG = {
-    walkSpeed: 12.0, // Speed per second
-    runSpeed: 20.0,
-    jumpForce: 15.0,
-    gravity: 45.0,
+    walkSpeed: 10.0,
+    runSpeed: 16.0,
+    jumpForce: 14.0,
+    gravity: 42.0,
     respawnY: -50,
-    eyeHeight: 1.6,
+    eyeHeight: 1.8, // Slightly higher for better perspective
     startPos: { x: 0, y: 0.25, z: 0 }
 };
 
@@ -34,7 +34,7 @@ function init() {
     finalTime = document.getElementById('final-time');
     finalDeaths = document.getElementById('final-deaths');
 
-    clock = new THREE.Clock();
+    clock = new THREE.Clock(false); // DO NOT start automatically
 
     scene = new THREE.Scene();
     scene.background = new THREE.Color(0x87ceeb); // Sky Blue
@@ -88,11 +88,13 @@ function createMap() {
     checkpoints = []; // Clear and rebuild
 
     // Stage 1 Start: The Jail
-    createBox(0, 0, 0, 20, 0.5, 20, 0x4a4a4a); // Larger floor
-    createBox(-10, 3, 0, 0.5, 6, 20, 0x333333); // Back wall
-    createBox(0, 3, -10, 20, 6, 0.5, 0x333333); // Side wall
-    createBox(0, 3, 10, 20, 6, 0.5, 0x333333);  // Side wall
-    createBox(0, 6, 0, 20, 0.5, 20, 0x333333); // Ceiling
+    // Stage 1 Start: The Jail
+    // Floor is MUCH thicker (4.0) to prevent tunneling
+    createBox(0, -1.75, 0, 20, 4.0, 20, 0x4a4a4a); // Floor (top is still at 0.25)
+    createBox(-10, 3, 0, 2.0, 6, 20, 0x333333); // Thicker Back wall
+    createBox(0, 3, -10, 20, 6, 2.0, 0x333333); // Thicker Side wall
+    createBox(0, 3, 10, 20, 6, 2.0, 0x333333);  // Thicker Side wall
+    createBox(0, 6.25, 0, 20, 1.0, 20, 0x333333); // Ceiling
 
     // Prison Bars with an Exit
     for (let i = -9; i <= 9; i += 2.5) {
@@ -162,7 +164,9 @@ function setupInput() {
 function updateMovement() {
     if (gameState !== 'PLAYING') return;
 
-    const delta = clock.getDelta();
+    let delta = clock.getDelta();
+    if (delta > 0.1) delta = 0.1; // CRITICAL: Cap delta to prevent tunneling out of map
+
     const speed = keys['ShiftLeft'] ? CONFIG.runSpeed : CONFIG.walkSpeed;
     const oldPos = camera.position.clone();
 
