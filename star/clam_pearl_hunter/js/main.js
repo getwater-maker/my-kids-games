@@ -100,20 +100,26 @@ function startGame() {
 function travel(target) {
     if (gameState !== 'PLAYING') return;
 
-    // Auto-toggle if no target
-    if (!target) {
-        target = (currentLoc === 'MUDFLAT') ? 'HOME' : 'MUDFLAT';
+    // Fix: If called as an event listener, 'target' will be an event object
+    // Handle both manual calls and click events
+    let newLoc = (typeof target === 'string') ? target : null;
+
+    if (!newLoc) {
+        newLoc = (currentLoc === 'MUDFLAT') ? 'HOME' : 'MUDFLAT';
     }
 
-    currentLoc = target;
-    locationEl.textContent = target === 'MUDFLAT' ? '🌊 갯벌 (Mudflat)' : '🏠 집 (Home)';
+    currentLoc = newLoc;
+    locationEl.textContent = newLoc === 'MUDFLAT' ? '🌊 갯벌 (Mudflat)' : '🏠 집 (Home)';
 
-    if (target === 'HOME') {
+    const travelBtn = document.getElementById('travel-btn');
+    if (newLoc === 'HOME') {
         homeScreen.classList.remove('hidden');
+        travelBtn.textContent = '🌊 갯벌로 수집하러 가기';
         renderHomeClams();
     } else {
         homeScreen.classList.add('hidden');
         shopScreen.classList.add('hidden');
+        travelBtn.textContent = '🏠 집으로 돌아가기';
     }
 }
 
