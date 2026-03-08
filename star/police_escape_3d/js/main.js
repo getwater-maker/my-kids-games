@@ -2,7 +2,7 @@
 
 const CONFIG = {
     walkSpeed: 0.05,
-    runSpeed: 0.08,
+    runSpeed: 1.0,
     jumpForce: 0.22,
     gravity: 0.01,
     respawnY: -20,
