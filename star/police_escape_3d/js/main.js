@@ -2,11 +2,11 @@
 
 const CONFIG = {
     walkSpeed: 0.05,
-    runSpeed: 0.09,
+    runSpeed: 0.08,
     jumpForce: 0.22,
     gravity: 0.01,
     respawnY: -20,
-    startPos: { x: 0, y: 0.5, z: 0 } // Lowered start pos
+    startPos: { x: 0, y: 0.25, z: 0 } // Adjusted to floor top (0 + 0.5/2)
 };
 
 let scene, camera, renderer, controls;
@@ -34,11 +34,12 @@ function init() {
     finalDeaths = document.getElementById('final-deaths');
 
     scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x34495e); // Dark Blueish Grey
-    scene.fog = new THREE.Fog(0x34495e, 10, 50);
+    scene.background = new THREE.Color(0x1e3799); // Vibrant Police Blue
+    scene.fog = new THREE.Fog(0x1e3799, 5, 60);
 
     camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    camera.position.set(CONFIG.startPos.x, CONFIG.startPos.y + 1.7, CONFIG.startPos.z);
+    // Initial camera height: Floor top (0.25) + Player Eye Height (1.2) = 1.45
+    camera.position.set(CONFIG.startPos.x, CONFIG.startPos.y + 1.2, CONFIG.startPos.z);
 
     renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
