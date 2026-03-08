@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D 주차 마스터: 리얼 드라이빙 🚗</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Jua&family=Outfit:wght@400;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div id="game-container">
+        <!-- HUD -->
+        <div id="hud" class="hidden">
+            <div class="hud-top">
+                <div class="stats-box">
+                    <span id="level-text">LEVEL 1</span>
+                    <span id="timer-text">00:00</span>
+                </div>
+            </div>
+            <div class="gear-indicator">
+                <div id="gear-d" class="gear active">D</div>
+                <div id="gear-r" class="gear">R</div>
+            </div>
+            <div class="speedometer">
+                <div class="speed-value" id="speed-text">0</div>
+                <div class="speed-unit">KM/H</div>
+            </div>
+            <div class="damage-bar">
+                <div class="damage-fill" id="damage-fill"></div>
+            </div>
+        </div>
+
+        <!-- Screens -->
+        <div id="start-screen" class="screen">
+            <div class="menu-card">
+                <h1 class="glow-text">🚗 3D 주차 마스터</h1>
+                <p>정교한 컨트롤로 완벽한 주차에 도전하세요!</p>
+                <div class="controls-guide">
+                    <div class="guide-item"><span>W / S</span> 가속 / 후진</div>
+                    <div class="guide-item"><span>A / D</span> 핸들 조작</div>
+                    <div class="guide-item"><span>SPACE</span> 핸드 브레이크</div>
+                    <div class="guide-item"><span>R</span> 기어 변속 (D ↔ R)</div>
+                </div>
+                <button id="start-btn" class="primary-btn">게임 시작</button>
+            </div>
+        </div>
+
+        <div id="level-complete" class="screen hidden">
+            <div class="menu-card win-card">
+                <h2>✨ 주차 성공!</h2>
+                <p id="result-time">소요 시간: 00:00</p>
+                <button id="next-level-btn" class="primary-btn">다음 단계</button>
+            </div>
+        </div>
+
+        <div id="game-over" class="screen hidden">
+            <div class="menu-card lose-card">
+                <h2>💥 충돌 발생!</h2>
+                <p>차량이 파손되었습니다.</p>
+                <button onclick="location.reload()" class="primary-btn">다시 시도</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="js/main.js"></script>
+</body>
+
+</html>
