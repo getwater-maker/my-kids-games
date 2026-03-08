@@ -64,9 +64,9 @@ function createHospitalRoom() {
     scene.add(floor);
 
     // Walls
-    createWall(0, -15, 30, 4, 0x81ecec); // Back
-    createWall(-15, 0, 4, 30, 0x81ecec); // Left
-    createWall(15, 0, 4, 30, 0x81ecec);  // Right
+    createWall(0, -15, 30, 4, 0.5, 0x81ecec); // Back
+    createWall(-15, 0, 0.5, 4, 30, 0x81ecec); // Left
+    createWall(15, 0, 0.5, 4, 30, 0x81ecec);  // Right
 
     // Items
     createInteractable('bed', 0, 0, -10, 0x00b894);
@@ -76,12 +76,10 @@ function createHospitalRoom() {
     createInteractable('doctor', 8, 0, -5, 0xffffff);
 }
 
-function createWall(x, z, w, h, color) {
-    const geo = new THREE.BoxGeometry(w, h, 0.5);
-    if (w < 1) geo.dispose(); // Adjust for side walls
-    const wallGeo = (w < 1) ? new THREE.BoxGeometry(0.5, h, 30) : new THREE.BoxGeometry(w, h, 0.5);
+function createWall(x, z, w, h, d, color) {
+    const geo = new THREE.BoxGeometry(w, h, d);
     const mat = new THREE.MeshPhongMaterial({ color: color });
-    const wall = new THREE.Mesh(wallGeo, mat);
+    const wall = new THREE.Mesh(geo, mat);
     wall.position.set(x, h / 2, z);
     scene.add(wall);
 }
@@ -99,7 +97,7 @@ function createInteractable(type, x, y, z, color) {
     } else if (type === 'medicine') {
         geo = new THREE.CylinderGeometry(0.2, 0.2, 0.5);
     } else if (type === 'doctor') {
-        geo = new THREE.CapsuleGeometry(0.4, 0.8, 4, 8);
+        geo = new THREE.CylinderGeometry(0.4, 0.4, 1.6);
     }
 
     const mat = new THREE.MeshPhongMaterial({ color: color });
