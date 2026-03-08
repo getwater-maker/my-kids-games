@@ -196,6 +196,15 @@ function setupGame1() {
     lightLoop();
 }
 
+function speak(text, rate = 1.0) {
+    if (!window.speechSynthesis) return;
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'ko-KR';
+    utterance.rate = rate;
+    window.speechSynthesis.cancel();
+    window.speechSynthesis.speak(utterance);
+}
+
 function lightLoop() {
     if (currentMode !== 'GAME_1' || isDead) return;
 
@@ -208,7 +217,16 @@ function lightLoop() {
     interactionHint.style.background = "#4caf50";
     dollHead.rotation.y = Math.PI; // Face away
 
-    const greenTime = 2000 + Math.random() * 3000;
+    const greenTime = 5000 + Math.random() * 4000;
+
+    // Voice Start
+    speak("무궁화 꽃이 피었습니다!", 0.8 + Math.random() * 0.5);
+
+    // Countdown Warning
+    setTimeout(() => { if (currentMode === 'GAME_1' && !isDead) { speak("3", 1.2); statusInd.textContent = "3!!"; } }, greenTime - 3000);
+    setTimeout(() => { if (currentMode === 'GAME_1' && !isDead) { speak("2", 1.2); statusInd.textContent = "2!!"; } }, greenTime - 2000);
+    setTimeout(() => { if (currentMode === 'GAME_1' && !isDead) { speak("1", 1.2); statusInd.textContent = "1!!"; } }, greenTime - 1000);
+
     setTimeout(() => {
         if (currentMode !== 'GAME_1' || isDead) return;
 
