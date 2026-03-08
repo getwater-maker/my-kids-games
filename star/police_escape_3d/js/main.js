@@ -1,9 +1,9 @@
 // star/police_escape_3d/js/main.js
 
 const CONFIG = {
-    walkSpeed: 0.01,
-    runSpeed: 0.05,
-    jumpForce: 0.22, // Slightly increased for the faster sprint
+    walkSpeed: 0.03,
+    runSpeed: 0.04,
+    jumpForce: 0.22,
     gravity: 0.01,
     respawnY: -20,
     startPos: { x: 0, y: 0.5, z: 0 } // Lowered start pos
