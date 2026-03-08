@@ -50,6 +50,7 @@ async function init() {
 
     // 3D Setup
     scene = new THREE.Scene();
+    scene.background = new THREE.Color(0xaaccff); // Sky blue
     camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
     renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
@@ -58,10 +59,11 @@ async function init() {
 
     clock = new THREE.Clock();
 
-    const ambient = new THREE.AmbientLight(0xffffff, 0.5);
+    const ambient = new THREE.AmbientLight(0xffffff, 0.6);
     scene.add(ambient);
-    const sun = new THREE.DirectionalLight(0xffffff, 0.8);
+    const sun = new THREE.DirectionalLight(0xffffff, 1.0);
     sun.position.set(50, 100, 50);
+    sun.castShadow = true;
     scene.add(sun);
 
     // Initial Empty Scene
@@ -124,6 +126,10 @@ function startStage(num) {
     hud.classList.remove('hidden');
     resultPage.classList.add('hidden');
     document.getElementById('game-title').textContent = `GAME 0${num} 진행 중`;
+
+    // Clear HUD UI from previous games
+    statusInd.style.display = 'none';
+    interactionHint.textContent = "";
 
     isDead = false;
     timer = 60;
@@ -283,20 +289,54 @@ function setupGame2() {
 }
 
 // --- GAME 3: TUG OF WAR ---
+let game3Rope;
 function setupGame3() {
-    // Basic Visualization
-    const ropeGeo = new THREE.CylinderGeometry(0.2, 0.2, 100, 8);
+    // Platforms (High Alt)
+    const platGeo = new THREE.BoxGeometry(40, 20, 20);
+    const platMat = new THREE.MeshPhongMaterial({ color: 0x333333 });
+
+    // Player side
+    const p1 = new THREE.Mesh(platGeo, platMat);
+    p1.position.set(-30, -5, 0);
+    scene.add(p1);
+
+    // Enemy side
+    const p2 = new THREE.Mesh(platGeo, platMat);
+    p2.position.set(30, -5, 0);
+    scene.add(p2);
+
+    // Rope
+    const ropeGeo = new THREE.CylinderGeometry(0.3, 0.3, 100, 8);
     const ropeMat = new THREE.MeshPhongMaterial({ color: 0x8d6e63 });
-    const rope = new THREE.Mesh(ropeGeo, ropeMat);
-    rope.rotation.z = Math.PI / 2;
-    rope.position.y = 5;
-    scene.add(rope);
+    game3Rope = new THREE.Mesh(ropeGeo, ropeMat);
+    game3Rope.rotation.z = Math.PI / 2;
+    game3Rope.position.y = 8;
+    scene.add(game3Rope);
+
+    // Participants (Player Team)
+    for (let i = 0; i < 5; i++) {
+        const p = new THREE.Mesh(new THREE.BoxGeometry(1.2, 2, 0.8), new THREE.MeshPhongMaterial({ color: 0x037a76 }));
+        p.position.set(-15 - i * 2, 6, 0);
+        game3Rope.add(p); // Attach to rope for movement
+    }
+
+    // Participants (Enemy Team)
+    for (let i = 0; i < 5; i++) {
+        const e = new THREE.Mesh(new THREE.BoxGeometry(1.2, 2, 0.8), new THREE.MeshPhongMaterial({ color: 0xed1c4d }));
+        e.position.set(15 + i * 2, 6, 0);
+        game3Rope.add(e);
+    }
 
     game3TugOfWarProgress = 0.5;
+    camera.position.set(0, 15, 30);
+    camera.lookAt(0, 5, 0);
+
+    interactionHint.textContent = "마우스를 빠르게 광클하세요!! (CLICK FAST)";
+    interactionHint.style.background = "#037a76";
+
     window.onmousedown = () => {
         if (currentMode === 'GAME_3' && !isDead) {
-            game3TugOfWarProgress += 0.05;
-            camera.position.x += 0.2;
+            game3TugOfWarProgress += 0.03;
         }
     }
 }
@@ -349,7 +389,12 @@ function animate() {
         if (currentMode === 'GAME_1') {
             updateGame1(delta);
         } else if (currentMode === 'GAME_3') {
-            game3TugOfWarProgress -= delta * 0.15; // AI pulls back
+            game3TugOfWarProgress -= delta * 0.12; // AI pulls back
+            // Visual feedback: Move rope
+            game3Rope.position.x = (game3TugOfWarProgress - 0.5) * 40;
+            camera.position.x = game3Rope.position.x * 0.5;
+            camera.lookAt(game3Rope.position.x, 5, 0);
+
             if (game3TugOfWarProgress < 0.2) eliminate("상대팀의 힘에 밀려 떨어졌습니다!");
             if (game3TugOfWarProgress > 0.8) triggerWin(3, 1000000);
         }
