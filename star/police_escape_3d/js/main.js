@@ -2,8 +2,8 @@
 
 const CONFIG = {
     walkSpeed: 0.01,
-    runSpeed: 0.01,
-    jumpForce: 0.2, // Adjusted for slower speed
+    runSpeed: 0.05,
+    jumpForce: 0.22, // Slightly increased for the faster sprint
     gravity: 0.01,
     respawnY: -20,
     startPos: { x: 0, y: 0.5, z: 0 } // Lowered start pos
