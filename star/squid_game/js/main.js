@@ -145,6 +145,7 @@ function restartCurrentStage() {
 }
 
 // --- GAME 1: RED LIGHT GREEN LIGHT ---
+let npcs = [];
 function setupGame1() {
     const groundGeo = new THREE.PlaneGeometry(100, 1000);
     const groundMat = new THREE.MeshPhongMaterial({ color: 0xedc9af });
@@ -168,11 +169,28 @@ function setupGame1() {
     doll = dollGroup;
 
     // Player
-    player = new THREE.Mesh(new THREE.BoxGeometry(1, 2, 1), new THREE.MeshPhongMaterial({ color: 0x037a76 }));
+    player = new THREE.Mesh(new THREE.BoxGeometry(1.2, 2, 0.8), new THREE.MeshPhongMaterial({ color: 0x037a76 }));
     player.position.set(0, 1, 50);
+    player.castShadow = true;
     scene.add(player);
 
-    camera.position.set(0, 5, player.position.z + 10);
+    // NPC Participants
+    npcs = [];
+    for (let i = 0; i < 40; i++) {
+        const npc = new THREE.Mesh(new THREE.BoxGeometry(1.2, 2, 0.8), new THREE.MeshPhongMaterial({ color: 0x014d4e }));
+        const rx = (Math.random() - 0.5) * 40;
+        const rz = 40 + Math.random() * 20;
+        npc.position.set(rx, 1, rz);
+        npc.userData = {
+            speed: 8 + Math.random() * 4,
+            isDead: false,
+            reactionTime: Math.random() * 0.5
+        };
+        scene.add(npc);
+        npcs.push(npc);
+    }
+
+    camera.position.set(0, 5, player.position.z + 15);
     camera.lookAt(player.position.x, 2, player.position.z - 5);
 
     lightLoop();
@@ -186,6 +204,8 @@ function lightLoop() {
     statusInd.textContent = "GREEN LIGHT";
     statusInd.className = "green";
     statusInd.style.display = "block";
+    interactionHint.textContent = "W 키를 눌러 전진하세요! (MOVE)";
+    interactionHint.style.background = "#4caf50";
     dollHead.rotation.y = Math.PI; // Face away
 
     const greenTime = 2000 + Math.random() * 3000;
@@ -196,9 +216,11 @@ function lightLoop() {
         lightState = 'RED';
         statusInd.textContent = "RED LIGHT";
         statusInd.className = "red";
+        interactionHint.textContent = "멈추세요! 움직이면 죽습니다! (STOP)";
+        interactionHint.style.background = "#ed1c4d";
         dollHead.rotation.y = 0; // Face player
 
-        setTimeout(() => { if (currentMode === 'GAME_1') lightLoop(); }, 1500 + Math.random() * 2000);
+        setTimeout(() => { if (currentMode === 'GAME_1' && !isDead) lightLoop(); }, 1500 + Math.random() * 2000);
     }, greenTime);
 }
 
@@ -332,13 +354,50 @@ function updateGame1(delta) {
         if (lightState === 'RED') {
             eliminate("움직임이 감지되었습니다!");
         } else {
-            // Move forward
+            // Player walk animation and movement
             player.position.z -= CONFIG.walkSpeed * delta;
-            camera.position.z = player.position.z + 10;
+            // Bobbing animation for walking
+            player.position.y = 1.0 + Math.abs(Math.sin(Date.now() * 0.01)) * 0.2;
+            camera.position.z = player.position.z + 15;
+            camera.position.x = player.position.x;
         }
+    } else {
+        player.position.y = 1.0;
     }
 
-    if (player.position.z < -185) {
+    // NPC movement logic
+    npcs.forEach(npc => {
+        if (npc.userData.isDead) {
+            // Death state: red color and lying down
+            npc.rotation.x = Math.PI / 2;
+            npc.position.y = 0.5;
+            npc.material.color.set(0xff0000);
+            return;
+        }
+
+        if (lightState === 'GREEN') {
+            // Random forward speed for variety
+            npc.position.z -= npc.userData.speed * delta;
+            // Independent bobbing for NPCs
+            npc.position.y = 1.0 + Math.abs(Math.sin(Date.now() * 0.008 + npc.position.x)) * 0.2;
+        } else {
+            // NPCs have a chance to fail to stop based on their individual reaction time
+            // More likely to die if they have high reaction time and just turned red
+            if (Math.random() < 0.001 * npc.userData.reactionTime * 5) {
+                npc.userData.isDead = true;
+            } else {
+                npc.position.y = 1.0;
+            }
+        }
+
+        // Final line check for NPCs
+        if (npc.position.z < -185) {
+            npc.position.z = -185;
+            npc.position.y = 1.0;
+        }
+    });
+
+    if (player.position.z < -188) {
         triggerWin(1, 456000);
     }
 }
