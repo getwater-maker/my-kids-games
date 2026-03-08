@@ -222,25 +222,28 @@ function checkWallCollision(oldPos) {
 
 function checkFloorCollision() {
     let onFloor = false;
+    const playerX = camera.position.x;
+    const playerZ = camera.position.z;
+    const playerY = camera.position.y;
+    const eyeHeight = 1.45;
 
     platforms.forEach(p => {
         const box = new THREE.Box3().setFromObject(p);
-        const playerFeetPos = camera.position.clone().setY(camera.position.y - 1.2);
 
-        // Simple overlap check with tolerance
-        if (playerFeetPos.x >= box.min.x && playerFeetPos.x <= box.max.x &&
-            playerFeetPos.z >= box.min.z && playerFeetPos.z <= box.max.z) {
+        // Horizontal check (with 0.3 unit margin for easier landing)
+        const margin = 0.3;
+        if (playerX >= box.min.x - margin && playerX <= box.max.x + margin &&
+            playerZ >= box.min.z - margin && playerZ <= box.max.z + margin) {
 
             const floorTop = box.max.y;
-            if (camera.position.y - 1.2 <= floorTop && camera.position.y - 1.2 >= floorTop - 0.5) {
-                if (velocity.y <= 0) {
-                    camera.position.y = floorTop + 1.2;
-                    velocity.y = 0;
-                    isJumping = false;
-                    onFloor = true;
-                    if (p.isCheckpoint) currentCheckpointIdx = p.cpIdx;
-                    if (p.isGoal) triggerWin();
-                }
+            // Floor landing check: if player feet are within 0.6 units of floor top
+            if (velocity.y <= 0 && playerY - eyeHeight <= floorTop && playerY - eyeHeight >= floorTop - 0.6) {
+                camera.position.y = floorTop + eyeHeight;
+                velocity.y = 0;
+                isJumping = false;
+                onFloor = true;
+                if (p.isCheckpoint) currentCheckpointIdx = p.cpIdx;
+                if (p.isGoal) triggerWin();
             }
         }
     });
