@@ -352,6 +352,11 @@ function triggerWin() {
 function triggerGameOver() {
     gameState = 'LOSE';
     loseScreen.classList.remove('hidden');
+
+    // Auto redirect after 2 seconds
+    setTimeout(() => {
+        location.href = '../hospital_prank_3d/index.html';
+    }, 2000);
 }
 
 function animate() {
