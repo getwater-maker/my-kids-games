@@ -318,25 +318,30 @@ function animate() {
     renderer.render(scene, camera);
 }
 
+const activeKeys = {};
+window.addEventListener('keydown', (e) => { activeKeys[e.code] = true; });
+window.addEventListener('keyup', (e) => { activeKeys[e.code] = false; });
+
 function updateGame1(delta) {
+    if (isDead) return;
+
+    // Check for movement keys
     const isMoving = activeKeys['KeyW'] || activeKeys['ArrowUp'];
-    if (isMoving && !isDead) {
+
+    if (isMoving) {
         if (lightState === 'RED') {
             eliminate("움직임이 감지되었습니다!");
         } else {
+            // Move forward
             player.position.z -= CONFIG.walkSpeed * delta;
             camera.position.z = player.position.z + 10;
         }
     }
 
-    if (player.position.z < -180) {
+    if (player.position.z < -185) {
         triggerWin(1, 456000);
     }
 }
-
-const activeKeys = {};
-window.onkeydown = (e) => activeKeys[e.code] = true;
-window.onkeyup = (e) => activeKeys[e.code] = false;
 
 window.onload = init;
 window.addEventListener('resize', () => {
