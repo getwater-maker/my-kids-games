@@ -119,19 +119,19 @@ function createMap() {
         { x: 58, y: 7.5, z: 2, w: 1, d: 6, color: 0xe67e22 },
         { x: 65, y: 9, z: -1, w: 1, d: 6, color: 0xe67e22 },
         { x: 72, y: 10, z: 2, w: 1, d: 6, color: 0xe67e22 },
-        { x: 80, y: 11, z: 0, w: 5, d: 5, checkpoint: true, color: 0x2980b9 }, // Checkpoint 3
+        { x: 78, y: 11, z: 0, w: 5, d: 5, checkpoint: true, color: 0x2980b9 }, // Checkpoint 3 (Closer)
 
-        // --- STAGE 4: HIGH-VOLTAGE WIRES (Thin platforms) ---
-        { x: 88, y: 12, z: 3, w: 6, d: 0.5, color: 0x1e272e },
-        { x: 97, y: 13, z: -2, w: 6, d: 0.5, color: 0x1e272e },
-        { x: 106, y: 14.5, z: 1, w: 6, d: 0.5, color: 0x1e272e },
-        { x: 115, y: 15.5, z: 0, w: 6, d: 6, checkpoint: true, color: 0x2980b9 }, // Checkpoint 4
+        // --- STAGE 4: HIGH-VOLTAGE WIRES ---
+        { x: 85, y: 12, z: 3, w: 6, d: 0.5, color: 0x1e272e },
+        { x: 92, y: 13, z: -2, w: 6, d: 0.5, color: 0x1e272e },
+        { x: 99, y: 14, z: 1, w: 6, d: 0.5, color: 0x1e272e },
+        { x: 106, y: 15, z: 0, w: 6, d: 6, checkpoint: true, color: 0x2980b9 }, // Checkpoint 4 (Closer)
 
         // --- STAGE 5: FINAL ROOFTOP & HELIPAD ---
-        { x: 125, y: 16.5, z: 3, w: 3, d: 3, color: 0xc0392b },
-        { x: 132, y: 17.5, z: -2, w: 2.5, d: 2.5, color: 0xc0392b },
-        { x: 139, y: 19, z: 4, w: 2, d: 2, color: 0xc0392b },
-        { x: 148, y: 20, z: 0, w: 8, d: 8, color: 0xf1c40f, isGoal: true } // FINAL GOAL (Helipad)
+        { x: 114, y: 16, z: 3, w: 3, d: 3, color: 0xc0392b },
+        { x: 122, y: 17, z: -2, w: 2.5, d: 2.5, color: 0xc0392b },
+        { x: 129, y: 18, z: 2, w: 2, d: 2, color: 0xc0392b },
+        { x: 138, y: 19.5, z: 0, w: 8, d: 8, color: 0xf1c40f, isGoal: true } // FINAL GOAL (Closer)
     ];
 
     path.forEach(p => {
