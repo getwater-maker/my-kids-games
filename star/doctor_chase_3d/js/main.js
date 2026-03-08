@@ -24,20 +24,23 @@ let startTime;
 // Input
 const keys = {};
 
-// UI
-const startScreen = document.getElementById('start-screen');
-const winScreen = document.getElementById('win-screen');
-const loseScreen = document.getElementById('lose-screen');
-const hud = document.getElementById('hud');
-const pillCountText = document.getElementById('pill-count');
-const staminaFill = document.getElementById('stamina-fill');
-const timerText = document.getElementById('game-timer');
-const alertMsg = document.getElementById('alert-msg');
+// UI Elements (will be assigned in init)
+let startScreen, winScreen, loseScreen, hud, pillCountText, staminaFill, timerText, alertMsg;
 
 function init() {
+    // Assign UI
+    startScreen = document.getElementById('start-screen');
+    winScreen = document.getElementById('win-screen');
+    loseScreen = document.getElementById('lose-screen');
+    hud = document.getElementById('hud');
+    pillCountText = document.getElementById('pill-count');
+    staminaFill = document.getElementById('stamina-fill');
+    timerText = document.getElementById('game-timer');
+    alertMsg = document.getElementById('alert-msg');
+
     scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x050505);
-    scene.fog = new THREE.Fog(0x050505, 5, 30);
+    scene.background = new THREE.Color(0x0a0a0a);
+    scene.fog = new THREE.Fog(0x0a0a0a, 2, 40);
 
     camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
     camera.position.set(2, 1.7, 2);
@@ -48,16 +51,20 @@ function init() {
     document.getElementById('game-container').appendChild(renderer.domElement);
 
     // Lights
-    const ambient = new THREE.AmbientLight(0xffffff, 0.1);
+    const ambient = new THREE.AmbientLight(0xffffff, 0.4);
     scene.add(ambient);
 
+    const hemiLight = new THREE.HemisphereLight(0x404040, 0x000000, 0.5);
+    scene.add(hemiLight);
+
     // Flashlight (attached to camera)
-    const flashlight = new THREE.SpotLight(0xffffff, 1);
+    const flashlight = new THREE.SpotLight(0xffffff, 1.5);
     flashlight.position.set(0, 0, 0);
     flashlight.angle = Math.PI / 6;
     flashlight.penumbra = 0.5;
     flashlight.decay = 2;
-    flashlight.distance = 40;
+    flashlight.distance = 50;
+    flashlight.castShadow = true;
     camera.add(flashlight);
     camera.add(flashlight.target);
     flashlight.target.position.set(0, 0, -1);
@@ -69,25 +76,39 @@ function init() {
     spawnDoctors();
 
     // Controls
-    controls = new THREE.PointerLockControls(camera, document.body);
+    try {
+        controls = new THREE.PointerLockControls(camera, document.body);
+    } catch (e) {
+        console.error("PointerLockControls error:", e);
+        // Fallback or warning
+    }
 
     document.getElementById('start-btn').onclick = () => {
-        controls.lock();
+        if (controls) {
+            controls.lock();
+        } else {
+            // Direct start if controls fail
+            startGame();
+        }
     };
 
-    controls.addEventListener('lock', () => {
-        startScreen.classList.add('hidden');
-        hud.classList.remove('hidden');
-        if (gameState === 'START') {
-            gameState = 'PLAYING';
-            startTime = Date.now();
-        }
-    });
+    if (controls) {
+        controls.addEventListener('lock', startGame);
+    }
 
     window.addEventListener('keydown', (e) => keys[e.code] = true);
     window.addEventListener('keyup', (e) => keys[e.code] = false);
 
     animate();
+}
+
+function startGame() {
+    startScreen.classList.add('hidden');
+    hud.classList.remove('hidden');
+    if (gameState === 'START') {
+        gameState = 'PLAYING';
+        startTime = Date.now();
+    }
 }
 
 function generateHospitalMaze() {
