@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>커비 빙수 만들기</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div id="game-container">
+        <!-- Background -->
+        <div class="background-decor"></div>
+
+        <!-- UI Text -->
+        <h1 id="title-text">얼음을 갈아주세요!</h1>
+
+        <!-- The Shaved Ice Machine -->
+        <div id="machine">
+            <div id="machine-top">빙수 기계</div>
+            <button id="shave-btn">얼음 갈기 ❄️</button>
+        </div>
+
+        <!-- The Bowl & Ice -->
+        <div id="bowl-container">
+            <div id="ice-mound"></div>
+            <div id="bowl-front"></div>
+        </div>
+
+        <!-- Decorating Palette (hidden until ice is ready) -->
+        <div id="palette" class="hidden">
+            <div class="palette-title">빙수를 꾸며보세요! (드래그 & 드롭)</div>
+            <div class="tray">
+                <div class="draggable-item syrup" draggable="true" id="syrup">딸기 시럽🍓</div>
+                <div class="draggable-item decor-eye" draggable="true" id="eye-left">눈</div>
+                <div class="draggable-item decor-eye" draggable="true" id="eye-right">눈</div>
+                <div class="draggable-item decor-mouth" draggable="true" id="mouth">입</div>
+                <div class="draggable-item decor-blush" draggable="true" id="blush-left">볼터치</div>
+                <div class="draggable-item decor-blush" draggable="true" id="blush-right">볼터치</div>
+            </div>
+            <button id="serve-btn" class="btn hidden">완성하기!</button>
+        </div>
+
+        <!-- Confetti layer -->
+        <div id="confetti-layer"></div>
+
+        <button class="btn back-btn" onclick="location.href='../index.html'">메인화면으로</button>
+    </div>
+
+    <script src="js/main.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>놀이동산 가는 커비 🎡</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Load a relaxing font from Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div id="game-ui">
+        <canvas id="gameCanvas" width="900" height="500"></canvas>
+        <canvas id="threeCanvas" class="hidden"></canvas>
+        <div id="controls-hint">
+            <span id="hint-text">[방향키 우측] 드라이브 &nbsp;|&nbsp; [SPACE] 점프 &nbsp;|&nbsp; [마우스 클릭] 놀이기구 터치 &nbsp;|&nbsp;
+                [근처에서 F] 기구 탑승(3D)</span>
+        </div>
+
+        <!-- BGM Audio Element. We'll use a placeholder URL or prompt the user -->
+        <audio id="bgm" loop>
+            <source
+                src="https://cdn.pixabay.com/download/audio/2022/01/18/audio_d0a13f69d2.mp3?filename=cozy-place-115914.mp3"
+                type="audio/mpeg">
+        </audio>
+
+        <!-- Button to start Audio (Browsers block autoplay) -->
+        <button id="start-btn">🎵 볼륨 켜고 힐링 여행 출발하기</button>
+        <button id="home-btn" onclick="location.href='../index.html'" class="hidden">메인으로 돌아가기</button>
+    </div>
+
+    <!-- Three.js for 3D Ride View -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="js/main.js"></script>
+</body>
+
+</html>

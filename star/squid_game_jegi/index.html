@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>오징어 제기차기 - Squid Game Jegi</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Noto+Sans+KR:wght@300;500;700&display=swap"
+        rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+
+<body>
+    <div id="game-container"></div>
+
+    <div id="hud" class="hidden">
+        <div class="stat-box">
+            <span class="label">KICKS</span>
+            <span id="score" class="value">0</span>
+        </div>
+        <div id="status-indicator">GREEN LIGHT</div>
+    </div>
+
+    <div id="start-screen" class="overlay">
+        <div class="glass-card">
+            <h1 class="pink-text">오징어 제기차기</h1>
+            <p>제기가 떨어질 때 <span class="highlight">마우스 왼쪽 클릭</span>으로 차세요!<br>찰 때는 시간이 <b>0.05배</b>로 느려집니다.</p>
+            <p>"무궁화 꽃이 피었습니다!" 소리가 들리면 멈춰야 합니다.</p>
+            <button id="start-btn" class="pink-btn">참가하기</button>
+        </div>
+    </div>
+
+    <div id="game-over" class="overlay hidden">
+        <div class="glass-card">
+            <h2>탈락 (ELIMINATED)</h2>
+            <p>점수: <span id="final-score">0</span></p>
+            <button id="restart-btn" class="pink-btn">다시 도전</button>
+            <button class="secondary-btn" onclick="location.href='../index.html'">메인 메뉴</button>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+</body>
+
+</html>

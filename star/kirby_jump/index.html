@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>커비 점프맵</title>
+    <link rel="stylesheet" href="style.css">
+    <script>
+        window.onerror = function (msg, url, line, col, error) {
+            alert("에러 발생!\n" + msg + "\n" + url + ":" + line);
+        };
+    </script>
+</head>
+
+<body>
+    <div id="game-container">
+        <!-- UI Layer -->
+        <div id="ui-layer">
+            <div id="hud">
+                <span id="stage-display">Stage 1</span>
+                <span id="score-display">점수: 0</span>
+            </div>
+
+            <div id="start-screen" class="screen active">
+                <h1>커비 점프맵</h1>
+                <p>방향키로 이동, 위쪽 화살표(또는 스페이스바)로 점프!</p>
+                <p>공중에서 점프를 여러 번 누르면 <span style="color: #ff4081; font-weight: bold;">호버링(날기)</span>을 할 수 있어요.</p>
+                <button id="start-btn" class="action-btn">게임 시작 (1단계부터)</button>
+            </div>
+
+            <div id="game-over-screen" class="screen">
+                <h1 style="color: #d32f2f;">게임 오버</h1>
+                <p id="game-over-reason">구멍에 빠졌습니다!</p>
+                <button id="restart-btn" class="action-btn">다시 하기</button>
+            </div>
+
+            <div id="stage-clear-screen" class="screen">
+                <h1 style="color: #388e3c;">스테이지 클리어!</h1>
+                <p>다음 단계로 넘어갑니다.</p>
+                <button id="next-stage-btn" class="action-btn">다음 단계</button>
+            </div>
+        </div>
+
+        <!-- Game Canvas -->
+        <canvas id="game-canvas" width="800" height="600"></canvas>
+    </div>
+
+    <script src="js/main.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,261 @@
+:root {
+    --bg-color: #7bed9f;
+    --shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+    --border-radius: 20px;
+}
+
+body {
+    font-family: 'Jua', sans-serif;
+    background-color: #2ed573;
+    background-image: linear-gradient(135deg, #7bed9f 0%, #2ed573 100%);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    color: #2d3436;
+}
+
+.app-container {
+    width: 95vw;
+    height: 95vh;
+    background-color: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border: 5px solid #2ed573;
+    user-select: none;
+}
+
+.game-header {
+    background-color: #2ed573;
+    color: white;
+    padding: 15px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.game-header h1 {
+    font-size: 2rem;
+    margin: 0;
+    text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.3);
+}
+
+.actions {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.action-btn {
+    font-family: 'Jua', sans-serif;
+    font-size: 1.2rem;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    background-color: #f1f2f6;
+    color: #2b2b2b;
+    box-shadow: 0 4px 0 #ced6e0;
+}
+
+.action-btn:active {
+    transform: translateY(4px);
+    box-shadow: none;
+}
+
+.health-badge {
+    font-size: 1.5rem;
+    background: #ff7f50;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 0 #ff6348;
+    font-weight: bold;
+}
+
+.main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background-color: #f1f2f6;
+}
+
+.status-panel {
+    padding: 20px;
+    background: #eccc68;
+    color: #2f3542;
+    text-align: center;
+    border-bottom: 4px dashed #ffa502;
+    font-size: 1.2rem;
+}
+
+.status-panel p {
+    margin: 5px 0;
+}
+
+.status-panel strong {
+    color: #d63031;
+}
+
+.forest-container {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    position: relative;
+    background: radial-gradient(circle, #e8f8f5 0%, #b8e994 100%);
+    overflow-y: auto;
+}
+
+.bamboo-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 15px;
+    max-width: 800px;
+    width: 100%;
+}
+
+.bamboo-card {
+    background: #a4b0be;
+    /* 뒷줄 대나무 느낌 색 */
+    border-radius: 15px;
+    aspect-ratio: 3/4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 4rem;
+    cursor: pointer;
+    box-shadow: 0 6px 0 #747d8c;
+    transition: transform 0.1s, background-color 0.3s;
+    position: relative;
+    perspective: 1000px;
+}
+
+.bamboo-card:active {
+    transform: translateY(6px);
+    box-shadow: none;
+}
+
+/* 카드 뒷면/앞면 효과 대신, 초기에 대나무 이모티콘을 띄워둠 */
+.bamboo-card .cover {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: #2ed573;
+    border-radius: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2;
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s;
+}
+
+.bamboo-card .cover span {
+    font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
+}
+
+.bamboo-card .content {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
+    background: #f1f2f6;
+    border-radius: 15px;
+}
+
+/* 잘린 대나무 효과 */
+.bamboo-card.revealed .cover {
+    transform: translateY(-50px) rotate(30deg);
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* 특별한 아이템 배경 */
+.bamboo-card.revealed .content.golden {
+    background: #f1c40f;
+    box-shadow: inset 0 0 20px #f39c12;
+    animation: glow 1s infinite alternate;
+}
+
+.bamboo-card.revealed .content.panda {
+    background: #ff7675;
+}
+
+@keyframes glow {
+    from {
+        box-shadow: 0 0 10px #f1c40f, inset 0 0 10px #f39c12;
+    }
+
+    to {
+        box-shadow: 0 0 30px #f1c40f, inset 0 0 20px #f39c12;
+    }
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: white;
+}
+
+.overlay.hidden {
+    display: none;
+}
+
+.overlay h2 {
+    font-size: 4rem;
+    margin: 0;
+    text-shadow: 2px 4px 0 rgba(0, 0, 0, 0.4);
+    color: #f1c40f;
+}
+
+.overlay p {
+    font-size: 2rem;
+    margin: 20px 0 40px;
+}
+
+.big-btn {
+    font-family: 'Jua', sans-serif;
+    font-size: 2rem;
+    padding: 15px 40px;
+    border: none;
+    border-radius: 20px;
+    background: #2ed573;
+    color: white;
+    box-shadow: 0 8px 0 #20bf6b;
+    cursor: pointer;
+    transition: transform 0.1s;
+}
+
+.big-btn:active {
+    transform: translateY(8px);
+    box-shadow: none;
+}
+
+@media (max-width: 600px) {
+    .bamboo-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    .bamboo-card {
+        font-size: 3rem;
+    }
+}

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>커비 아이스크림 만들기</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div id="game-container">
+        <!-- Background -->
+        <div class="bg-pattern"></div>
+
+        <h1 id="title-text">아이스크림을 스쿱으로 떠보세요! (최대 3단)</h1>
+
+        <!-- Work Area -->
+        <div id="work-area">
+
+            <!-- Tubs -->
+            <div id="tubs-container">
+                <div class="tub pink" data-color="pink" data-flavor="딸기 커비">
+                    <div class="tub-label">딸기 커비🍓</div>
+                </div>
+                <div class="tub yellow" data-color="yellow" data-flavor="레몬 스파크 커비">
+                    <div class="tub-label">레몬 스파크⚡</div>
+                </div>
+                <div class="tub blue" data-color="blue" data-flavor="민트 아이스 커비">
+                    <div class="tub-label">민트 아이스❄️</div>
+                </div>
+            </div>
+
+            <!-- Stacking Area -->
+            <div id="stack-container">
+                <div id="cone"></div>
+                <!-- Scoops will be appended here dynamically -->
+            </div>
+
+            <!-- The Custom Cursor / Scoop -->
+            <div id="scooper" class="empty"></div>
+
+        </div>
+
+        <!-- Controls -->
+        <div id="controls">
+            <button id="serve-btn" class="btn hidden">완성! 먹이기</button>
+            <button id="reset-btn" class="btn" style="background:#f44336;">다시 만들기</button>
+            <button class="btn" style="background:#555;" onclick="location.href='../index.html'">메인화면으로</button>
+        </div>
+
+        <!-- Confetti layer -->
+        <div id="confetti-layer"></div>
+
+        <!-- Kirby Customer Character -->
+        <div id="customer-kirby" class="hidden"></div>
+    </div>
+
+    <script src="js/main.js"></script>
+</body>
+
+</html>

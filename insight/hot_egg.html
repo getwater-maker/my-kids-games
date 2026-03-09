@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>앗 뜨거! 계란 식히기 🥚💨</title>
+    <link rel="stylesheet" href="hot_egg.css">
+    <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="app-container">
+        <header class="game-header">
+            <h1>🥚💨 앗 뜨거! 계란 식히기</h1>
+            <div class="actions">
+                <button onclick="location.href='index.html'" class="action-btn">⬅️ 뒤로가기</button>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <aside class="sidebar">
+                <div class="panel">
+                    <h2>🌡️ 현재 온도</h2>
+                    <div class="temp-gauge-container">
+                        <div class="temp-gauge" id="tempGauge"></div>
+                        <span class="temp-text" id="tempText">100°C</span>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <h2>⏱️ 남은 시간</h2>
+                    <div class="time-text" id="timeText">10.0초</div>
+                </div>
+
+                <div class="panel">
+                    <h2>🎮 게임 방법</h2>
+                    <p class="hint-text">
+                        1. 시작 버튼을 누르세요.<br>
+                        2. 호~ 불기(화면을 광클)해서 온도를 0°C로 낮추세요!<br>
+                        3. 시간이 다 되기 전에 계란을 식혀야 해요!
+                    </p>
+                    <button id="startBtn" class="action-btn play-btn">게임 시작!</button>
+                </div>
+            </aside>
+
+            <section class="game-area">
+                <div class="game-wrapper">
+                    <!-- Egg Container -->
+                    <div class="egg-container" id="eggContainer">
+                        <div class="egg-shadow"></div>
+                        <div class="egg" id="theEgg"></div>
+                        <!-- Steam is generated here -->
+                        <div id="steamLayer"></div>
+                    </div>
+
+                    <div id="resultScreen" class="overlay-screen hidden">
+                        <h2 id="resultTitle">결과</h2>
+                        <p id="resultDesc">설명</p>
+                        <button id="retryBtn" class="action-btn play-btn">다시 도전</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Sounds -->
+    <audio id="sfx-blow" src="https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3"></audio>
+    <audio id="sfx-win" src="https://assets.mixkit.co/active_storage/sfx/1435/1435-preview.mp3"></audio>
+    <audio id="sfx-lose" src="https://assets.mixkit.co/active_storage/sfx/270/270-preview.mp3"></audio>
+    <audio id="sfx-sizzle" src="https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3" loop></audio>
+
+    <script src="hot_egg.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>캐릭터 꾸미기 🧚‍♀️</title>
+    <link rel="stylesheet" href="character.css">
+    <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="app-container">
+        <header class="game-header">
+            <h1>🧚‍♀️ 나만의 꼬마 캐릭터 꾸미기</h1>
+            <div class="actions">
+                <button onclick="location.href='index.html'" class="action-btn">⬅️ 뒤로가기</button>
+                <button id="clearBtn" class="action-btn clear-btn">✨ 새로 꾸미기</button>
+                <button id="saveBtn" class="action-btn save-btn">📸 사진 저장!</button>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <!-- Left Toolbar -->
+            <aside class="sidebar">
+                <div class="panel">
+                    <h2>🎨 머리 스타일 & 화장</h2>
+                    <p class="hint-text">마우스로 쓱쓱~ 머리도 그려주고 볼터치도 해봐요!</p>
+                    <div class="tool-list">
+                        <button class="tool-btn active" data-tool="brush" data-color="#ff7979" data-size="30">🎀 분홍
+                            머리</button>
+                        <button class="tool-btn" data-tool="brush" data-color="#f0932b" data-size="30">🧡 주황 머리</button>
+                        <button class="tool-btn" data-tool="brush" data-color="#4834d4" data-size="30">🌌 보라 머리</button>
+                        <button class="tool-btn" data-tool="brush" data-color="#22a6b3" data-size="30">🌊 민트 머리</button>
+                        <button class="tool-btn" data-tool="brush" data-color="#ff9ff3" data-size="40"
+                            data-opacity="0.2">🌸 발그레 볼터치</button>
+                        <button class="tool-btn" data-tool="eraser">지우개</button>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <h2>👀 똘망똘망 눈 & 코, 입</h2>
+                    <p class="hint-text">귀여운 표정을 만들어주세요!</p>
+                    <div class="sticker-list">
+                        <button class="tool-btn sticker-btn" data-tool="topping" data-val="👀">👀 두리번</button>
+                        <button class="tool-btn sticker-btn" data-tool="topping" data-val="🤩">🤩 초롱초롱</button>
+                        <button class="tool-btn sticker-btn" data-tool="topping" data-val="😆">😆 꺄르르</button>
+                        <button class="tool-btn sticker-btn" data-tool="topping" data-val="😑">😑 뚱해</button>
+                        <button class="tool-btn sticker-btn" data-tool="topping" data-val="👄">👄 도톰 입술</button>
+                        <button class="tool-btn sticker-btn" data-tool="topping" data-val="👅">👅 낼름</button>
+                        <button class="tool-btn sticker-btn" data-tool="topping" data-val="🐽">🐽 깜찍 코</button>
+                        <button class="tool-btn sticker-btn" data-tool="topping" data-val="💧">💧 눈물</button>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <h2>🎀 예쁜 악세서리</h2>
+                    <p class="hint-text">모자도 씌우고 리본도 달아볼까요?</p>
+                    <div class="sticker-list">
+                        <button class="tool-btn sticker-btn" data-tool="topping" data-val="👑">👑 예쁜 왕관</button>
+                        <button class="tool-btn sticker-btn" data-tool="topping" data-val="🧢">🧢 멋진 모자</button>
+                        <button class="tool-btn sticker-btn" data-tool="topping" data-val="🎀">🎀 왕 리본</button>
+                        <button class="tool-btn sticker-btn" data-tool="topping" data-val="🕶️">🕶️ 선글라스</button>
+                        <button class="tool-btn sticker-btn" data-tool="topping" data-val="🎓">🎓 학사모</button>
+                        <button class="tool-btn sticker-btn" data-tool="topping" data-val="🌻">🌻 해바라기</button>
+                        <button class="tool-btn sticker-btn" data-tool="topping" data-val="💖">💖 반짝 하트</button>
+                        <button class="tool-btn sticker-btn" data-tool="topping" data-val="⭐">⭐ 노란 별</button>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Center Stage -->
+            <section class="preview-area">
+                <div class="character-wrapper">
+                    <!-- The Background / Card -->
+                    <div class="character-card">
+                        <div class="character-face"></div>
+                    </div>
+                    <!-- The magic canvas for drawing and stamping -->
+                    <canvas id="characterCanvas" width="550" height="650"></canvas>
+                    <div id="cursorHint" class="cursor-hint">🖌️</div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Sounds (Using simple mixkit links) -->
+    <audio id="sfx-brush" src="https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3" loop></audio>
+    <audio id="sfx-pop" src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3"></audio>
+
+    <script src="character.js"></script>
+</body>
+
+</html>

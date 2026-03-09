@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Craft World - 마인크래프트 스타일</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&family=Noto+Sans+KR:wght@300;500;700&display=swap"
+        rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+
+<body>
+    <div id="game-container"></div>
+
+    <!-- Crosshair -->
+    <div id="crosshair"></div>
+
+    <!-- HUD -->
+    <div id="hud">
+        <div class="stats">
+            <div class="stat-item">
+                <span class="label">TIME:</span>
+                <span id="time-display">Day 08:00</span>
+            </div>
+            <div class="stat-item">
+                <span class="label">COORDINATES:</span>
+                <span id="pos-display">0, 0, 0</span>
+            </div>
+            <div class="stat-item">
+                <span class="label">BLOCKS:</span>
+                <span id="block-count">0</span>
+            </div>
+        </div>
+
+        <div id="inventory">
+            <div class="slot active" data-type="grass">🌿</div>
+            <div class="slot" data-type="dirt">🟫</div>
+            <div class="slot" data-type="stone">🪨</div>
+            <div class="slot" data-type="wood">🪵</div>
+            <div class="slot" data-type="leaves">🍃</div>
+            <div class="slot" data-type="glass">💎</div>
+        </div>
+    </div>
+
+    <!-- Overlay / Instruction -->
+    <div id="instructions" class="overlay">
+        <div class="content">
+            <h1>3D CRAFT WORLD</h1>
+            <p>나만의 세상을 만들어 보세요!</p>
+            <div class="controls">
+                <span><b>W,A,S,D</b> : 이동</span>
+                <span><b>SPACE</b> : 점프</span>
+                <span><b>L-CLICK</b> : 블록 부수기</span>
+                <span><b>R-CLICK</b> : 블록 설치</span>
+                <span><b>1-6</b> : 블록 선택</span>
+                <span><b>ESC</b> : 메뉴</span>
+            </div>
+            <button id="start-btn">게임 시작</button>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+</body>
+
+</html>

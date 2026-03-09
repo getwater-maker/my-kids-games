@@ -1,0 +1,176 @@
+:root {
+    --squid-pink: #ed1c4d;
+    --squid-blue: #008f95;
+    --squid-black: #111111;
+    --glass-bg: rgba(0, 0, 0, 0.4);
+    --glass-border: rgba(237, 28, 77, 0.2);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Noto Sans KR', sans-serif;
+}
+
+body {
+    background-color: var(--squid-black);
+    overflow: hidden;
+    color: white;
+}
+
+#game-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+    backdrop-filter: blur(8px);
+    background: radial-gradient(circle, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0.8) 100%);
+    transition: opacity 0.5s;
+}
+
+.hidden {
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none;
+}
+
+.glass-card {
+    background: var(--glass-bg);
+    border: 2px solid var(--glass-border);
+    padding: 50px;
+    border-radius: 40px;
+    text-align: center;
+    box-shadow: 0 0 50px rgba(237, 28, 77, 0.2);
+    max-width: 600px;
+}
+
+.pink-text {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 3.5rem;
+    color: var(--squid-pink);
+    text-shadow: 0 0 15px var(--squid-pink);
+    margin-bottom: 20px;
+}
+
+.pink-btn {
+    padding: 15px 50px;
+    font-size: 1.5rem;
+    font-family: 'Orbitron', sans-serif;
+    background: var(--squid-pink);
+    color: white;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    box-shadow: 0 0 20px var(--squid-pink);
+    transition: 0.3s;
+    margin-top: 30px;
+}
+
+.pink-btn:hover {
+    background: white;
+    color: var(--squid-pink);
+    transform: scale(1.1);
+    box-shadow: 0 0 30px white;
+}
+
+#hud {
+    position: fixed;
+    top: 30px;
+    left: 30px;
+    width: calc(100% - 60px);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    z-index: 10;
+    pointer-events: none;
+}
+
+.stat-box {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    padding: 20px;
+    border-radius: 25px;
+    min-width: 150px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.label {
+    font-size: 0.8rem;
+    letter-spacing: 2px;
+    color: #888;
+    margin-bottom: 5px;
+}
+
+.value {
+    font-size: 2.5rem;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 700;
+    color: var(--squid-pink);
+}
+
+#status-indicator {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 2rem;
+    font-weight: 900;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 20px 40px;
+    border-radius: 20px;
+    border: 2px solid white;
+    transition: color 0.3s, border-color 0.3s, background 0.3s;
+}
+
+.red-light {
+    color: #f44336;
+    border-color: #f44336 !important;
+    background: rgba(244, 67, 54, 0.2) !important;
+    text-shadow: 0 0 20px #f44336;
+}
+
+.green-light {
+    color: #4caf50;
+    border-color: #4caf50 !important;
+    background: rgba(76, 175, 80, 0.2) !important;
+    text-shadow: 0 0 20px #4caf50;
+}
+
+.highlight {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 2px 8px;
+    border-radius: 4px;
+    color: gold;
+}
+
+.secondary-btn {
+    margin-top: 15px;
+    background: transparent;
+    border: 1px solid #555;
+    color: #777;
+    padding: 10px 20px;
+    border-radius: 10px;
+    cursor: pointer;
+    display: block;
+    width: 100%;
+    transition: 0.2s;
+}
+
+.secondary-btn:hover {
+    color: white;
+    border-color: white;
+}

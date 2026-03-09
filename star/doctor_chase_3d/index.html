@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>미친 의사와의 술래잡기: 병원 탈출 🏥🏃</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Jua&family=Outfit:wght@400;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div id="game-container">
+        <!-- HUD -->
+        <div id="hud" class="hidden">
+            <div class="hud-top">
+                <div class="stat-badge">
+                    <span class="icon">💊</span>
+                    <span id="pill-count">0 / 10</span>
+                </div>
+                <div class="stat-badge">
+                    <span class="icon">⏱️</span>
+                    <span id="game-timer">00:00</span>
+                </div>
+            </div>
+            <div class="stamina-container">
+                <div class="stamina-label">스태미나 (SHIFT로 질주)</div>
+                <div class="stamina-bar">
+                    <div id="stamina-fill" class="stamina-fill"></div>
+                </div>
+            </div>
+            <div id="alert-msg"></div>
+        </div>
+
+        <!-- Screens -->
+        <div id="start-screen" class="screen">
+            <div class="menu-card main-menu">
+                <h1 class="glow-text">🏥 미친 의사 술래잡기</h1>
+                <p>미친 의사가 쫓아옵니다! 병원 곳곳에 흩어진 10개의 비상약을 모아 탈출하세요!</p>
+                <div class="tutorial-grid">
+                    <div class="tuto-item">
+                        <span class="tuto-key">W A S D</span>
+                        <span>이동</span>
+                    </div>
+                    <div class="tuto-item">
+                        <span class="tuto-key">SHIFT</span>
+                        <span>전력 질주</span>
+                    </div>
+                    <div class="tuto-item">
+                        <span class="tuto-key">M</span>
+                        <span>미니맵 토글</span>
+                    </div>
+                </div>
+                <button id="start-btn" class="primary-btn pulse">게임 시작</button>
+            </div>
+        </div>
+
+        <div id="win-screen" class="screen hidden">
+            <div class="menu-card win-card">
+                <div class="big-icon">🏆</div>
+                <h2>탈출 성공!</h2>
+                <p id="final-time">기록: 00:00</p>
+                <button onclick="location.reload()" class="primary-btn">다시 도전</button>
+                <button onclick="location.href='../index.html'" class="secondary-btn">메인으로</button>
+            </div>
+        </div>
+
+        <div id="lose-screen" class="screen hidden">
+            <div class="menu-card lose-card">
+                <div class="big-icon">💀</div>
+                <h2>의사에게 잡혔습니다!</h2>
+                <p>의사 선생님: "환자분, 아직 치료가 안 끝났어요~"</p>
+                <button onclick="location.reload()" class="primary-btn">복수하러 가기</button>
+                <button onclick="location.href='../index.html'" class="secondary-btn">메인으로</button>
+            </div>
+        </div>
+
+        <!-- Mini-map Overlay -->
+        <div id="minimap-container" class="hidden">
+            <div class="minimap-title">HOSPITAL MAP</div>
+            <canvas id="minimap"></canvas>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/PointerLockControls.js"></script>
+    <script src="js/main.js"></script>
+</body>
+
+</html>

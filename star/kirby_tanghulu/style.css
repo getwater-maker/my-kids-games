@@ -1,0 +1,319 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
+    background-color: #ffebee;
+    /* 연한 핑크 배경 */
+    color: #333;
+    overflow: hidden;
+    user-select: none;
+}
+
+#game-container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.bg-shape {
+    position: absolute;
+    border-radius: 50%;
+    background: #ffcdd2;
+    z-index: -1;
+    opacity: 0.5;
+}
+
+.shape1 {
+    width: 400px;
+    height: 400px;
+    top: -100px;
+    left: -100px;
+}
+
+.shape2 {
+    width: 600px;
+    height: 600px;
+    bottom: -200px;
+    right: -200px;
+}
+
+#title-text {
+    margin-top: 30px;
+    font-size: 40px;
+    color: #c62828;
+    text-shadow: 2px 2px 0px #fff;
+    z-index: 10;
+}
+
+/* Palette Area */
+#palette-area {
+    display: flex;
+    gap: 40px;
+    margin-top: 20px;
+    padding: 20px 40px;
+    background: rgba(255, 255, 255, 0.7);
+    border-radius: 20px;
+    border: 3px dashed #ef9a9a;
+    z-index: 10;
+}
+
+.draggable-fruit {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    cursor: grab;
+    position: relative;
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1), inset -10px -10px 20px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.draggable-fruit:hover {
+    transform: scale(1.1);
+}
+
+.draggable-fruit:active {
+    cursor: grabbing;
+    transform: scale(0.9);
+}
+
+/* Fruit Types */
+.fruit-strawberry {
+    background: #ff5252;
+}
+
+.fruit-grape {
+    background: #ab47bc;
+}
+
+.fruit-orange {
+    background: #ff9800;
+}
+
+/* Faces */
+.f-eye {
+    position: absolute;
+    top: 30px;
+    width: 10px;
+    height: 25px;
+    background: #000;
+    border-radius: 50%;
+}
+
+.f-eye.left {
+    left: 30px;
+}
+
+.f-eye.right {
+    right: 30px;
+}
+
+.f-blush {
+    position: absolute;
+    top: 45px;
+    width: 15px;
+    height: 8px;
+    background: rgba(255, 255, 255, 0.6);
+    border-radius: 50%;
+}
+
+.f-blush.left {
+    left: 15px;
+}
+
+.f-blush.right {
+    right: 15px;
+}
+
+
+/* Skewer Area */
+#skewer-area {
+    position: relative;
+    margin-top: 50px;
+    width: 200px;
+    height: 500px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#stick {
+    position: absolute;
+    bottom: 0;
+    width: 15px;
+    height: 100%;
+    background: #8d6e63;
+    border-radius: 10px;
+    box-shadow: inset -5px 0 10px rgba(0, 0, 0, 0.3);
+}
+
+#stacked-fruits {
+    position: absolute;
+    bottom: 50px;
+    /* leaves some stick at the bottom for handles */
+    display: flex;
+    flex-direction: column-reverse;
+    /* Stack upwards */
+    align-items: center;
+    gap: 5px;
+    z-index: 5;
+    width: 100%;
+    height: calc(100% - 70px);
+}
+
+.stacked-item {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    position: relative;
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1), inset -10px -10px 20px rgba(0, 0, 0, 0.1);
+    animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+@keyframes popIn {
+    0% {
+        transform: scale(0);
+        opacity: 0;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* Sugar Coating Phase */
+#sugar-pour {
+    position: absolute;
+    top: -100px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 150px;
+    height: 0;
+    background: rgba(255, 255, 255, 0.8);
+    box-shadow: 0 0 30px rgba(255, 255, 255, 0.8);
+    z-index: 20;
+    border-radius: 0 0 50px 50px;
+    transition: height 2s cubic-bezier(0.4, 0, 1, 1);
+}
+
+#sugar-pour.pouring {
+    height: 800px;
+    /* Covers the whole skewer */
+}
+
+/* Glazed Effect added to fruits */
+.glazed {
+    position: absolute;
+    top: -5%;
+    left: -5%;
+    width: 110%;
+    height: 110%;
+    border-radius: 50%;
+    /* Glassmorphism sugar effect */
+    background: rgba(255, 255, 255, 0.3);
+    border: 3px solid rgba(255, 255, 255, 0.8);
+    box-shadow: inset 5px 5px 15px rgba(255, 255, 255, 0.9), 0 0 15px rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(2px) contrast(1.2);
+    z-index: 10;
+    /* initial state for fade in */
+    opacity: 0;
+    animation: glassHarden 1.5s ease-out forwards;
+}
+
+@keyframes glassHarden {
+    0% {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+
+/* Controls */
+#controls {
+    position: absolute;
+    bottom: 20px;
+    display: flex;
+    gap: 20px;
+    z-index: 30;
+}
+
+.btn {
+    padding: 15px 30px;
+    font-size: 24px;
+    font-weight: bold;
+    background: #e53935;
+    color: white;
+    border: 4px solid rgba(0, 0, 0, 0.1);
+    border-radius: 15px;
+    cursor: pointer;
+    transition: transform 0.1s;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+}
+
+.btn.hidden {
+    display: none;
+}
+
+.btn:hover {
+    transform: scale(1.05);
+    background: #c62828;
+}
+
+.btn:active {
+    transform: scale(0.95);
+}
+
+/* Eat effect */
+.bite-mark {
+    position: absolute;
+    width: 80px;
+    height: 80px;
+    background: #ffebee;
+    /* same as body bg to look like it's bitten */
+    border-radius: 50%;
+    top: -20px;
+    right: -20px;
+    z-index: 15;
+    box-shadow: inset 5px -5px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Confetti */
+#confetti-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 40;
+}
+
+.confetti {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    animation: fall 3s linear forwards;
+}
+
+@keyframes fall {
+    0% {
+        transform: translateY(-50px) rotate(0);
+        opacity: 1;
+    }
+
+    100% {
+        transform: translateY(100vh) rotate(720deg);
+        opacity: 0;
+    }
+}

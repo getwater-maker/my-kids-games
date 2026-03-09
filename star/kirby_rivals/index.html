@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kirby Rivals</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div id="game-container">
+        <!-- HUD -->
+        <div id="hud">
+            <div id="player-status" class="status-box">
+                <div class="name">Player 1 (Blue)</div>
+                <div class="hp-bar-container">
+                    <div id="player-hp-bar" class="hp-bar"></div>
+                </div>
+            </div>
+
+            <div id="timer-box">
+                <span id="round-timer">60</span>
+            </div>
+
+            <div id="enemy-status" class="status-box right">
+                <div class="name">CPU (Red)</div>
+                <div class="hp-bar-container">
+                    <div id="enemy-hp-bar" class="hp-bar"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Canvas -->
+        <canvas id="game-canvas" width="800" height="400"></canvas>
+
+        <!-- Screens -->
+        <div id="start-screen" class="screen active">
+            <h1>커비 라이벌</h1>
+            <p>1v1 격투 게임! 조작: WASD 이동, J 펀치, K 킥, L 가드</p>
+            <button id="start-btn" class="btn">게임 시작</button>
+            <button class="btn" onclick="location.href='../index.html'">메인화면으로</button>
+        </div>
+
+        <div id="round-over-screen" class="screen">
+            <h1 id="round-result-msg">라운드 종료</h1>
+            <button id="next-round-btn" class="btn">다음 라운드</button>
+        </div>
+
+        <div id="game-over-screen" class="screen">
+            <h1 id="final-result-msg">게임 종료!</h1>
+            <button id="restart-btn" class="btn">다시 하기</button>
+            <button class="btn" onclick="location.href='../index.html'">메인화면으로</button>
+        </div>
+
+        <div id="announcement">Fight!</div>
+    </div>
+    <script src="js/main.js"></script>
+</body>
+
+</html>

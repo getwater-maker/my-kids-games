@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D 자연재해 서바이벌: 극한 생존 🌪️🔥</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Outfit:wght@400;700&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <div id="game-container">
+        <!-- Crosshair -->
+        <div id="crosshair"></div>
+
+        <!-- HUD -->
+        <div id="hud" class="hidden">
+            <div class="top-bar">
+                <div class="disaster-warning" id="disaster-warning">
+                    <span class="warning-icon">⚠️</span>
+                    <span id="disaster-name">기상 관측 중...</span>
+                    <div class="progress-container">
+                        <div id="disaster-progress" class="progress-fill"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bottom-hud">
+                <div class="hud-group">
+                    <div class="label">체력</div>
+                    <div class="health-bar">
+                        <div id="hp-fill" class="hp-fill"></div>
+                    </div>
+                </div>
+                <div class="stat-badge">
+                    ⏱️ <span id="survival-time">00:00</span>
+                </div>
+            </div>
+
+            <div id="location-status" class="status-tip">실외 (위험!)</div>
+        </div>
+
+        <!-- Screens -->
+        <div id="start-screen" class="screen">
+            <div class="menu-card container">
+                <h1 class="glow-text">🌪️ 극한 자연재해 생존</h1>
+                <p>무작위로 몰아치는 자연재해를 피해 살아남으세요!<br>건물 안이나 지붕 아래로 신속히 대피해야 합니다.</p>
+                <div class="tutorial">
+                    <div class="item"><span>W A S D</span> 이동</div>
+                    <div class="item"><span>SPACE</span> 점프</div>
+                    <div class="item"><span>SHIFT</span> 달리기</div>
+                </div>
+                <button id="start-btn" class="main-btn">생존 시작</button>
+            </div>
+        </div>
+
+        <div id="lose-screen" class="screen hidden">
+            <div class="menu-card lose">
+                <h2>💀 생존 실패</h2>
+                <p id="cause-of-death">재해를 피하지 못했습니다.</p>
+                <div class="final-score">생존 시간: <span id="final-time">00:00</span></div>
+                <button onclick="location.reload()" class="main-btn">다시 도전</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Three.js & Controls -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/PointerLockControls.js"></script>
+    <script src="js/main.js"></script>
+</body>
+
+</html>

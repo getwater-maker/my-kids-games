@@ -1,0 +1,237 @@
+:root {
+    --bg-color: #fab1a0;
+    /* Warm pizza color */
+    --shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    --border-radius: 20px;
+    --font-color: #2d3436;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Jua', sans-serif;
+    background-color: var(--bg-color);
+    background-image: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    color: var(--font-color);
+}
+
+.app-container {
+    width: 95vw;
+    height: 95vh;
+    background-color: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border: 5px solid #e17055;
+    position: relative;
+    user-select: none;
+}
+
+/* Header */
+.game-header {
+    background-color: #d63031;
+    color: white;
+    padding: 15px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 4px solid #b2bec3;
+    z-index: 10;
+}
+
+.game-header h1 {
+    font-size: 2rem;
+    text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.3);
+}
+
+.actions {
+    display: flex;
+    gap: 15px;
+}
+
+.action-btn {
+    font-family: 'Jua', sans-serif;
+    font-size: 1.2rem;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    background-color: #f1f2f6;
+    color: #57606f;
+    box-shadow: 0 4px 0 #ced6e0;
+    transition: all 0.2s;
+}
+
+.action-btn:active {
+    transform: translateY(4px);
+    box-shadow: none;
+}
+
+.clear-btn {
+    background-color: #ff9f43;
+    color: white;
+    box-shadow: 0 4px 0 #e58e26;
+}
+
+.save-btn {
+    background-color: #00b894;
+    color: white;
+    box-shadow: 0 4px 0 #009432;
+}
+
+/* Main Layout */
+.main-content {
+    flex: 1;
+    display: flex;
+    overflow: hidden;
+    /* Wooden table background! */
+    background-color: #d2b48c;
+    background-image: repeating-linear-gradient(90deg, transparent, transparent 40px, rgba(0, 0, 0, 0.05) 40px, rgba(0, 0, 0, 0.05) 42px);
+}
+
+/* Sidebar Tools */
+.sidebar {
+    width: 320px;
+    background-color: rgba(255, 255, 255, 0.95);
+    border-right: 4px dashed #fab1a0;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    overflow-y: auto;
+    box-shadow: 5px 0 15px rgba(0, 0, 0, 0.1);
+}
+
+.panel h2 {
+    color: #d63031;
+    margin-bottom: 5px;
+    font-size: 1.4rem;
+}
+
+.hint-text {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 10px;
+}
+
+.tool-list,
+.sticker-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
+.tool-btn {
+    font-family: 'Jua', sans-serif;
+    font-size: 1.1rem;
+    padding: 10px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    background-color: #edf2f4;
+    color: #2b2b2b;
+    box-shadow: 0 4px 0 #d2dae2;
+    transition: all 0.1s;
+}
+
+.tool-btn.active {
+    background-color: #ffeaa7;
+    box-shadow: 0 4px 0 #fdcb6e;
+    color: #d63031;
+}
+
+.tool-btn:active {
+    transform: translateY(4px);
+    box-shadow: none;
+}
+
+/* Center Stage */
+.preview-area {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.pizza-wrapper {
+    position: relative;
+    width: 600px;
+    height: 600px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Wooden board / Pizza Pan */
+.pizza-pan {
+    position: absolute;
+    width: 580px;
+    height: 580px;
+    background: #5a3a22;
+    /* Dark wood board */
+    border-radius: 50%;
+    box-shadow:
+        10px 10px 20px rgba(0, 0, 0, 0.4),
+        inset 0 0 10px rgba(0, 0, 0, 0.8);
+    /* Wooden board handle */
+}
+
+.pizza-pan::before {
+    content: '';
+    position: absolute;
+    width: 140px;
+    height: 80px;
+    background: #5a3a22;
+    right: -70px;
+    top: 50%;
+    transform: translateY(-50%);
+    border-radius: 20px 40px 40px 20px;
+    box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.3);
+}
+
+.pizza-pan::after {
+    /* hole in the handle */
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background: #d2b48c;
+    /* background color to look like a hole */
+    right: -40px;
+    top: 50%;
+    transform: translateY(-50%);
+    border-radius: 50%;
+    box-shadow: inset 5px 5px 10px rgba(0, 0, 0, 0.5);
+}
+
+/* Drawing Canvas Overlays the Shoe */
+#pizzaCanvas {
+    position: absolute;
+    pointer-events: auto;
+    /* catch mouse events */
+    z-index: 10;
+    cursor: crosshair;
+}
+
+/* Cursor Hint Balloon */
+.cursor-hint {
+    position: absolute;
+    pointer-events: none;
+    font-size: 50px;
+    display: none;
+    z-index: 20;
+    transform: translate(-50%, -50%);
+    filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.4));
+}

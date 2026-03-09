@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>마라탕 만들기 🍲</title>
+    <link rel="stylesheet" href="malatang.css">
+    <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="app-container">
+        <header class="game-header">
+            <h1>🌶️ 화끈한 마라탕 가게</h1>
+            <div class="actions">
+                <button onclick="location.href='index.html'" class="action-btn">⬅️ 뒤로가기</button>
+                <button id="clearBtn" class="action-btn clear-btn">🔥 새 그릇 준비하기</button>
+                <button id="saveBtn" class="action-btn save-btn">📸 사진 저장!</button>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <!-- Left Toolbar -->
+            <aside class="sidebar">
+                <div class="panel">
+                    <h2>💧 육수 붓기</h2>
+                    <p class="hint-text">원하는 국물 색을 채워주세요!</p>
+                    <div class="tool-list">
+                        <button class="tool-btn active" data-tool="broth" data-color="#e84118">🌶️ 매운 홍탕</button>
+                        <button class="tool-btn" data-tool="broth" data-color="#f5cd79">🦴 담백 백탕</button>
+                        <button class="tool-btn" data-tool="broth" data-color="#e15f41">🍅 토마토탕</button>
+                        <button class="tool-btn" data-tool="broth" data-color="#8c7ae6">🟣 마라크림</button>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <h2>🍝 면발 호로록</h2>
+                    <p class="hint-text">쭉쭉~ 원하는 면을 뽑아봐요!</p>
+                    <div class="tool-list">
+                        <button class="tool-btn" data-tool="noodle" data-color="#f1f2f6" data-size="25"
+                            data-opacity="0.6">🥢 중국당면</button>
+                        <button class="tool-btn" data-tool="noodle" data-color="#ffeaa7" data-size="10"
+                            data-opacity="1.0">🌽 옥수수면</button>
+                        <button class="tool-btn" data-tool="noodle" data-color="#ffffff" data-size="20"
+                            data-opacity="1.0">🍡 쫀득 분모자</button>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <h2>🥬 푸짐한 재료들</h2>
+                    <p class="hint-text">원하는 곳에 톡톡 올려요!</p>
+                    <div class="sticker-list">
+                        <button class="tool-btn sticker-btn" data-tool="topping" data-val="🥩">🥩 소고기</button>
+                        <button class="tool-btn sticker-btn" data-tool="topping" data-val="🥬">🥬 청경채</button>
+                        <button class="tool-btn sticker-btn" data-tool="topping" data-val="🍄">🍄 팽이버섯</button>
+                        <button class="tool-btn sticker-btn" data-tool="topping" data-val="🌭">🌭 비엔나</button>
+                        <button class="tool-btn sticker-btn" data-tool="topping" data-val="🥚">🥚 메추리알</button>
+                        <button class="tool-btn sticker-btn" data-tool="topping" data-val="🍢">🍢 어묵꼬치</button>
+                        <button class="tool-btn sticker-btn" data-tool="topping" data-val="🥟">🥟 물만두</button>
+                        <button class="tool-btn sticker-btn" data-tool="topping" data-val="🍤">🍤 새우</button>
+                        <button class="tool-btn sticker-btn" data-tool="topping" data-val="🫓">🫓 푸주</button>
+                        <button class="tool-btn sticker-btn" data-tool="topping" data-val="🧀">🧀 치즈떡</button>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <h2>✨ 마라 소스</h2>
+                    <p class="hint-text">누르고 움직여서 팍팍!</p>
+                    <div class="tool-list">
+                        <button class="tool-btn" data-tool="powder" data-color="#d63031">🌶️ 고추기름</button>
+                        <button class="tool-btn" data-tool="powder" data-color="#fdcb6e">🥜 땅콩소스</button>
+                        <button class="tool-btn" data-tool="powder" data-color="#2d3436">🖤 산초가루</button>
+                        <button class="tool-btn" data-tool="powder" data-color="#55efc4">🌿 고수</button>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Center Stage -->
+            <section class="preview-area">
+                <div class="malatang-wrapper">
+                    <!-- The Bowl -->
+                    <div class="malatang-bowl"></div>
+                    <!-- The magic canvas for drawing broth, noodle, powder, and toppings -->
+                    <canvas id="malatangCanvas" width="500" height="500"></canvas>
+                    <div id="cursorHint" class="cursor-hint">🌶️</div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Sounds -->
+    <audio id="sfx-broth" src="https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3" loop></audio>
+    <audio id="sfx-pop" src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3"></audio>
+    <audio id="sfx-sprinkle" src="https://assets.mixkit.co/active_storage/sfx/2627/2627-preview.mp3" loop></audio>
+
+    <script src="malatang.js"></script>
+</body>
+
+</html>

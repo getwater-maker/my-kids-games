@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>커비 3D 타워 점프</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div id="game-ui">
+        <h1 id="title">커비 3D 타워 점프 ☁️</h1>
+        <div id="instructions">
+            [W A S D] 또는 [방향키]: 이동<br>
+            [SPACE]: 점프<br>
+            [공중에서 SPACE]: 호버링 (풍선 비행)<br>
+            [마우스 드래그]: 카메라 회전
+        </div>
+        <div id="score-display">고도: <span id="height-score">0</span>m</div>
+        <div id="hover-gauge">
+            <div id="hover-bar"></div>
+        </div>
+    </div>
+
+    <!-- Game Over Screen -->
+    <div id="game-over" class="hidden">
+        <h1>추락했습니다!</h1>
+        <p>최고 고도: <span id="final-score">0</span>m</p>
+        <button id="retry-btn">다시 도전하기</button>
+        <button onclick="location.href='../index.html'" style="margin-top: 10px; background: #555;">메인으로</button>
+    </div>
+
+    <!-- 3D Canvas Container -->
+    <div id="canvas-container"></div>
+
+    <!-- Three.js (r128) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <!-- Cannon.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cannon.js/0.6.2/cannon.min.js"></script>
+
+    <!-- Game Logic -->
+    <script src="js/main.js"></script>
+</body>
+
+</html>

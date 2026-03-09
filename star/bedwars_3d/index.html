@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D 배드워즈: 휴먼 서바이벌 ⚔️</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div id="game-container">
+        <!-- Crosshair -->
+        <div id="crosshair">+</div>
+
+        <!-- Start Screen -->
+        <div id="start-screen" class="overlay">
+            <div class="menu-box">
+                <h1>⚔️ 3D 배드워즈</h1>
+                <p>커비가 아닌 우리들의 3D 생존 전투!</p>
+                <div class="controls-info">
+                    [W A S D]: 이동<br>
+                    [SPACE]: 점프<br>
+                    [마우스 왼쪽]: 공격 (칼)<br>
+                    [마우스 오른쪽]: 블록 설치 (양털)
+                </div>
+                <button id="start-btn">게임 시작!</button>
+            </div>
+        </div>
+
+        <!-- HUD -->
+        <div id="hud" class="hidden">
+            <div class="status-top">
+                <div id="hp-bar-container">
+                    <div id="hp-bar-fill"></div>
+                    <span id="hp-text">HP: 100</span>
+                </div>
+                <div class="resource-counter">
+                    <div class="res-item">🔘 철: <span id="iron-count">0</span></div>
+                    <div class="res-item">💎 에메랄드: <span id="emerald-count">0</span></div>
+                </div>
+            </div>
+            <div class="inventory">
+                <div class="inv-slot" id="slot-0">⚔️ 칼</div>
+                <div class="inv-slot" id="slot-1">🧶 양털 (<span id="wool-count">24</span>)</div>
+            </div>
+            <div id="msg">왼쪽 클릭: 공격 | 오른쪽 클릭: 설치</div>
+        </div>
+
+        <!-- Shop Screen -->
+        <div id="shop-screen" class="overlay hidden">
+            <div class="menu-box shop-box">
+                <h2>🏬 상점 (B키로 닫기)</h2>
+
+                <div class="shop-section">
+                    <h3>🛡️ 갑옷 업그레이드</h3>
+                    <div id="armor-shop-container" class="shop-grid">
+                        <div class="shop-item" onclick="buyArmor('leather')">
+                            <div class="item-icon">🧥</div>
+                            <div class="item-name">가죽 갑옷</div>
+                            <div class="item-cost">🔘 50</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="shop-section">
+                    <h3>⚔️ 무기 & 블록</h3>
+                    <div class="shop-grid">
+                        <div class="shop-item" onclick="buyItem('wool')">
+                            <div class="item-icon">🧶</div>
+                            <div class="item-name">양털 x16</div>
+                            <div class="item-cost">🔘 4</div>
+                        </div>
+                        <div id="sword-shop-item" class="shop-item" onclick="buySword()">
+                            <div class="item-icon">🗡️</div>
+                            <div class="item-name">돌검</div>
+                            <div class="item-cost">🔘 10</div>
+                        </div>
+                    </div>
+                </div>
+
+                <button onclick="toggleShop()">닫기</button>
+            </div>
+        </div>
+
+        <!-- Game Over -->
+        <div id="game-over" class="overlay hidden">
+            <div class="menu-box">
+                <h1 id="result-title">탈락했습니다!</h1>
+                <p id="result-msg">다시 도전해 보세요.</p>
+                <button onclick="location.reload()">다시 하기</button>
+                <button onclick="location.href='../index.html'" style="background: #555;">메인으로</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Three.js Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- PointerLockControls (First Person) -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/PointerLockControls.js"></script>
+    <!-- Game JS -->
+    <script src="js/main.js"></script>
+</body>
+
+</html>

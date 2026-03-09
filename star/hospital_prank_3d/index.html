@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>심폭 병원 장난기 🏥</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Jua&family=Outfit:wght@400;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div id="game-container">
+        <!-- HUD -->
+        <div id="hud">
+            <div class="chaos-container">
+                <div class="chaos-label">Chaos Meter</div>
+                <div class="chaos-bar">
+                    <div id="chaos-fill" class="chaos-fill"></div>
+                </div>
+            </div>
+            <div id="msg">병원의 물건들을 클릭해서 장난을 치세요!</div>
+        </div>
+
+        <!-- Crosshair for interaction -->
+        <div id="crosshair"></div>
+
+        <!-- Screens -->
+        <div id="intro-screen" class="screen">
+            <div class="menu-card">
+                <h1 class="glow-text">🏥 병원 실려옴!</h1>
+                <p>주차 사고로 병원에 왔습니다. 하지만 가만히 있을 수 없죠!</p>
+                <div class="controls-guide">
+                    <div class="guide-item"><span>W A S D</span> 이동</div>
+                    <div class="guide-item"><span>마우스</span> 화면 회전</div>
+                    <div class="guide-item"><span>왼쪽 클릭</span> 소환 / 장난 시작!</div>
+                </div>
+                <button id="start-btn" class="primary-btn">장난치러 가기</button>
+            </div>
+        </div>
+
+        <div id="win-screen" class="screen hidden">
+            <div class="menu-card win-card">
+                <h2>🎊 병원 쑥대밭 성공!</h2>
+                <p>의사 선생님이 기겁하셨습니다!</p>
+                <button onclick="location.href='../index.html'" class="primary-btn">메인으로 가기</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/PointerLockControls.js"></script>
+    <script src="js/main.js"></script>
+</body>
+
+</html>

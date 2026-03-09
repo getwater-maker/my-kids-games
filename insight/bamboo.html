@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>황금 대나무 찾기 🎋</title>
+    <link rel="stylesheet" href="bamboo.css">
+    <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="app-container">
+        <header class="game-header">
+            <h1>🎋 빛나는 황금 대나무 찾기</h1>
+            <div class="actions">
+                <button onclick="location.href='index.html'" class="action-btn">⬅️ 뒤로가기</button>
+                <div class="health-badge">기회: <span id="healthDisplay">❤️❤️❤️</span></div>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <div class="status-panel">
+                <p>무성한 대나무 숲 어딘가에 전설의 <strong>황금 대나무</strong>가 숨겨져 있어요!</p>
+                <p>대나무를 클릭해서 캐보세요. 판다(🐼)를 깨우면 하트를 잃습니다!</p>
+            </div>
+
+            <div class="forest-container">
+                <div class="bamboo-grid" id="bambooGrid">
+                    <!-- 대나무들이 자바스크립트로 추가됩니다 -->
+                </div>
+
+                <div id="resultOverlay" class="overlay hidden">
+                    <h2 id="resultTitle">우와! 찾았다! 🎉</h2>
+                    <p id="resultDesc">전설의 황금 대나무를 발견했어요!</p>
+                    <button id="restartBtn" class="big-btn">다시 탐험하기</button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- 효과음 -->
+    <audio id="sfx-chop" src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3"></audio>
+    <audio id="sfx-win" src="https://assets.mixkit.co/active_storage/sfx/1435/1435-preview.mp3"></audio>
+    <audio id="sfx-fail" src="https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3"></audio>
+
+    <script src="bamboo.js"></script>
+</body>
+
+</html>

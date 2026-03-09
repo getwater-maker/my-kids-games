@@ -1,0 +1,335 @@
+:root {
+    --bg-color: #fce4ec;
+    /* Light pink background */
+    --shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    --border-radius: 20px;
+    --font-color: #2d3436;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Jua', sans-serif;
+    background-color: var(--bg-color);
+    background-image: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    color: var(--font-color);
+}
+
+.app-container {
+    width: 95vw;
+    height: 95vh;
+    background-color: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border: 5px solid #dff9fb;
+    position: relative;
+    user-select: none;
+}
+
+/* Header */
+.game-header {
+    background-color: #e056fd;
+    color: white;
+    padding: 15px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 4px solid #be2edd;
+    z-index: 10;
+}
+
+.game-header h1 {
+    font-size: 2rem;
+    text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.2);
+}
+
+.actions {
+    display: flex;
+    gap: 15px;
+}
+
+.action-btn {
+    font-family: 'Jua', sans-serif;
+    font-size: 1.2rem;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    background-color: #f1f2f6;
+    color: #57606f;
+    box-shadow: 0 4px 0 #ced6e0;
+    transition: all 0.2s;
+}
+
+.action-btn:active {
+    transform: translateY(4px);
+    box-shadow: none;
+}
+
+.clear-btn {
+    background-color: #ff7675;
+    color: white;
+    box-shadow: 0 4px 0 #d63031;
+}
+
+.save-btn {
+    background-color: #55efc4;
+    color: #2d3436;
+    box-shadow: 0 4px 0 #00b894;
+}
+
+/* Main Layout */
+.main-content {
+    flex: 1;
+    display: flex;
+    overflow: hidden;
+    background-color: #f5f6fa;
+}
+
+/* Sidebar Tools */
+.sidebar {
+    width: 320px;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-right: 4px dashed #fab1a0;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    overflow-y: auto;
+}
+
+.panel h2 {
+    color: #e17055;
+    margin-bottom: 10px;
+    font-size: 1.4rem;
+}
+
+/* Colors List */
+.color-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.color-btn {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 3px solid transparent;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s;
+}
+
+.color-btn:active {
+    transform: scale(0.9);
+}
+
+.color-btn.active {
+    border-color: #2d3436;
+    transform: scale(1.1);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+/* Tool Buttons (Cream/Stickers) */
+.tool-list,
+.sticker-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
+.tool-btn {
+    font-family: 'Jua', sans-serif;
+    font-size: 1.1rem;
+    padding: 10px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    background-color: #edf2f4;
+    color: #2b2b2b;
+    box-shadow: 0 4px 0 #d2dae2;
+    transition: all 0.1s;
+}
+
+.tool-btn.active {
+    background-color: #ffeaa7;
+    box-shadow: 0 4px 0 #fdcb6e;
+    color: #b33939;
+}
+
+.tool-btn:active {
+    transform: translateY(4px);
+    box-shadow: none;
+}
+
+/* Center Stage */
+.preview-area {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    background: radial-gradient(circle at center, #ffffff 0%, #dfe6e9 100%);
+}
+
+.phone-wrapper {
+    position: relative;
+    /* Extra padding for side buttons */
+    padding: 20px;
+}
+
+/* Pure CSS Premium Phone Case! */
+.phone-case-container {
+    position: relative;
+    width: 320px;
+    height: 640px;
+    border-radius: 50px;
+    /* Extremely realistic inset bevels and outer drop shadows */
+    box-shadow:
+        inset 0 0 15px rgba(0, 0, 0, 0.1),
+        inset 6px 6px 20px rgba(255, 255, 255, 0.8),
+        inset -6px -6px 20px rgba(0, 0, 0, 0.05),
+        25px 25px 50px rgba(0, 0, 0, 0.15),
+        -15px -15px 30px rgba(255, 255, 255, 0.8);
+    background: linear-gradient(135deg, #ffffff, #f1f2f6);
+    /* default */
+    transition: background 0.3s ease;
+    /* Fix for drawing outside */
+    z-index: 1;
+}
+
+/* Side Buttons (Volume & Power) */
+.volume-buttons {
+    position: absolute;
+    left: -6px;
+    top: 150px;
+    width: 6px;
+    height: 100px;
+    background: #bdc3c7;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    box-shadow: inset 2px 0 3px rgba(255, 255, 255, 0.5), inset -1px 0 2px rgba(0, 0, 0, 0.2);
+}
+
+.volume-buttons::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 100%;
+    height: 2px;
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.power-button {
+    position: absolute;
+    right: -6px;
+    top: 180px;
+    width: 6px;
+    height: 60px;
+    background: #bdc3c7;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    box-shadow: inset -2px 0 3px rgba(255, 255, 255, 0.5), inset 1px 0 2px rgba(0, 0, 0, 0.2);
+}
+
+/* Camera Bump Frame */
+.camera-bump {
+    position: absolute;
+    top: 30px;
+    left: 30px;
+    width: 100px;
+    height: 105px;
+    border-radius: 25px;
+    background: rgba(255, 255, 255, 0.4);
+    /* Glassmorphism! */
+    backdrop-filter: blur(10px);
+    box-shadow: inset 2px 2px 5px rgba(255, 255, 255, 0.9), 3px 3px 10px rgba(0, 0, 0, 0.15);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 10px;
+    padding-left: 15px;
+    z-index: 2;
+    /* above case background, but below stickers? */
+}
+
+/* Camera Lenses */
+.camera-lens {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    background: #1e272e;
+    box-shadow:
+        inset 0 0 10px black,
+        inset 0 0 2px rgba(255, 255, 255, 0.5),
+        1px 1px 3px rgba(0, 0, 0, 0.3);
+    border: 3px solid #7f8fa6;
+    position: relative;
+}
+
+/* inner reflection */
+.camera-lens::after {
+    content: '';
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    width: 8px;
+    height: 8px;
+    background: rgba(255, 255, 255, 0.6);
+    border-radius: 50%;
+    filter: blur(1px);
+}
+
+.flash {
+    position: absolute;
+    right: 15px;
+    top: 40px;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background: #f1c40f;
+    box-shadow: inset 0 0 5px white, 0 0 10px rgba(241, 196, 15, 0.5);
+    border: 1px solid #dcdde1;
+}
+
+/* Canvas Overlay covering the exact shape of case */
+#caseCanvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    /* clip-path prevents drawings from spilling outside rounded corners */
+    border-radius: 50px;
+    pointer-events: auto;
+    /* catch mouse events */
+    cursor: crosshair;
+    z-index: 5;
+    /* Very top, draw over everything! */
+}
+
+/* Cursor Hint Bubble */
+.cursor-hint {
+    position: absolute;
+    pointer-events: none;
+    /* Let mouse pass through to canvas */
+    font-size: 40px;
+    display: none;
+    z-index: 10;
+    transform: translate(-50%, -50%);
+    filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.3));
+}

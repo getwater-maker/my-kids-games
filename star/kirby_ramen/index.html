@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>커비 라면 만들기</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div id="game-container">
+        <!-- Background -->
+        <div class="bg-pattern">🍜</div>
+
+        <h1 id="title-text">양은 냄비에 물을 올려볼까요?</h1>
+
+        <!-- The Pot Area -->
+        <div id="pot-area">
+            <div id="pot-back">
+                <div id="water"></div>
+                <div id="pot-contents"></div>
+            </div>
+            <div id="pot-front"></div>
+        </div>
+
+        <!-- Ingredient Palette -->
+        <div id="palette-area" class="hidden">
+            <div class="ingredient noodle" draggable="true" data-type="noodle">
+                <div class="noodle-texture"></div>
+            </div>
+            <div class="ingredient soup" draggable="true" data-type="soup">스프</div>
+            <div class="ingredient kirby-egg" draggable="true" data-type="kirby-egg">
+                <div class="ke-eye left"></div>
+                <div class="ke-eye right"></div>
+                <div class="ke-blush left"></div>
+                <div class="ke-blush right"></div>
+            </div>
+            <div class="ingredient green-onion" draggable="true" data-type="green-onion">디테일<br>(파)</div>
+        </div>
+
+        <!-- Actions / Controls -->
+        <div id="controls-area">
+            <button id="add-water-btn" class="btn btn-action">물 붓기 💧</button>
+            <button id="boil-btn" class="btn btn-action hidden">불 켜고 물 끓이기 🔥</button>
+
+            <div id="timer-display" class="hidden">
+                남은 시간: <span id="time-left">3</span>초
+            </div>
+
+            <button id="eat-btn" class="btn btn-action hidden">호로록 먹기 😋</button>
+
+            <div style="margin-top: 20px;">
+                <button id="reset-btn" class="btn" style="background:#d32f2f;">다시 끓이기</button>
+                <button class="btn" style="background:#555;" onclick="location.href='../index.html'">메인화면으로</button>
+            </div>
+        </div>
+
+        <div id="confetti-layer"></div>
+    </div>
+
+    <!-- Audio Effects -->
+    <audio id="pour-sound" src="https://cdn.pixabay.com/audio/2022/03/15/audio_73147cd2ea.mp3" preload="auto"></audio>
+    <audio id="boil-sound" src="https://cdn.pixabay.com/audio/2022/03/15/audio_1e596eb4c7.mp3" preload="auto"
+        loop></audio>
+
+    <script src="js/main.js"></script>
+</body>
+
+</html>

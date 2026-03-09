@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>커비 배드워즈</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div id="game-container">
+        <!-- UI Layer -->
+        <div id="ui-layer">
+            <!-- HUD -->
+            <div id="hud">
+                <div class="team-status blue-team">
+                    <span class="team-name">우리 팀 (파랑)</span>
+                    <span id="player-hp">HP: 100</span>
+                    <span id="player-bed-status">🛏️ 침대: 생존</span>
+                </div>
+
+                <div class="resources-hud">
+                    <span class="r-iron">철: <span id="res-iron">0</span></span>
+                    <span class="r-gold">금: <span id="res-gold">0</span></span>
+                    <span class="r-emerald">에메랄드: <span id="res-emerald">0</span></span>
+                </div>
+
+                <div class="team-status red-team">
+                    <span class="team-name">적 팀 (빨강)</span>
+                    <span id="enemy-hp">HP: 100</span>
+                    <span id="enemy-bed-status">🛏️ 침대: 생존</span>
+                </div>
+            </div>
+
+            <!-- Shop Modal -->
+            <div id="shop-modal" class="modal">
+                <div class="modal-content">
+                    <h2>상점 (상호작용: B키)</h2>
+                    <div class="shop-items">
+                        <div class="shop-item" data-type="wool" data-cost-type="iron" data-cost-val="4">
+                            <span>양털 블록 x16</span>
+                            <button class="buy-btn">철 4개</button>
+                        </div>
+                        <div class="shop-item" data-type="sword_stone" data-cost-type="iron" data-cost-val="10">
+                            <span>돌검 (공격력 증가)</span>
+                            <button class="buy-btn">철 10개</button>
+                        </div>
+                        <div class="shop-item" data-type="sword_iron" data-cost-type="gold" data-cost-val="5">
+                            <span>철검 (강력함)</span>
+                            <button class="buy-btn">금 5개</button>
+                        </div>
+                        <div class="shop-item" data-type="armor" data-cost-type="emerald" data-cost-val="4">
+                            <span>다이아몬드 갑옷 (방어력)</span>
+                            <button class="buy-btn">에메랄드 4개</button>
+                        </div>
+                    </div>
+                    <button id="close-shop-btn">닫기</button>
+                </div>
+            </div>
+
+            <!-- Screens -->
+            <div id="start-screen" class="screen active">
+                <h1>커비 배드워즈</h1>
+                <p>자원을 모아 상점(B)에서 아이템을 사고,<br>마우스로 블록을 설치해 적의 <span style="color: #d32f2f;">침대</span>를 부수세요!</p>
+                <div class="controls-guide">
+                    <p>조작: W,A,S,D (이동) / Space (점프) / 좌클릭 (공격 및 블록 파괴) / 우클릭 (블록 설치) / B (상점)</p>
+                </div>
+                <button id="start-btn" class="action-btn">전투 시작</button>
+            </div>
+
+            <div id="game-over-screen" class="screen">
+                <h1 style="color: #d32f2f;">패배...</h1>
+                <p>침대가 파괴되고 목숨을 잃었습니다.</p>
+                <button id="restart-btn" class="action-btn">재도전</button>
+                <button class="action-btn home-btn" onclick="location.href='../index.html'">처음으로</button>
+            </div>
+
+            <div id="game-clear-screen" class="screen">
+                <h1 style="color: #388e3c;">승리!</h1>
+                <p>적의 침대를 부수고 적을 물리쳤습니다!</p>
+                <button class="action-btn home-btn" onclick="location.href='../index.html'">처음으로</button>
+            </div>
+
+            <!-- Quick Messages (e.g. "침대가 파괴되었습니다!") -->
+            <div id="announcement"></div>
+        </div>
+
+        <!-- Game Canvas -->
+        <canvas id="game-canvas" width="1000" height="600" oncontextmenu="return false;"></canvas>
+    </div>
+
+    <script src="js/main.js"></script>
+</body>
+
+</html>

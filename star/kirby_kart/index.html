@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>슈퍼 커비 카트</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Three.js for 3D Graphics -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+
+<body>
+    <div id="game-container">
+        <!-- HUD -->
+        <div id="hud">
+            <div class="hud-item" id="lap-counter">Lap: <span id="lap-text">1</span> / 3</div>
+            <div class="hud-item" id="position">순위: <span id="pos-text">1</span> / 4</div>
+            <div class="hud-item" id="speedometer">속도: <span id="speed-text">0</span> km/h</div>
+        </div>
+
+        <div id="countdown" class="flash-text"></div>
+
+        <!-- Start Screen -->
+        <div id="start-screen" class="screen active">
+            <h1>슈퍼 커비 카트</h1>
+            <p>방향키(WASD) 또는 화살표 키로 카트를 조종하세요!<br>스페이스바(Space)를 눌러 드리프트를 할 수 있습니다.<br>AI 레이서들을 이기고 3바퀴를 먼저 완주하세요!</p>
+            <button id="start-btn" class="btn">레이스 시작</button>
+            <button class="btn" style="background:#d32f2f;" onclick="location.href='../index.html'">메인화면으로</button>
+        </div>
+
+        <!-- End Screen -->
+        <div id="game-over-screen" class="screen">
+            <h1 id="result-title">레이스 종료!</h1>
+            <p id="result-desc"></p>
+            <button id="restart-btn" class="btn">다시 달리기</button>
+            <button class="btn" style="background:#d32f2f;" onclick="location.href='../index.html'">메인화면으로</button>
+        </div>
+    </div>
+
+    <!-- WebGL Canvas will be injected here -->
+    <script src="js/main.js"></script>
+</body>
+
+</html>

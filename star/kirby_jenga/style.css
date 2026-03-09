@@ -1,0 +1,111 @@
+body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #87CEEB;
+    /* 하늘색 배경 */
+    font-family: 'Malgun Gothic', sans-serif;
+    color: white;
+}
+
+#game-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 10;
+}
+
+#hud {
+    position: absolute;
+    top: 20px;
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    font-size: 30px;
+    font-weight: bold;
+    text-shadow: 2px 2px 4px #000;
+}
+
+#timer-box {
+    color: #ffd54f;
+    font-size: 50px;
+}
+
+#survivor-box {
+    color: #ef5350;
+}
+
+/* Screens */
+.screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 20;
+    text-align: center;
+    pointer-events: auto;
+}
+
+.screen.active {
+    display: flex;
+}
+
+.screen h1 {
+    font-size: 50px;
+    margin-bottom: 20px;
+    color: #ff9800;
+    text-shadow: 0 0 10px #ff5722;
+}
+
+.screen p {
+    font-size: 20px;
+    margin-bottom: 30px;
+    line-height: 1.5;
+}
+
+.btn {
+    padding: 15px 30px;
+    font-size: 24px;
+    font-family: inherit;
+    font-weight: bold;
+    background: #4caf50;
+    color: white;
+    border: 3px solid white;
+    border-radius: 10px;
+    cursor: pointer;
+    margin: 10px;
+    transition: transform 0.1s, background 0.2s;
+    pointer-events: auto;
+}
+
+.btn:hover {
+    background: #388e3c;
+    transform: scale(1.05);
+}
+
+.btn:active {
+    transform: scale(0.95);
+}
+
+#announcement {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 60px;
+    color: white;
+    text-shadow: 2px 2px 0px black, 0 0 20px yellow;
+    z-index: 15;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+}
