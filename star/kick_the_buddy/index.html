@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>킥 더 버디: 스트레스 타파! (Kick the Buddy 2D)</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;700&family=Oswald:wght@500;700&display=swap"
+        rel="stylesheet">
+    <!-- Matter.js for Ragdoll Physics -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
+</head>
+
+<body>
+    <div id="game-container">
+        <!-- Canvas injected by Matter.js -->
+
+        <!-- HUD TOP -->
+        <div id="hud-top">
+            <div id="coin-box">💰 <span id="coin-val">0</span></div>
+            <div id="weapon-display">TOOL: <span id="current-tool">PUNCH</span></div>
+        </div>
+
+        <!-- WEAPON BAR BOTTOM -->
+        <div id="weapon-bar">
+            <button class="tool-btn active" data-tool="punch">👊 주먹</button>
+            <button class="tool-btn" data-tool="bomb">💣 폭탄</button>
+            <button class="tool-btn" data-tool="gun">🔫 머신건</button>
+            <button class="tool-btn danger" id="reset-buddy">🔄 버디 소환</button>
+        </div>
+
+        <!-- Popups for impact -->
+        <div id="fx-layer"></div>
+
+        <!-- OVERLAYS -->
+        <div id="overlay" class="overlay">
+            <div class="menu-box">
+                <div class="logo">😵🥊</div>
+                <h1 class="logo-text">KICK THE<span>BUDDY</span></h1>
+                <p>오늘의 스트레스, 버디에게 모두 날려버리세요! <br>버디를 때리면 코인을 획득할 수 있습니다.</p>
+                <div class="controls-guide">
+                    Drag: Toss Buddy | Click: Use Selected Tool
+                </div>
+                <button id="start-btn">스트레스 풀기!</button>
+            </div>
+        </div>
+    </div>
+    <script src="js/main.js"></script>
+</body>
+
+</html>
