@@ -6,6 +6,7 @@ let engine, runner, render;
 let player, wheelA, wheelB, playerBox;
 let isHolding = false;
 let score = 0, bestScore = 0, gemCount = 0;
+let currentStage = parseInt(localStorage.getItem('neon_rider_stage')) || 1;
 let gameState = 'START';
 let trackSegments = [];
 let nextTrackX = 0;
@@ -148,6 +149,7 @@ function setupEvents() {
 
     document.getElementById('start-btn').addEventListener('click', startGame);
     document.getElementById('restart-btn').addEventListener('click', restartGame);
+    document.getElementById('next-stage-btn').addEventListener('click', nextStage);
 
     Events.on(engine, 'beforeUpdate', () => {
         if (gameState !== 'PLAYING') return;
@@ -187,8 +189,10 @@ function setupEvents() {
         score = Math.max(score, Math.floor(playerBox.position.x / 100) - 2);
         updateUI();
 
-        // Check for Crash (if top of box touches ground-like label or too inverted)
-        // Matter.js detection
+        // Check for Stage Clear
+        if (score >= 1000) {
+            winStage();
+        }
     });
 
     Events.on(engine, 'collisionStart', (event) => {
@@ -218,6 +222,24 @@ function restartGame() {
     location.reload();
 }
 
+function winStage() {
+    if (gameState === 'WIN') return;
+    gameState = 'WIN';
+
+    // Stop runner
+    Runner.stop(runner);
+
+    document.getElementById('win-screen').classList.remove('hidden');
+    document.getElementById('stage-clear-msg').textContent = `Stage ${currentStage} Complete!`;
+
+    currentStage++;
+    localStorage.setItem('neon_rider_stage', currentStage);
+}
+
+function nextStage() {
+    location.reload(); // Simplest way to reset everything for next stage
+}
+
 function die() {
     if (gameState === 'DEAD') return;
     gameState = 'DEAD';
@@ -230,8 +252,12 @@ function die() {
 }
 
 function updateUI() {
-    document.getElementById('score').textContent = `SCORE: ${score}`;
+    document.getElementById('score').textContent = `SCORE: ${score} / 1000`;
     document.getElementById('gem-count').textContent = gemCount;
+    document.getElementById('stage-info').textContent = `STAGE ${currentStage}`;
+
+    const progress = Math.min(100, (score / 1000) * 100);
+    document.getElementById('progress-bar').style.width = progress + '%';
 }
 
 // Initial Call

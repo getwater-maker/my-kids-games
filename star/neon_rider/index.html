@@ -18,8 +18,12 @@
 
         <div id="hud">
             <div class="top-row">
-                <div id="score">SCORE: 0</div>
+                <div id="stage-info">STAGE 1</div>
+                <div id="score">SCORE: 0 / 1000</div>
                 <div id="best">BEST: 0</div>
+            </div>
+            <div id="progress-container">
+                <div id="progress-bar"></div>
             </div>
             <div id="gems">💎 <span id="gem-count">0</span></div>
         </div>
@@ -37,6 +41,14 @@
                 <h1 class="death-text">CRASHED!</h1>
                 <p id="final-score">SCORE: 0</p>
                 <button id="restart-btn">TRY AGAIN</button>
+            </div>
+        </div>
+
+        <div id="win-screen" class="overlay hidden">
+            <div class="menu">
+                <h1 class="win-text">STAGE CLEAR!</h1>
+                <p id="stage-clear-msg">Level 1 Complete</p>
+                <button id="next-stage-btn">NEXT STAGE</button>
             </div>
         </div>
     </div>
