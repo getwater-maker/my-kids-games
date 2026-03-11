@@ -1,0 +1,222 @@
+:root {
+    --ice-blue: #a5f3fc;
+    --deep-blue: #0ea5e9;
+    --fire-orange: #f97316;
+    --dark-bg: #0f172a;
+    --glass-bg: rgba(255, 255, 255, 0.1);
+}
+
+body,
+html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: var(--dark-bg);
+    font-family: 'Fredoka', sans-serif;
+    color: white;
+}
+
+#game-container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+}
+
+canvas {
+    display: block;
+}
+
+/* HUD Common */
+#weather-hud,
+#resource-hud,
+#furnace-hud {
+    position: absolute;
+    pointer-events: none;
+    z-index: 10;
+}
+
+/* Top Left: Weather */
+#weather-hud {
+    top: 20px;
+    left: 20px;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 15px 25px;
+    border-radius: 15px;
+    border-left: 5px solid var(--ice-blue);
+}
+
+#temp-display {
+    font-family: 'Oswald', sans-serif;
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+#status-display {
+    font-size: 0.8rem;
+    color: var(--ice-blue);
+    letter-spacing: 1px;
+}
+
+/* Top Right: Resources */
+#resource-hud {
+    top: 20px;
+    right: 20px;
+    display: flex;
+    gap: 15px;
+}
+
+.resource-box {
+    background: rgba(0, 0, 0, 0.6);
+    padding: 10px 20px;
+    border-radius: 50px;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+/* Center Bottom: Furnace Status */
+#furnace-hud {
+    bottom: 220px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 400px;
+    text-align: center;
+}
+
+#furnace-level {
+    font-family: 'Oswald', sans-serif;
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    color: var(--fire-orange);
+    text-shadow: 0 0 10px rgba(249, 115, 22, 0.5);
+}
+
+.progress-container {
+    width: 100%;
+    height: 12px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+#furnace-progress {
+    width: 80%;
+    height: 100%;
+    background: linear-gradient(90deg, #f97316, #fb923c);
+    box-shadow: 0 0 15px var(--fire-orange);
+    transition: width 0.3s;
+}
+
+#survivor-count {
+    margin-top: 10px;
+    font-size: 1rem;
+    opacity: 0.8;
+}
+
+/* Bottom Interaction */
+#interaction-ui {
+    position: absolute;
+    bottom: 40px;
+    left: 0;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    z-index: 10;
+}
+
+.action-btn {
+    background: var(--fire-orange);
+    color: white;
+    border: none;
+    padding: 15px 40px;
+    font-size: 1.4rem;
+    font-weight: bold;
+    border-radius: 12px;
+    cursor: pointer;
+    box-shadow: 0 4px 0 #c2410c;
+    transition: 0.2s;
+    font-family: 'Fredoka', sans-serif;
+}
+
+.action-btn:hover {
+    transform: translateY(-2px);
+    background: #fb923c;
+}
+
+.action-btn:active {
+    transform: translateY(2px);
+    box-shadow: 0 0 0 #c2410c;
+}
+
+.action-btn.small {
+    background: #475569;
+    font-size: 1rem;
+    padding: 10px 25px;
+    box-shadow: 0 4px 0 #1e293b;
+}
+
+.sub-actions {
+    display: flex;
+    gap: 10px;
+}
+
+/* Overlays */
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(15, 23, 42, 0.9);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+    backdrop-filter: blur(10px);
+}
+
+.modal {
+    text-align: center;
+    max-width: 500px;
+    padding: 40px;
+}
+
+.game-title {
+    font-family: 'Oswald', sans-serif;
+    font-size: 4rem;
+    line-height: 0.9;
+    margin-bottom: 20px;
+}
+
+.game-title span {
+    display: block;
+    color: var(--ice-blue);
+    font-size: 2.5rem;
+}
+
+.modal p {
+    color: #94a3b8;
+    margin-bottom: 40px;
+    font-size: 1.1rem;
+}
+
+#start-game-btn,
+#restart-btn {
+    background: var(--ice-blue);
+    color: var(--dark-bg);
+    border: none;
+    padding: 15px 50px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.hidden {
+    display: none !important;
+}

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>화이트아웃 서바이벌 (Whiteout Survival)</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;700&family=Oswald:wght@500;700&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <div id="game-container">
+        <canvas id="gameCanvas"></canvas>
+
+        <!-- Weather Status -->
+        <div id="weather-hud">
+            <div id="temp-display">🌡️ <span id="temp-value">-25</span>°C</div>
+            <div id="status-display">WINTER STORM INCOMING</div>
+        </div>
+
+        <!-- Resource HUD -->
+        <div id="resource-hud">
+            <div class="resource-box">🌲 <span id="wood-count">100</span></div>
+            <div class="resource-box">🥩 <span id="food-count">100</span></div>
+            <div class="resource-box">🔥 <span id="coal-count">50</span></div>
+        </div>
+
+        <!-- Furnace Status -->
+        <div id="furnace-hud">
+            <div id="furnace-level">FURNACE LV.<span id="f-lv">1</span></div>
+            <div class="progress-container">
+                <div id="furnace-progress"></div>
+            </div>
+            <div id="survivor-count">👥 POPULATION: <span id="pop-count">4</span></div>
+        </div>
+
+        <!-- Interaction UI -->
+        <div id="interaction-ui">
+            <button id="upgrade-btn" class="action-btn">🔥 UPGRADE FURNACE</button>
+            <div class="sub-actions">
+                <button id="gather-wood-btn" class="action-btn small">🌲 GATHER WOOD</button>
+                <button id="hunt-food-btn" class="action-btn small">🥩 HUNT FOOD</button>
+            </div>
+        </div>
+
+        <!-- Overlays -->
+        <div id="start-overlay" class="overlay">
+            <div class="modal">
+                <h1 class="game-title">WHITEOUT<span>SURVIVAL</span></h1>
+                <p>Keep the furnace burning and manage your survivors through the eternal winter!</p>
+                <button id="start-game-btn">SURVIVE</button>
+            </div>
+        </div>
+
+        <div id="death-overlay" class="overlay hidden">
+            <div class="modal">
+                <h1 class="death-title">FROZEN OVER</h1>
+                <p>The furnace went out and the survivors succumbed to the cold.</p>
+                <button id="restart-btn">RETRY</button>
+            </div>
+        </div>
+    </div>
+    <script src="js/main.js"></script>
+</body>
+
+</html>
