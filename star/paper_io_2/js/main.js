@@ -158,17 +158,84 @@ function moveEntity(ent, id) {
 }
 
 function fillArea(ownerId, trail) {
-    // Basic fill: Capture everything inside the trail loop
-    // For simplicity in this clone, we capture trail cells and surrounding area
+    // 1. Mark trail as captured
     trail.forEach(cell => {
         captureCell(cell.x, cell.y, ownerId);
-        // "Fat" trail for easier capture
-        for (let i = -1; i <= 1; i++) {
-            for (let j = -1; j <= 1; j++) {
-                captureCell(cell.x + i * TILE_SIZE, cell.y + j * TILE_SIZE, ownerId);
+    });
+
+    // 2. Flood fill from edges to find "outside" area
+    const isOutside = {}; // Use object for sparse or fast 2D mapping
+    const queue = [];
+
+    // Add all edge tiles to queue if they are not owned by ownerId
+    for (let x = 0; x < GRID_SIZE; x += TILE_SIZE) {
+        // Top edge
+        if (grid[x][0] !== ownerId) {
+            if (!isOutside[x]) isOutside[x] = {};
+            isOutside[x][0] = true;
+            queue.push({ x, y: 0 });
+        }
+        // Bottom edge
+        const bottom = GRID_SIZE - TILE_SIZE;
+        if (grid[x][bottom] !== ownerId) {
+            if (!isOutside[x]) isOutside[x] = {};
+            isOutside[x][bottom] = true;
+            queue.push({ x, y: bottom });
+        }
+    }
+    for (let y = 0; y < GRID_SIZE; y += TILE_SIZE) {
+        // Left edge
+        if (grid[0][y] !== ownerId) {
+            if (!isOutside[0]) isOutside[0] = {};
+            if (!isOutside[0][y]) {
+                isOutside[0][y] = true;
+                queue.push({ x: 0, y });
             }
         }
-    });
+        // Right edge
+        const right = GRID_SIZE - TILE_SIZE;
+        if (grid[right][y] !== ownerId) {
+            if (!isOutside[right]) isOutside[right] = {};
+            if (!isOutside[right][y]) {
+                isOutside[right][y] = true;
+                queue.push({ x: right, y });
+            }
+        }
+    }
+
+    // Standard BFS flood fill
+    let head = 0;
+    while (head < queue.length) {
+        const { x, y } = queue[head++];
+        const directions = [
+            { dx: TILE_SIZE, dy: 0 },
+            { dx: -TILE_SIZE, dy: 0 },
+            { dx: 0, dy: TILE_SIZE },
+            { dx: 0, dy: -TILE_SIZE }
+        ];
+
+        for (const dir of directions) {
+            const nx = x + dir.dx;
+            const ny = y + dir.dy;
+
+            if (nx >= 0 && nx < GRID_SIZE && ny >= 0 && ny < GRID_SIZE) {
+                if (grid[nx][ny] !== ownerId && (!isOutside[nx] || !isOutside[nx][ny])) {
+                    if (!isOutside[nx]) isOutside[nx] = {};
+                    isOutside[nx][ny] = true;
+                    queue.push({ x: nx, y: ny });
+                }
+            }
+        }
+    }
+
+    // 3. Capture everything that is NOT outside and NOT already owned
+    for (let x = 0; x < GRID_SIZE; x += TILE_SIZE) {
+        for (let y = 0; y < GRID_SIZE; y += TILE_SIZE) {
+            if (grid[x][y] !== ownerId && (!isOutside[x] || !isOutside[x][y])) {
+                grid[x][y] = ownerId;
+            }
+        }
+    }
 }
 
 function updateBotAI(bot) {
