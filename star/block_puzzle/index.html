@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BLOCK PUZZLE: Ultimate Strategy</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Rajdhani:wght@500;700&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <div id="game-container">
+        <!-- Background elements -->
+        <div class="stars"></div>
+        <div class="twinkling"></div>
+
+        <div id="hud">
+            <div class="logo-box">
+                <div class="trophy">🏆</div>
+                <h1 id="score-label">SCORE: <span id="current-score">0</span></h1>
+                <div id="best-score-label">BEST: <span id="best-score">0</span></div>
+            </div>
+
+            <div class="logo-title">
+                <span class="b">B</span><span class="l">L</span><span class="o">O</span><span class="c">C</span><span
+                    class="k">K</span>
+                <div class="subtitle">PUZZLE GAME</div>
+            </div>
+        </div>
+
+        <div id="main-grid-container">
+            <div id="grid-bg"></div>
+            <div id="grid-overlay"></div>
+        </div>
+
+        <div id="shape-selection-container">
+            <div class="shape-slot" id="slot-0"></div>
+            <div class="shape-slot" id="slot-1"></div>
+            <div class="shape-slot" id="slot-2"></div>
+        </div>
+
+        <!-- Overlays -->
+        <div id="game-over-overlay" class="overlay hidden">
+            <div class="menu-box">
+                <h2 class="game-over-text">GAME OVER</h2>
+                <div class="final-score">SCORE: <span id="final-score-val">0</span></div>
+                <button id="restart-btn">PLAY AGAIN</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+</body>
+
+</html>

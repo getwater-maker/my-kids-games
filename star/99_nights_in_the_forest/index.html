@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>99 Nights in the Forest | 3D Survival Horror</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Creepster&family=Outfit:wght@400;700&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <div id="game-container">
+        <!-- HUD -->
+        <div id="hud" class="hidden">
+            <div class="hud-top">
+                <div class="day-counter">NIGHT <span id="night-count">1</span></div>
+                <div class="time-progress">
+                    <div id="time-bar"></div>
+                </div>
+            </div>
+
+            <div class="hud-bottom">
+                <div class="stat-group">
+                    <div class="stat-label">HEALTH</div>
+                    <div class="stat-bar-bg">
+                        <div id="health-bar" class="stat-bar health"></div>
+                    </div>
+                </div>
+                <div class="stat-group">
+                    <div class="stat-label">HUNGER</div>
+                    <div class="stat-bar-bg">
+                        <div id="hunger-bar" class="stat-bar hunger"></div>
+                    </div>
+                </div>
+                <div class="stat-group">
+                    <div class="stat-label">CAMPFIRE FUEL</div>
+                    <div class="stat-bar-bg">
+                        <div id="fuel-bar" class="stat-bar fuel"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="interaction-prompt" class="hidden">Press [E] to Interact</div>
+            <div class="crosshair"></div>
+        </div>
+
+        <!-- Start Screen -->
+        <div id="overlay" class="screen">
+            <div class="menu-card">
+                <h1 class="title">99 NIGHTS</h1>
+                <h2 class="subtitle">IN THE FOREST</h2>
+                <div class="story">
+                    숲속에 잃어버린 아이들을 찾고, 99일 동안 살아남으세요.<br>
+                    밤이 찾아오면 불이 꺼지지 않게 조심해야 합니다...
+                </div>
+                <div class="controls-guide">
+                    <div class="ctrl"><span>WASD</span> MOVE</div>
+                    <div class="ctrl"><span>E</span> INTERACT</div>
+                    <div class="ctrl"><span>SHIFT</span> RUN</div>
+                    <div class="ctrl"><span>SPACE</span> JUMP</div>
+                </div>
+                <button id="start-btn" class="main-btn">ENTER THE FOREST</button>
+            </div>
+        </div>
+
+        <!-- Game Over / Win Screen -->
+        <div id="game-over" class="screen hidden">
+            <div class="menu-card">
+                <h1 id="status-title" class="title">YOU PERISHED</h1>
+                <p id="status-msg">The darkness consumed you...</p>
+                <button onclick="location.reload()" class="main-btn">TRY AGAIN</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Core Libs -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/PointerLockControls.js"></script>
+
+    <!-- Modules -->
+    <script src="js/main.js"></script>
+</body>
+
+</html>

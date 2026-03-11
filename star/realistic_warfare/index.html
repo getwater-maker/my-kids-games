@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>REALISTIC WARFARE: 2D Milsim</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&family=Share+Tech+Mono&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <div id="game-wrapper">
+        <canvas id="gameCanvas"></canvas>
+
+        <div id="hud">
+            <!-- Tactical Overlays -->
+            <div class="vignette"></div>
+
+            <div id="compass">N --- NW --- W --- SW --- S --- SE --- E --- NE --- N</div>
+
+            <div class="bottom-display">
+                <div class="vital-stats">
+                    <div class="stat-group">
+                        <span class="label">HEALTH</span>
+                        <div class="bar-bg">
+                            <div id="hp-bar" class="bar-fill"></div>
+                        </div>
+                        <span id="hp-text">100%</span>
+                    </div>
+                </div>
+
+                <div class="weapon-status">
+                    <div class="fire-mode">SEMI / AUTO</div>
+                    <div class="ammo-info">
+                        <span id="mag-val">30</span>
+                        <span class="separator">/</span>
+                        <span id="reserve-val">210</span>
+                    </div>
+                    <div class="weapon-name">M4A1 CARBINE</div>
+                </div>
+            </div>
+
+            <div id="aim-guide"></div>
+        </div>
+
+        <div id="overlay">
+            <div class="mission-card">
+                <h1 class="glitch" data-text="REALISTIC WARFARE">REALISTIC WARFARE</h1>
+                <p class="intel">// OPERATION: CLEAN SWEEP</p>
+                <div class="soldier-preview">💂‍♂️</div>
+                <div class="mode-selection">
+                    <button class="mode-btn active" data-mode="SOLO">SOLO</button>
+                    <button class="mode-btn" data-mode="DUO">DUO (2)</button>
+                    <button class="mode-btn" data-mode="SQUAD">SQUAD (4x4)</button>
+                </div>
+                <button id="start-btn">DEPLOY SQUAD</button>
+                <div class="briefing">
+                    <p><b>[WASD]</b>: MOVEMENT (High Weight)</p>
+                    <p><b>[MOUSE]</b>: AIM / SHOOT (Realistic Recoil)</p>
+                    <p><b>[R]</b>: TACTICAL RELOAD</p>
+                    <p><b>[SPACE]</b>: MELEE BASH / INTERACT</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="damage-flash"></div>
+    </div>
+
+    <script src="js/main.js"></script>
+</body>
+
+</html>

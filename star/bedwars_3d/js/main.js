@@ -1,722 +1,321 @@
 // js/main.js
 
-// --- Constants & Config ---
-const TILE_SIZE = 1; // 3D Unit size
-const GRAVITY = 0.02;
-const JUMP_FORCE = 0.35;
-const WALK_SPEED = 0.05; // Adjusted to 'Speed 5' feel
-
-// --- Three.js Setup ---
 let scene, camera, renderer, controls;
 let raycaster = new THREE.Raycaster();
-let moveForward = false, moveBackward = false, moveLeft = false, moveRight = false;
+let moveForward = false, moveBackward = false, moveLeft = false, moveRight = false, moveJump = false;
 let canJump = false;
 let velocity = new THREE.Vector3();
 let direction = new THREE.Vector3();
-let isLeftMouseDown = false;
-let breakingTarget = null;
-let breakingProgress = 0;
-const BREAK_SPEED = 2; // Progress per frame
 
-// --- Game State ---
-let gameState = 'START';
+// Player State
 let player = {
     hp: 100,
-    kills: 0,
     iron: 0,
-    emerald: 0,
-    armor: 1, // 1: None, 0.8: Leather, 0.6: Iron, 0.4: Diamond, 0.2: Emerald
+    gold: 0,
+    kills: 0,
+    swordLevel: 0, // 0: Wood, 1: Stone, 2: Iron, 3: Diamond
+    wool: 24,
     selectedSlot: 0,
-    isPlacingMode: false,
-    inventory: [
-        { name: '칼', type: 'weapon', damage: 20, level: 0 },
-        { name: '양털', type: 'block', count: 24 }
-    ]
+    bedActive: true
 };
 
-let objects = [];
 let enemies = [];
+let objects = [];
 let resources = [];
 let spawners = [];
-let beds = [];
 let placementGhost;
+let gameState = 'START';
 
-// --- UI Elements ---
-const startScreen = document.getElementById('start-screen');
-const gameOverScreen = document.getElementById('game-over');
-const crosshair = document.getElementById('crosshair');
-const hud = document.getElementById('hud');
-const woolCountText = document.getElementById('wool-count');
-const ironCountText = document.getElementById('iron-count');
-const emeraldCountText = document.getElementById('emerald-count');
-const hpBarFill = document.getElementById('hp-bar-fill');
-const hpText = document.getElementById('hp-text');
-const shopScreen = document.getElementById('shop-screen');
-const invSlots = [document.getElementById('slot-0'), document.getElementById('slot-1')];
+// UI
+const ui = {
+    start: document.getElementById('start-screen'),
+    hud: document.getElementById('hud'),
+    hotbar: document.getElementById('hotbar-ui'),
+    crosshair: document.getElementById('crosshair'),
+    hpFill: document.getElementById('hp-bar-fill'),
+    iron: document.getElementById('iron-count'),
+    gold: document.getElementById('gold-count'),
+    wool: document.getElementById('wool-count'),
+    slots: [document.getElementById('slot-0'), document.getElementById('slot-1')],
+    msg: document.getElementById('msg'),
+    shop: document.getElementById('shop-screen'),
+    gameOver: document.getElementById('game-over'),
+    resultTitle: document.getElementById('result-title'),
+    resultMsg: document.getElementById('result-msg')
+};
 
-// --- Initialization ---
 function init() {
     scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x87ceeb); // Sky blue
+    scene.background = new THREE.Color(0x87ceeb);
     scene.fog = new THREE.Fog(0x87ceeb, 0, 100);
 
     camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    camera.position.y = 2; // Eyes level
+    camera.position.set(0, 3, 0);
 
     renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.shadowMap.enabled = true;
-    renderer.domElement.style.position = 'absolute';
-    renderer.domElement.style.top = '0';
-    renderer.domElement.style.left = '0';
-    renderer.domElement.style.zIndex = '1';
     document.getElementById('game-container').prepend(renderer.domElement);
 
-    // Placement Ghost
-    const ghostGeo = new THREE.BoxGeometry(1.01, 1.01, 1.01);
-    const ghostMat = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.4, wireframe: true });
-    placementGhost = new THREE.Mesh(ghostGeo, ghostMat);
-    placementGhost.visible = false;
+    // Lights
+    scene.add(new THREE.AmbientLight(0xffffff, 0.7));
+    const sun = new THREE.DirectionalLight(0xffffff, 0.8);
+    sun.position.set(20, 40, 20);
+    sun.castShadow = true;
+    scene.add(sun);
+
+    // Ghost for building
+    placementGhost = new THREE.Mesh(new THREE.BoxGeometry(1.05, 1.05, 1.05), new THREE.MeshBasicMaterial({ color: 0xffffff, wireframe: true, transparent: true, opacity: 0.3 }));
     scene.add(placementGhost);
 
-    // Lights
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
-    scene.add(ambientLight);
-
-    const sunLight = new THREE.DirectionalLight(0xffffff, 0.8);
-    sunLight.position.set(10, 20, 10);
-    sunLight.castShadow = true;
-    scene.add(sunLight);
-
-    // Controls
     controls = new THREE.PointerLockControls(camera, document.body);
-
-    document.getElementById('start-btn').addEventListener('click', () => {
-        controls.lock();
-    });
+    document.getElementById('start-btn').addEventListener('click', () => controls.lock());
 
     controls.addEventListener('lock', () => {
-        startScreen.classList.add('hidden');
-        gameOverScreen.classList.add('hidden');
-        crosshair.style.display = 'block';
-        hud.classList.remove('hidden');
-        updateModeText();
-        selectSlot(0); // Starting selection
+        ui.start.classList.add('hidden');
+        ui.hud.classList.remove('hidden');
+        ui.hotbar.classList.remove('hidden');
+        ui.msg.classList.remove('hidden');
+        ui.crosshair.style.display = 'block';
         gameState = 'PLAYING';
     });
 
     controls.addEventListener('unlock', () => {
-        if (gameState !== 'GAME_OVER') {
-            startScreen.classList.remove('hidden');
-            crosshair.style.display = 'none';
-        }
+        if (gameState === 'PLAYING') ui.start.classList.remove('hidden');
     });
 
-    // Input Handling
-    window.addEventListener('keydown', onKeyDown);
-    window.addEventListener('keyup', onKeyUp);
-    window.addEventListener('mousedown', onMouseDown);
-    window.addEventListener('mouseup', onMouseUp);
-    // Prevent context menu on right click to allow block placing
-    window.addEventListener('contextmenu', (e) => e.preventDefault());
-    window.addEventListener('wheel', (e) => {
-        if (e.deltaY > 0) selectSlot(1);
-        else selectSlot(0);
-    });
-
-    // Generate Level
-    generateMap();
-
-    // Start Loop
+    setupInput();
+    generateWorld();
     animate();
 }
 
-// --- Map Generation ---
-function generateMap() {
-    // Starting Island (Blue)
-    createIsland(0, 0, 0, 12, 12, 0x4caf50);
-    createBed(0, 1, -5, 'blue');
+function generateWorld() {
+    // Player Island
+    createIsland(0, 0, 0, 15, 15, 0x4caf50);
+    createBed(0, 1.1, -6, 0x42a5f5); // Blue team bed
     createSpawner(0, 1, -2, 'iron');
 
-    // Side Island Left
-    createIsland(-30, 0, 15, 10, 10, 0x9e9e9e);
-    createSpawner(-30, 1, 15, 'iron');
+    // Central Island
+    createIsland(0, 0, 40, 20, 20, 0x90a4ae);
+    createSpawner(0, 1, 40, 'gold');
 
-    // Side Island Right
-    createIsland(30, 0, 15, 10, 10, 0x9e9e9e);
-    createSpawner(30, 1, 15, 'iron');
-
-    // Middle Island (Diamond/Emerald Area)
-    createIsland(0, 0, 40, 20, 20, 0x546e7a);
-    createSpawner(0, 1, 40, 'emerald');
-
-    // Enemy Island (Red)
-    createIsland(0, 0, 80, 12, 12, 0xef5350);
-    createBed(0, 1, 85, 'red');
+    // Enemy Island
+    createIsland(0, 0, 80, 15, 15, 0xef5350);
+    createBed(0, 1.1, 86, 0xef5350); // Red team bed
     createSpawner(0, 1, 82, 'iron');
 
-    spawnEnemy(0, 1, 75);
-    spawnEnemy(5, 1, 80);
-
-    const voidGeo = new THREE.PlaneGeometry(3000, 3000);
-    const voidMat = new THREE.MeshBasicMaterial({ color: 0x111111, transparent: true, opacity: 0.2 });
-    const voidPlane = new THREE.Mesh(voidGeo, voidMat);
-    voidPlane.rotation.x = -Math.PI / 2;
-    voidPlane.position.y = -40;
-    scene.add(voidPlane);
-}
-
-function createSpawner(x, y, z, type) {
-    const geo = new THREE.CylinderGeometry(1, 1, 0.2, 8);
-    const mat = new THREE.MeshPhongMaterial({ color: type === 'iron' ? 0xbdc3c7 : 0x2ecc71 });
-    const mesh = new THREE.Mesh(geo, mat);
-    mesh.position.set(x, y - 0.9, z);
-    scene.add(mesh);
-    spawners.push({ x, y, z, type, lastSpawn: 0 });
-}
-
-function spawnResource(x, y, z, type) {
-    const geo = new THREE.IcosahedronGeometry(0.3);
-    const mat = new THREE.MeshPhongMaterial({ color: type === 'iron' ? 0xffffff : 0x00ff00, emissive: type === 'iron' ? 0x000000 : 0x003300 });
-    const mesh = new THREE.Mesh(geo, mat);
-    mesh.position.set(x, y + 0.5, z);
-    scene.add(mesh);
-    resources.push({ mesh, type });
+    spawnEnemy(0, 1.5, 75);
+    spawnEnemy(5, 1.5, 80);
 }
 
 function createIsland(x, y, z, w, d, color) {
-    const geo = new THREE.BoxGeometry(w, 2, d);
-    const mat = new THREE.MeshPhongMaterial({ color: color });
-    const island = new THREE.Mesh(geo, mat);
-    island.position.set(x, y - 1, z);
-    island.receiveShadow = true;
-    scene.add(island);
-    objects.push(island);
+    const mesh = new THREE.Mesh(new THREE.BoxGeometry(w, 2, d), new THREE.MeshPhongMaterial({ color }));
+    mesh.position.set(x, y - 1, z);
+    mesh.receiveShadow = true;
+    scene.add(mesh);
+    objects.push(mesh);
 }
 
-function createBed(x, y, z, team) {
-    const geo = new THREE.BoxGeometry(1.2, 0.6, 2);
-    const mat = new THREE.MeshPhongMaterial({ color: team === 'blue' ? 0x2196f3 : 0xf44336 });
-    const bed = new THREE.Mesh(geo, mat);
-    bed.position.set(x, y, z);
-    bed.castShadow = true;
-    bed.team = team;
-    scene.add(bed);
-    objects.push(bed);
-    beds.push(bed);
+function createBed(x, y, z, color) {
+    const mesh = new THREE.Mesh(new THREE.BoxGeometry(1.2, 0.6, 2), new THREE.MeshPhongMaterial({ color }));
+    mesh.position.set(x, y, z);
+    mesh.castShadow = true;
+    scene.add(mesh);
+    objects.push(mesh);
+}
+
+function createSpawner(x, y, z, type) {
+    const mesh = new THREE.Mesh(new THREE.CylinderGeometry(1, 1, 0.2, 8), new THREE.MeshPhongMaterial({ color: type === 'iron' ? 0xbdc3c7 : 0xffd700 }));
+    mesh.position.set(x, y - 0.9, z);
+    scene.add(mesh);
+    spawners.push({ x, y, z, type, last: 0 });
 }
 
 function spawnEnemy(x, y, z) {
-    // Simple Human Model (Minecraft style)
     const group = new THREE.Group();
-
-    // Body
-    const bodyGeo = new THREE.BoxGeometry(0.6, 0.8, 0.3);
-    const bodyMat = new THREE.MeshPhongMaterial({ color: 0xff8a80 });
-    const body = new THREE.Mesh(bodyGeo, bodyMat);
-    body.position.y = 0.4;
-    group.add(body);
-
-    // Head
-    const headGeo = new THREE.BoxGeometry(0.4, 0.4, 0.4);
-    const headMat = new THREE.MeshPhongMaterial({ color: 0xffccbc });
-    const head = new THREE.Mesh(headGeo, headMat);
-    head.position.y = 1.0;
-    group.add(head);
-
+    // Human model
+    const body = new THREE.Mesh(new THREE.BoxGeometry(0.6, 1.2, 0.3), new THREE.MeshPhongMaterial({ color: 0xef5350 }));
+    body.position.y = 0.6;
+    const head = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.4, 0.4), new THREE.MeshPhongMaterial({ color: 0xffccbc }));
+    head.position.y = 1.4;
+    group.add(body, head);
     group.position.set(x, y, z);
     scene.add(group);
-
-    let enemy = {
-        mesh: group,
-        hp: 100,
-        team: 'red',
-        vx: 0, vz: 0,
-        state: 'IDLE'
-    };
-    enemies.push(enemy);
+    enemies.push({ mesh: group, hp: 100, team: 'red' });
 }
 
-// --- Movement & Input ---
-function onKeyDown(e) {
-    switch (e.code) {
-        case 'ArrowUp':
-        case 'KeyW': moveForward = true; break;
-        case 'ArrowLeft':
-        case 'KeyA': moveLeft = true; break;
-        case 'ArrowDown':
-        case 'KeyS': moveBackward = true; break;
-        case 'ArrowRight':
-        case 'KeyD': moveRight = true; break;
-        case 'Space': if (canJump) velocity.y += JUMP_FORCE; canJump = false; break;
-        case 'Digit1': selectSlot(0); break;
-        case 'Digit2': selectSlot(1); break;
-        case 'KeyB': toggleShop(); break;
-        case 'ShiftLeft':
-        case 'ShiftRight': player.isPlacingMode = !player.isPlacingMode; updateModeText(); break;
-    }
-}
-
-function onKeyUp(e) {
-    switch (e.code) {
-        case 'ArrowUp':
-        case 'KeyW': moveForward = false; break;
-        case 'ArrowLeft':
-        case 'KeyA': moveLeft = false; break;
-        case 'ArrowDown':
-        case 'KeyS': moveBackward = false; break;
-        case 'ArrowRight':
-        case 'KeyD': moveRight = false; break;
-    }
+function setupInput() {
+    window.addEventListener('keydown', (e) => {
+        if (e.code === 'KeyW') moveForward = true;
+        if (e.code === 'KeyS') moveBackward = true;
+        if (e.code === 'KeyA') moveLeft = true;
+        if (e.code === 'KeyD') moveRight = true;
+        if (e.code === 'Space' && canJump) { velocity.y += 0.3; canJump = false; }
+        if (e.code === 'Digit1') selectSlot(0);
+        if (e.code === 'Digit2') selectSlot(1);
+        if (e.code === 'KeyB') toggleShop();
+    });
+    window.addEventListener('keyup', (e) => {
+        if (e.code === 'KeyW') moveForward = false;
+        if (e.code === 'KeyS') moveBackward = false;
+        if (e.code === 'KeyA') moveLeft = false;
+        if (e.code === 'KeyD') moveRight = false;
+    });
+    window.addEventListener('mousedown', (e) => {
+        if (e.button === 0) attack();
+        if (e.button === 2) placeBlock();
+    });
+    window.addEventListener('contextmenu', (e) => e.preventDefault());
 }
 
 function selectSlot(idx) {
     player.selectedSlot = idx;
-    invSlots.forEach((slot, i) => {
-        if (i === idx) slot.classList.add('selected');
-        else slot.classList.remove('selected');
-    });
+    ui.slots.forEach((s, i) => s.classList.toggle('active', i === idx));
 }
 
-function updateModeText() {
-    const msg = document.getElementById('msg');
-    msg.textContent = "🖱️ 왼쪽 클릭: 공격 / 오른쪽 클릭: 양털 설치";
-    msg.style.color = "#fff";
-}
-
-function onMouseDown(e) {
-    if (gameState !== 'PLAYING') return;
-
-    if (e.button === 2) { // Right Click
-        placeBlock();
-    } else if (e.button === 0) { // Left Click
-        isLeftMouseDown = true;
-        performAttack(); // Initial attack click
-    }
-}
-
-function onMouseUp(e) {
-    if (e.button === 0) {
-        isLeftMouseDown = false;
-        if (breakingTarget) {
-            breakingTarget.scale.set(1, 1, 1);
-            breakingTarget = null;
-            breakingProgress = 0;
-        }
-    }
-}
-
-// --- Combat & Building ---
-function performAttack() {
-    // Camera direction ray
+function attack() {
+    if (gameState !== 'PLAYING' || player.selectedSlot !== 0) return;
     raycaster.setFromCamera(new THREE.Vector2(0, 0), camera);
-    const intersects = raycaster.intersectObjects(enemies.map(e => e.mesh), true);
-
-    if (intersects.length > 0 && intersects[0].distance < 3) {
-        // Hit enemy
-        let hitMesh = intersects[0].object;
-        let enemy = enemies.find(e => e.mesh === hitMesh || e.mesh.children.includes(hitMesh));
+    const hits = raycaster.intersectObjects(enemies.map(e => e.mesh), true);
+    if (hits.length > 0 && hits[0].distance < 3.5) {
+        let eMesh = hits[0].object.parent;
+        let enemy = enemies.find(e => e.mesh === eMesh);
         if (enemy) {
-            let damage = player.inventory[0].damage;
-            if (player.inventory[0].level === 4) damage = 75; // Rage Blade
-
-            enemy.hp -= damage;
-            spawnEffect(intersects[0].point, 0xff0000);
+            enemy.hp -= 25 + (player.swordLevel * 10);
             if (enemy.hp <= 0) {
                 scene.remove(enemy.mesh);
                 enemies = enemies.filter(e => e !== enemy);
-
-                // Barbarian Progression
                 player.kills++;
-                upgradeSword();
-                announce(`🔴 적을 처치했습니다! (${player.kills}킬)`);
                 updateHUD();
             }
         }
     }
 }
 
-function upgradeSword() {
-    if (player.kills >= 5) {
-        player.inventory[0].level = 4;
-        player.inventory[0].name = "레이지 블레이드";
-    } else if (player.kills >= 3) {
-        player.inventory[0].level = 3;
-        player.inventory[0].name = "다이아몬드 검";
-    } else if (player.kills >= 2) {
-        player.inventory[0].level = 2;
-        player.inventory[0].name = "철검";
-    } else if (player.kills >= 1) {
-        player.inventory[0].level = 1;
-        player.inventory[0].name = "돌검";
-    }
-
-    // Update inventory slot text
-    invSlots[0].textContent = `⚔️ ${player.inventory[0].name}`;
-}
-
 function placeBlock() {
-    if (player.inventory[1].count <= 0) {
-        announce("양털이 부족합니다!");
-        return;
-    }
-
+    if (gameState !== 'PLAYING' || player.selectedSlot !== 1 || player.wool <= 0) return;
     raycaster.setFromCamera(new THREE.Vector2(0, 0), camera);
-    const intersects = raycaster.intersectObjects(objects);
-    let pos;
+    const hits = raycaster.intersectObjects(objects);
+    if (hits.length > 0 && hits[0].distance < 6) {
+        const h = hits[0];
+        const n = h.face.normal.clone().applyEuler(h.object.rotation);
+        const pos = h.point.clone().add(n.multiplyScalar(0.5));
+        pos.x = Math.round(pos.x); pos.y = Math.round(pos.y); pos.z = Math.round(pos.z);
 
-    if (intersects.length > 0 && intersects[0].distance < 6) {
-        const hit = intersects[0];
-        const normal = hit.face.normal.clone();
-        normal.applyEuler(hit.object.rotation);
-        pos = hit.point.clone().add(normal.multiplyScalar(0.5));
-    } else {
-        const dir = new THREE.Vector3();
-        camera.getWorldDirection(dir);
-        pos = camera.position.clone().add(dir.multiplyScalar(3.5));
-    }
-
-    if (pos) {
-        pos.x = Math.round(pos.x);
-        pos.y = Math.round(pos.y);
-        pos.z = Math.round(pos.z);
-
-        const geo = new THREE.BoxGeometry(1, 1, 1);
-        const mat = new THREE.MeshPhongMaterial({ color: 0xeeeeee });
-        const wool = new THREE.Mesh(geo, mat);
+        const wool = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), new THREE.MeshPhongMaterial({ color: 0xffffff }));
         wool.position.copy(pos);
-        wool.castShadow = true;
-        wool.receiveShadow = true;
-
         scene.add(wool);
         objects.push(wool);
-
-        player.inventory[1].count--;
-        woolCountText.textContent = player.inventory[1].count;
+        player.wool--;
+        updateHUD();
     }
 }
 
-// --- Shop Logic ---
 function toggleShop() {
-    if (gameState === 'GAME_OVER') return;
-
-    if (shopScreen.classList.contains('hidden')) {
-        shopScreen.classList.remove('hidden');
-        controls.unlock();
-    } else {
-        shopScreen.classList.add('hidden');
-        controls.lock();
-    }
+    const isHidden = ui.shop.classList.toggle('hidden');
+    if (!isHidden) controls.unlock();
+    else controls.lock();
 }
 
-function buyArmor(type) {
-    let cost = 0;
-    let resType = 'iron';
-    let armorValue = 1;
-    let name = "";
-    let nextTier = null;
+window.buyItem = function (item) {
+    if (item === 'wool' && player.iron >= 8) { player.iron -= 8; player.wool += 16; updateHUD(); }
+};
 
-    switch (type) {
-        case 'leather':
-            cost = 50; armorValue = 0.8; name = "가죽 갑옷";
-            nextTier = { id: 'iron', name: '철 갑옷', icon: '🛡️', cost: '🔘 120' };
-            break;
-        case 'iron':
-            cost = 120; armorValue = 0.6; name = "철 갑옷";
-            nextTier = { id: 'diamond', name: '다이아 갑옷', icon: '💎', cost: 'Emerald 8' };
-            break;
-        case 'diamond':
-            cost = 8; resType = 'emerald'; armorValue = 0.4; name = "다이아 갑옷";
-            nextTier = { id: 'emerald', name: '에메랄드 갑옷', icon: '👑', cost: 'Emerald 40' };
-            break;
-        case 'emerald':
-            cost = 40; resType = 'emerald'; armorValue = 0.2; name = "에메랄드 갑옷";
-            nextTier = null;
-            break;
-    }
-
-    if (player[resType] >= cost) {
-        player[resType] -= cost;
-        player.armor = armorValue;
+window.buySword = function () {
+    const costs = [10, 50, 4]; // Iron, Iron, Gold
+    if (player.swordLevel >= 3) return;
+    let res = player.swordLevel < 2 ? 'iron' : 'gold';
+    if (player[res] >= costs[player.swordLevel]) {
+        player[res] -= costs[player.swordLevel];
+        player.swordLevel++;
         updateHUD();
-        announce(`🛡️ ${name} 구입 완료!`);
-
-        // Update Shop UI for next tier
-        const container = document.getElementById('armor-shop-container');
-        if (nextTier) {
-            container.innerHTML = `
-                <div class="shop-item" onclick="buyArmor('${nextTier.id}')">
-                    <div class="item-icon">${nextTier.icon}</div>
-                    <div class="item-name">${nextTier.name}</div>
-                    <div class="item-cost">${nextTier.cost}</div>
-                </div>
-            `;
-        } else {
-            container.innerHTML = `<div class="shop-item" style="opacity:0.5; cursor:default">구매 완료!</div>`;
-        }
-    } else {
-        announce("💰 재화가 부족합니다!");
+        const names = ["돌검", "철검", "다이아몬드 검"];
+        document.getElementById('sword-upgrade-btn').textContent = player.swordLevel < 3 ? `🗡️ ${names[player.swordLevel]} (${player.swordLevel < 2 ? '철' : '금'} ${costs[player.swordLevel]})` : "최고 등급";
     }
-}
-
-function buyItem(item) {
-    if (item === 'wool') {
-        if (player.iron >= 4) {
-            player.iron -= 4;
-            player.inventory[1].count += 16;
-            woolCountText.textContent = player.inventory[1].count;
-            updateHUD();
-            announce("🧶 양털 16개 구입!");
-        } else {
-            announce("💰 철이 부족합니다!");
-        }
-    }
-}
-
-function buySword() {
-    const tiers = [
-        { name: "돌검", cost: 10, res: 'iron', level: 1, next: "철검", damage: 30 },
-        { name: "철검", cost: 50, res: 'iron', level: 2, next: "다이아몬드 검", damage: 45 },
-        { name: "다이아몬드 검", cost: 4, res: 'emerald', level: 3, next: "레이지 블레이드", damage: 60 },
-        { name: "레이지 블레이드", cost: 20, res: 'emerald', level: 4, next: null, damage: 75 }
-    ];
-
-    const currentLevel = player.inventory[0].level;
-    if (currentLevel >= 4) {
-        announce("이미 최고 등급 무기입니다!");
-        return;
-    }
-
-    const tier = tiers[currentLevel];
-    if (player[tier.res] >= tier.cost) {
-        player[tier.res] -= tier.cost;
-        player.inventory[0].level = tier.level;
-        player.inventory[0].name = tier.name;
-        player.inventory[0].damage = tier.damage;
-        invSlots[0].textContent = `⚔️ ${tier.name}`;
-        updateHUD();
-        announce(`⚔️ ${tier.name} 강화 완료!`);
-
-        // Update UI
-        const next = tiers[tier.level];
-        const swordBtn = document.getElementById('sword-shop-item');
-        if (next) {
-            const costIcon = next.res === 'iron' ? '🔘' : 'Emerald';
-            swordBtn.innerHTML = `
-                <div class="item-icon">🗡️</div>
-                <div class="item-name">${next.name}</div>
-                <div class="item-cost">${costIcon} ${next.cost}</div>
-            `;
-        } else {
-            swordBtn.innerHTML = `<div class="item-name">최고 등급!</div>`;
-        }
-    } else {
-        const costIcon = tier.res === 'iron' ? '철(🔘)' : '에메랄드';
-        announce(`💰 ${costIcon}이(가) 부족합니다!`);
-    }
-}
-
-function spawnEffect(pos, color) {
-    const geo = new THREE.SphereGeometry(0.1, 8, 8);
-    const mat = new THREE.MeshBasicMaterial({ color: color });
-    const p = new THREE.Mesh(geo, mat);
-    p.position.copy(pos);
-    scene.add(p);
-    setTimeout(() => scene.remove(p), 200);
-}
-
-function announce(text) {
-    const hudMsg = document.createElement('div');
-    hudMsg.style.position = 'fixed';
-    hudMsg.style.top = '100px';
-    hudMsg.style.width = '100%';
-    hudMsg.style.textAlign = 'center';
-    hudMsg.style.color = '#fff';
-    hudMsg.style.fontSize = '2rem';
-    hudMsg.style.textShadow = '2px 2px #000';
-    hudMsg.textContent = text;
-    document.body.appendChild(hudMsg);
-    setTimeout(() => hudMsg.remove(), 2000);
-}
-
-function updatePlacementPreview() {
-    if (gameState !== 'PLAYING') {
-        placementGhost.visible = false;
-        return;
-    }
-
-    raycaster.setFromCamera(new THREE.Vector2(0, 0), camera);
-    const intersects = raycaster.intersectObjects(objects);
-    let pos;
-
-    if (intersects.length > 0 && intersects[0].distance < 6) {
-        const hit = intersects[0];
-        const normal = hit.face.normal.clone();
-        normal.applyEuler(hit.object.rotation);
-        pos = hit.point.clone().add(normal.multiplyScalar(0.5));
-    } else {
-        const dir = new THREE.Vector3();
-        camera.getWorldDirection(dir);
-        pos = camera.position.clone().add(dir.multiplyScalar(3.5));
-    }
-
-    if (pos) {
-        pos.x = Math.round(pos.x);
-        pos.y = Math.round(pos.y);
-        pos.z = Math.round(pos.z);
-
-        placementGhost.position.copy(pos);
-        placementGhost.visible = true;
-    } else {
-        placementGhost.visible = false;
-    }
-}
+};
 
 function animate() {
     requestAnimationFrame(animate);
-
-    if (gameState === 'PLAYING' && controls.isLocked) {
-        updatePlacementPreview();
-
-        // Block Breaking Logic (Left Click Hold)
-        if (isLeftMouseDown) {
-            raycaster.setFromCamera(new THREE.Vector2(0, 0), camera);
-            const intersects = raycaster.intersectObjects(objects);
-
-            // Only blocks (not islands/beds for now, or just wool)
-            if (intersects.length > 0 && intersects[0].distance < 4) {
-                const target = intersects[0].object;
-
-                // If it's a breakable block ( wool usually, check color or property )
-                if (target.geometry.type === "BoxGeometry" && target.material.color.getHex() === 0xeeeeee) {
-                    if (breakingTarget !== target) {
-                        if (breakingTarget) breakingTarget.scale.set(1, 1, 1);
-                        breakingTarget = target;
-                        breakingProgress = 0;
-                    }
-
-                    breakingProgress += BREAK_SPEED;
-
-                    // Visual feedback: wiggle/scale down
-                    const s = 1 - (breakingProgress / 120);
-                    target.scale.set(s, s, s);
-
-                    if (breakingProgress >= 100) {
-                        scene.remove(target);
-                        objects = objects.filter(o => o !== target);
-                        breakingTarget = null;
-                        breakingProgress = 0;
-                        announce("📢 블록을 파괴했습니다!");
-                    }
-                }
-            } else {
-                if (breakingTarget) {
-                    breakingTarget.scale.set(1, 1, 1);
-                    breakingTarget = null;
-                    breakingProgress = 0;
-                }
-            }
-        }
-
+    if (gameState === 'PLAYING') {
         const time = performance.now();
-        const delta = 1.0;
+        // Spawners
+        spawners.forEach(s => {
+            if (time - s.last > (s.type === 'iron' ? 3000 : 8000)) {
+                const r = new THREE.Mesh(new THREE.IcosahedronGeometry(0.3), new THREE.MeshPhongMaterial({ color: s.type === 'iron' ? 0xffffff : 0xffd700 }));
+                r.position.set(s.x, s.y + 0.5, s.z);
+                scene.add(r);
+                resources.push({ mesh: r, type: s.type });
+                s.last = time;
+            }
+        });
 
-        velocity.x -= velocity.x * 0.1;
-        velocity.z -= velocity.z * 0.1;
-        velocity.y -= GRAVITY;
+        // Collection
+        resources.forEach((r, i) => {
+            r.mesh.rotation.y += 0.05;
+            if (r.mesh.position.distanceTo(camera.position) < 2) {
+                player[r.type]++;
+                scene.remove(r.mesh); resources.splice(i, 1); updateHUD();
+            }
+        });
 
-        direction.z = Number(moveForward) - Number(moveBackward);
-        direction.x = Number(moveRight) - Number(moveLeft);
+        // Movement
+        velocity.x -= velocity.x * 0.1; velocity.z -= velocity.z * 0.1; velocity.y -= 0.015;
+        direction.z = Number(moveForward) - Number(moveBackward); direction.x = Number(moveRight) - Number(moveLeft);
         direction.normalize();
-
-        if (moveForward || moveBackward) velocity.z -= direction.z * WALK_SPEED;
-        if (moveLeft || moveRight) velocity.x -= direction.x * WALK_SPEED;
+        if (moveForward || moveBackward) velocity.z -= direction.z * 0.05;
+        if (moveLeft || moveRight) velocity.x -= direction.x * 0.05;
 
         controls.moveRight(-velocity.x);
         controls.moveForward(-velocity.z);
         camera.position.y += velocity.y;
 
-        if (camera.position.y < -20) {
-            triggerGameOver("허공에 빠졌습니다!");
-        }
-
-        let grounded = false;
+        // Ground check
         raycaster.set(camera.position, new THREE.Vector3(0, -1, 0));
-        const intersects = raycaster.intersectObjects(objects);
-        if (intersects.length > 0 && intersects[0].distance < 1.6) {
-            camera.position.y += (1.6 - intersects[0].distance);
-            velocity.y = 0;
-            canJump = true;
-            grounded = true;
+        const floor = raycaster.intersectObjects(objects);
+        if (floor.length > 0 && floor[0].distance < 1.6) {
+            camera.position.y += (1.6 - floor[0].distance); velocity.y = 0; canJump = true;
         }
 
-        // Enemy AI logic
-        enemies.forEach(enemy => {
-            let distToPlayer = enemy.mesh.position.distanceTo(camera.position);
-            if (distToPlayer < 35 && distToPlayer > 2) {
-                let dir = new THREE.Vector3().subVectors(camera.position, enemy.mesh.position);
-                dir.y = 0;
-                dir.normalize();
-                enemy.mesh.position.x += dir.x * 0.1;
-                enemy.mesh.position.z += dir.z * 0.1;
-                enemy.mesh.lookAt(camera.position.x, enemy.mesh.position.y, camera.position.z);
-            }
+        if (camera.position.y < -15) gameOver("허공에 빠졌습니다!");
 
-            if (distToPlayer < 2) {
-                player.hp -= (0.5 * player.armor); // Armor reduction
-                updateHUD();
-                if (player.hp <= 0) triggerGameOver("적에게 당했습니다!");
+        // Enemy AI
+        enemies.forEach(e => {
+            let d = e.mesh.position.distanceTo(camera.position);
+            if (d < 30 && d > 2) {
+                let dir = new THREE.Vector3().subVectors(camera.position, e.mesh.position).normalize();
+                e.mesh.position.x += dir.x * 0.08; e.mesh.position.z += dir.z * 0.08;
+                e.mesh.lookAt(camera.position.x, e.mesh.position.y, camera.position.z);
             }
+            if (d < 2) { player.hp -= 0.3; updateHUD(); if (player.hp <= 0) gameOver("적에게 당했습니다!"); }
         });
 
-        // Resource Spawning
-        const now = time;
-        spawners.forEach(s => {
-            const interval = s.type === 'iron' ? 3000 : 15000;
-            if (now - s.lastSpawn > interval) {
-                spawnResource(s.x, s.y, s.z, s.type);
-                s.lastSpawn = now;
-            }
-        });
-
-        // Collection (Iterate backward for safe splice)
-        for (let i = resources.length - 1; i >= 0; i--) {
-            const r = resources[i];
-            r.mesh.rotation.y += 0.05;
-            if (r.mesh.position.distanceTo(camera.position) < 2.5) {
-                player[r.type]++;
-                scene.remove(r.mesh);
-                resources.splice(i, 1);
-                updateHUD();
-            }
-        }
+        // Placement preview
+        if (player.selectedSlot === 1) {
+            raycaster.setFromCamera(new THREE.Vector2(0, 0), camera);
+            const hits = raycaster.intersectObjects(objects);
+            if (hits.length > 0 && hits[0].distance < 6) {
+                const h = hits[0];
+                const n = h.face.normal.clone().applyEuler(h.object.rotation);
+                const p = h.point.clone().add(n.multiplyScalar(0.5));
+                placementGhost.position.set(Math.round(p.x), Math.round(p.y), Math.round(p.z));
+                placementGhost.visible = true;
+            } else placementGhost.visible = false;
+        } else placementGhost.visible = false;
     }
-
     renderer.render(scene, camera);
 }
 
 function updateHUD() {
-    hpBarFill.style.width = player.hp + '%';
-    hpText.textContent = `HP: ${Math.ceil(player.hp)} | 🎯 Kills: ${player.kills}`;
-    ironCountText.textContent = player.iron;
-    emeraldCountText.textContent = player.emerald;
-
-    if (player.hp < 30) hpBarFill.style.background = '#ff4757';
-    else hpBarFill.style.background = '#2ed573';
+    ui.hpFill.style.width = `${player.hp}%`;
+    ui.iron.textContent = player.iron;
+    ui.gold.textContent = player.gold;
+    ui.wool.textContent = player.wool;
 }
 
-function triggerGameOver(reason) {
-    gameState = 'GAME_OVER';
-    controls.unlock();
-    gameOverScreen.classList.remove('hidden');
-    document.getElementById('result-title').textContent = "탈락했습니다!";
-    document.getElementById('result-msg').textContent = reason;
+function gameOver(msg) {
+    gameState = 'OVER'; controls.unlock();
+    ui.gameOver.classList.remove('hidden');
+    ui.resultMsg.textContent = msg;
 }
 
-// Initial Boot
 window.onload = init;
-window.addEventListener('resize', () => {
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth, window.innerHeight);
-});

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AVENTADOR X: Ultimate 3D Racing</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Rajdhani:wght@500;700&display=swap"
+        rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+
+<body>
+    <div id="game-container">
+        <!-- Dashboard HUD -->
+        <div id="hud">
+            <div class="top-left">
+                <div class="lap-counter">LAP <span id="current-lap">1</span>/3</div>
+                <div class="timer">TIME <span id="race-time">00:00:00</span></div>
+            </div>
+
+            <div class="bottom-center">
+                <div class="speedometer-container">
+                    <div class="speed-value" id="speed-val">0</div>
+                    <div class="speed-unit">KM/H</div>
+                    <div class="gear-info">GEAR <span id="gear-val">N</span></div>
+                </div>
+                <div class="nitro-bar-container">
+                    <div class="nitro-label">NITRO</div>
+                    <div class="bar-bg">
+                        <div id="nitro-fill" class="bar-fill"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="controls-hint">
+                [WASD] DRIVE | [SPACE] HANDBRAKE | [SHIFT] NITRO
+            </div>
+        </div>
+
+        <!-- Overlays -->
+        <div id="start-overlay" class="overlay">
+            <div class="menu-box">
+                <h1 class="logo-text">AVENTADOR<span>X</span></h1>
+                <p class="tagline">// NEXT-GEN SIMULATION</p>
+                <div class="specs">
+                    <p>ENGINE: V12 6.5L</p>
+                    <p>POWER: 770 HP</p>
+                    <p>0-100: 2.8 SEC</p>
+                </div>
+                <button id="start-btn">RACE START</button>
+            </div>
+        </div>
+
+        <div id="finish-overlay" class="overlay hidden">
+            <div class="menu-box">
+                <h1 style="color: #f1c40f;">RACE FINISH</h1>
+                <p id="final-time">TOTAL TIME: 00:00:00</p>
+                <button onclick="location.reload()">REPLAY</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+</body>
+
+</html>

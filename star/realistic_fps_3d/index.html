@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TACTICAL STRIKE: Realistic 3D FPS</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&family=Share+Tech+Mono&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <div id="game-container">
+        <!-- Crosshair -->
+        <div id="crosshair"></div>
+
+        <!-- HUD Layer -->
+        <div id="hud">
+            <div class="top-info">
+                <div class="mission-text">MISSION: ELIMINATE HOSTILES // AREA: DEPOT-7</div>
+                <div id="kill-count">KILLS: 0</div>
+            </div>
+
+            <div class="bottom-hud">
+                <div class="left-stat">
+                    <div class="stat-label">HEALTH</div>
+                    <div class="bar-container">
+                        <div id="hp-bar" class="bar-fill"></div>
+                    </div>
+                </div>
+
+                <div class="center-weapon">
+                    <div id="weapon-name">M4A1 CARBINE</div>
+                    <div class="ammo-display">
+                        <span id="ammo-val">30</span>
+                        <span class="sep">/</span>
+                        <span id="reserve-val">210</span>
+                    </div>
+                    <!-- NEW: Hotbar -->
+                    <div id="hotbar">
+                        <div class="slot active" id="slot-ar" title="[1] Assault Rifle">🎯</div>
+                        <div class="slot" id="slot-pistol" title="[2] Pistol">🔫</div>
+                        <div class="slot" id="slot-katana" title="[3] Katana">⚔️</div>
+                        <div class="slot" id="slot-dagger" title="[4] Dagger">🗡️</div>
+                        <div class="slot" id="slot-claymore" title="[5] Heavy Claymore">🔨</div>
+                        <div class="slot" id="slot-scythe" title="[6] Scythe">💀</div>
+                        <div class="slot" id="slot-utility" title="[7] Medkit">🩹</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Damage Overlay -->
+            <div id="damage-vignette"></div>
+        </div>
+
+        <!-- Start/Death Screens -->
+        <div id="overlay" class="overlay">
+            <div class="menu-box">
+                <h1 class="glitch" data-text="TACTICAL STRIKE">TACTICAL STRIKE</h1>
+                <p class="subtitle">// BATTLEFIELD SIMULATION v1.0</p>
+                <div class="briefing">
+                    <p><b>[WASD / Arrow Keys]</b>: 이동</p>
+                    <p><b>[MOUSE]</b>: 조준 및 사격 (우클릭 줌)</p>
+                    <p><b>[1 / 2]</b>: 주무기 / 보조무기 교체</p>
+                    <p><b>[F]</b>: 근접 낫 공격 (F + 우클릭: 대시)</p>
+                    <p><b>[G]</b>: 구급상자 (G + 우클릭: 밴드)</p>
+                    <p><b>[R]</b>: 재장전</p>
+                </div>
+                <button id="start-btn">작전 개시 (DEPLOY)</button>
+            </div>
+        </div>
+
+        <div id="death-overlay" class="overlay hidden">
+            <div class="menu-box">
+                <h1 style="color: #c0392b;">KIA</h1>
+                <p>전사하였습니다. 작전 실패.</p>
+                <div id="final-stats"></div>
+                <button onclick="location.reload()">재투입 (REDEPLOY)</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/PointerLockControls.js"></script>
+    <script src="js/main.js"></script>
+</body>
+
+</html>

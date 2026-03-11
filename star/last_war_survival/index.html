@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Last War: Survival - Web Edition</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Orbitron:wght@400;700;900&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <div id="game-container"></div>
+
+    <div id="hud" class="hidden">
+        <div id="squad-count-display">SQUAD: <span id="count-num">1</span></div>
+        <div id="distance-bar">
+            <div id="distance-fill"></div>
+        </div>
+    </div>
+
+    <!-- Start Overlay -->
+    <div id="overlay">
+        <div class="start-card">
+            <h1>LAST WAR</h1>
+            <h2>SURVIVAL</h2>
+            <div class="soldier-visual">🔫🏃‍♂️🏃‍♂️🏃‍♂️</div>
+            <button id="start-btn">TAP TO SURVIVE</button>
+            <div class="guide">
+                <p><b>Drag / Mouse Move</b>: Control Squad</p>
+                <p>Pass through GATES to multiply your squad!</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Win/Loss Overlays -->
+    <div id="game-over" class="hidden">
+        <div class="card">
+            <h1 class="fail">DEFEATED</h1>
+            <p>The horde was too strong...</p>
+            <button onclick="location.reload()">TRY AGAIN</button>
+        </div>
+    </div>
+
+    <div id="win-screen" class="hidden">
+        <div class="card">
+            <h1 class="success">VICTORY</h1>
+            <p>Area Secured!</p>
+            <button onclick="location.reload()">NEXT MISSION</button>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="js/main.js"></script>
+</body>
+
+</html>

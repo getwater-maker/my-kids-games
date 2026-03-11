@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>League of Legends - Web Edition</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Beaufort+for+LOL:wght@400;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div id="game-container"></div>
+
+    <div id="hud">
+        <!-- Enemy Health Bar (Visible when targeting) -->
+        <div id="target-info" class="hidden">
+            <div class="target-name">Minion</div>
+            <div class="health-bar-bg">
+                <div id="target-health-fill" class="health-fill red"></div>
+            </div>
+        </div>
+
+        <!-- Ability Bar -->
+        <div id="bottom-hud">
+            <div id="champ-stats">
+                <div class="level-circle">1</div>
+            </div>
+
+            <div id="ability-bar">
+                <div class="ability-slot" id="slot-q">
+                    <span class="hotkey">Q</span>
+                    <div class="cooldown-overlay"></div>
+                </div>
+                <div class="ability-slot" id="slot-w">
+                    <span class="hotkey">W</span>
+                    <div class="cooldown-overlay"></div>
+                </div>
+                <div class="ability-slot" id="slot-e">
+                    <span class="hotkey">E</span>
+                    <div class="cooldown-overlay"></div>
+                </div>
+                <div class="ability-slot" id="slot-r">
+                    <span class="hotkey">R</span>
+                    <div class="cooldown-overlay"></div>
+                </div>
+            </div>
+
+            <div id="bars">
+                <div class="bar-container health">
+                    <div id="player-health-fill" class="fill green"></div>
+                    <span id="health-text">100 / 100</span>
+                </div>
+                <div class="bar-container mana">
+                    <div id="player-mana-fill" class="fill blue"></div>
+                    <span id="mana-text">50 / 50</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Start Overlay -->
+    <div id="overlay">
+        <div class="start-card">
+            <img src="https://brand.riotgames.com/static/005e80829875e5b3af070e17637852a3/league-of-legends-logo.png"
+                alt="LoL" id="lol-logo">
+            <button id="start-btn">ENTERING SUMMONER'S RIFT</button>
+            <div class="guide">
+                <p><b>Right Click</b>: Move / Attack</p>
+                <p><b>Q, W, E, R</b>: Use Abilities</p>
+                <p><b>S</b>: Stop Movement</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="js/main.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Pokémon GO: Web Edition (2D)</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700;900&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div id="game-wrapper">
+        <!-- Explorer Map View -->
+        <div id="map-view">
+            <div id="map-container">
+                <canvas id="mapCanvas"></canvas>
+            </div>
+            <div id="map-hud">
+                <div class="player-profile">
+                    <div class="avatar">👤</div>
+                    <div class="info">
+                        <div class="name">Trainer</div>
+                        <div class="level">Lv. 10</div>
+                    </div>
+                </div>
+                <div id="pokedex-btn">📔 <span id="caught-count">0</span></div>
+            </div>
+        </div>
+
+        <!-- Catch View -->
+        <div id="catch-view" class="hidden">
+            <canvas id="catchCanvas"></canvas>
+            <div id="catch-hud">
+                <div id="pokemon-name">Wild Pokémon</div>
+                <div class="ball-container">
+                    <div id="pokeball-count">🔴 x99</div>
+                </div>
+                <button id="run-btn">🏃 RUN</button>
+            </div>
+        </div>
+
+        <!-- Overlays -->
+        <div id="overlay">
+            <div class="start-card">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/International_Pok%C3%A9mon_logo.svg/1200px-International_Pok%C3%A9mon_logo.svg.png"
+                    alt="Pokemon" class="logo">
+                <h1 class="go-text">GO</h1>
+                <button id="start-btn">START TO EXPLORE</button>
+                <p class="warning">Remember to be alert at all times. Stay aware of your surroundings.</p>
+            </div>
+        </div>
+
+        <div id="catch-result" class="hidden">
+            <div class="result-card">
+                <h1 id="result-status">GOTCHA!</h1>
+                <div id="caught-visual"></div>
+                <button id="ok-btn">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+</body>
+
+</html>

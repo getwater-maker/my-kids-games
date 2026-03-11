@@ -1,0 +1,140 @@
+/* star/last_war_survival/css/style.css */
+body {
+    margin: 0;
+    overflow: hidden;
+    background-color: #2c3e50;
+    font-family: 'Orbitron', sans-serif;
+    user-select: none;
+}
+
+#game-container {
+    width: 100vw;
+    height: 100vh;
+}
+
+#hud {
+    position: fixed;
+    top: 20px;
+    left: 0;
+    right: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    pointer-events: none;
+}
+
+#squad-count-display {
+    background: rgba(0, 0, 0, 0.7);
+    color: #fff;
+    padding: 10px 30px;
+    border-radius: 50px;
+    font-size: 24px;
+    font-weight: 900;
+    border: 3px solid #f1c40f;
+    box-shadow: 0 0 20px rgba(241, 196, 15, 0.5);
+    margin-bottom: 10px;
+}
+
+#distance-bar {
+    width: 300px;
+    height: 10px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+#distance-fill {
+    width: 0%;
+    height: 100%;
+    background: #2ecc71;
+    transition: width 0.1s;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* OVERLAYS */
+#overlay,
+#game-over,
+#win-screen {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.85);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.start-card,
+.card {
+    text-align: center;
+    color: #fff;
+    animation: fadeIn 0.5s ease-out;
+}
+
+h1 {
+    font-size: 64px;
+    margin: 0;
+    color: #f1c40f;
+    letter-spacing: 5px;
+}
+
+h2 {
+    font-size: 32px;
+    margin: 0;
+    color: #fff;
+    opacity: 0.8;
+}
+
+.soldier-visual {
+    font-size: 60px;
+    margin: 30px 0;
+}
+
+#start-btn,
+button {
+    background: #f1c40f;
+    color: #000;
+    border: none;
+    padding: 20px 60px;
+    font-size: 24px;
+    font-weight: 900;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    font-family: 'Orbitron', sans-serif;
+}
+
+#start-btn:hover,
+button:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 30px rgba(241, 196, 15, 0.8);
+}
+
+.guide {
+    margin-top: 30px;
+    font-size: 16px;
+    color: #bdc3c7;
+}
+
+.fail {
+    color: #e74c3c;
+}
+
+.success {
+    color: #2ecc71;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

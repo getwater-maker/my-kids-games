@@ -4,9 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kirby Rivals</title>
+    <title>KIRBY RIVALS 🏆</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
 </head>
 
 <body>
@@ -14,48 +13,62 @@
         <!-- HUD -->
         <div id="hud">
             <div id="player-status" class="status-box">
-                <div class="name">Player 1 (Blue)</div>
-                <div class="hp-bar-container">
-                    <div id="player-hp-bar" class="hp-bar"></div>
+                <div class="name">PLAYER 1</div>
+                <div class="hp-bar-outer">
+                    <div id="player-hp-bar" class="hp-bar shadow"></div>
+                </div>
+                <div class="super-bar-outer">
+                    <div id="player-super-bar" class="super-bar"></div>
                 </div>
             </div>
 
             <div id="timer-box">
-                <span id="round-timer">60</span>
+                <span id="round-timer">99</span>
             </div>
 
             <div id="enemy-status" class="status-box right">
-                <div class="name">CPU (Red)</div>
-                <div class="hp-bar-container">
-                    <div id="enemy-hp-bar" class="hp-bar"></div>
+                <div class="name">CPU BOT</div>
+                <div class="hp-bar-outer">
+                    <div id="enemy-hp-bar" class="hp-bar shadow"></div>
+                </div>
+                <div class="super-bar-outer">
+                    <div id="enemy-super-bar" class="super-bar"></div>
                 </div>
             </div>
         </div>
 
         <!-- Canvas -->
-        <canvas id="game-canvas" width="800" height="400"></canvas>
+        <canvas id="game-canvas" width="800" height="450"></canvas>
 
         <!-- Screens -->
         <div id="start-screen" class="screen active">
-            <h1>커비 라이벌</h1>
-            <p>1v1 격투 게임! 조작: WASD 이동, J 펀치, K 킥, L 가드</p>
-            <button id="start-btn" class="btn">게임 시작</button>
-            <button class="btn" onclick="location.href='../index.html'">메인화면으로</button>
+            <h1>KIRBY RIVALS</h1>
+            <p>1 VS 1 격투 게임입니다! 조작법: WASD 이동(공중부양), J 펀치, K 킥, L 가드, SPACE 궁극기</p>
+            <div style="display: flex; gap: 20px;">
+                <button id="start-btn" class="btn">게임 시작 (START)</button>
+                <button class="btn" style="background: #333; color: white;" onclick="location.href='../index.html'">메뉴로
+                    돌아가기</button>
+            </div>
         </div>
 
         <div id="round-over-screen" class="screen">
-            <h1 id="round-result-msg">라운드 종료</h1>
-            <button id="next-round-btn" class="btn">다음 라운드</button>
+            <h1 id="round-result-msg">ROUND FINISHED</h1>
+            <button id="next-round-btn" class="btn">NEXT ROUND</button>
         </div>
 
         <div id="game-over-screen" class="screen">
-            <h1 id="final-result-msg">게임 종료!</h1>
-            <button id="restart-btn" class="btn">다시 하기</button>
-            <button class="btn" onclick="location.href='../index.html'">메인화면으로</button>
+            <h1 id="final-result-msg">GAME FINISHED!</h1>
+            <div style="display: flex; gap: 20px;">
+                <button id="restart-btn" class="btn">다시 시작 (REMATCH)</button>
+                <button class="btn" style="background: #333; color: white;"
+                    onclick="location.href='../index.html'">메뉴로</button>
+            </div>
         </div>
 
-        <div id="announcement">Fight!</div>
+        <div id="announcement">FIGHT!</div>
     </div>
+
+    <!-- Background music is typically external, but we'll focus on visual effects -->
     <script src="js/main.js"></script>
 </body>
 

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>3D 브롤스타즈 - 커비 월드</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+
+<body>
+    <div id="game-ui">
+        <div id="joystick-container">
+            <div id="joystick-base">
+                <div id="joystick-stick"></div>
+            </div>
+        </div>
+
+        <div id="shoot-container">
+            <div id="shoot-btn" class="action-btn">
+                <div class="inner-btn">🔫</div>
+            </div>
+            <div id="super-btn" class="action-btn super-locked">
+                <div class="inner-btn">🔥</div>
+                <div id="super-charge-bar"></div>
+            </div>
+        </div>
+
+        <div id="top-bar">
+            <div id="timer">02:00</div>
+            <div id="team-score">
+                <span class="blue-score">0</span> : <span class="red-score">0</span>
+            </div>
+        </div>
+
+        <div id="player-hud">
+            <div class="health-bar-container">
+                <div id="player-health-bar"></div>
+                <div id="player-health-text">4500 / 4500</div>
+            </div>
+            <div class="ammo-container">
+                <div class="ammo-slot active"></div>
+                <div class="ammo-slot active"></div>
+                <div class="ammo-slot active"></div>
+            </div>
+        </div>
+
+        <div id="game-over" class="hidden">
+            <h1 id="result-text">승리!</h1>
+            <button onclick="location.reload()">다시 시작</button>
+            <button onclick="location.href='../index.html'">메뉴로</button>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+</body>
+
+</html>

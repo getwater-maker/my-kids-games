@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infinite Stairs: Web Edition (2D)</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Roboto:wght@900&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <div id="game-wrapper">
+        <canvas id="gameCanvas"></canvas>
+
+        <div id="hud">
+            <div id="timer-container">
+                <div id="timer-bar"></div>
+            </div>
+            <div id="score-display">0</div>
+        </div>
+
+        <div id="overlay">
+            <div class="start-card">
+                <h1 class="title">무한의 계단</h1>
+                <p class="subtitle">INFINITE STAIRS</p>
+                <div class="visual">🪜🏃‍♂️</div>
+                <button id="start-btn">START</button>
+                <div class="controls-guide">
+                    <p><b>L</b>: 오르기 (CLIMB)</p>
+                    <p><b>K</b>: 방향 전환 (ROTATE)</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="game-over" class="hidden">
+            <div class="over-card">
+                <h1>GAME OVER</h1>
+                <p>SCORE</p>
+                <h2 id="final-score">0</h2>
+                <button onclick="location.reload()">RETRY</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+</body>
+
+</html>

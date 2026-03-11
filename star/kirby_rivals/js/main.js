@@ -1,20 +1,20 @@
 const canvas = document.getElementById('game-canvas');
 const ctx = canvas.getContext('2d');
 
-// -- UI Elements --
 const ui = {
     startScreen: document.getElementById('start-screen'),
     roundOverScreen: document.getElementById('round-over-screen'),
     gameOverScreen: document.getElementById('game-over-screen'),
     playerHp: document.getElementById('player-hp-bar'),
     enemyHp: document.getElementById('enemy-hp-bar'),
+    playerSuper: document.getElementById('player-super-bar'),
+    enemySuper: document.getElementById('enemy-super-bar'),
     timer: document.getElementById('round-timer'),
     announcement: document.getElementById('announcement'),
     roundMsg: document.getElementById('round-result-msg'),
     finalMsg: document.getElementById('final-result-msg')
 };
 
-// -- Game State --
 let gameState = 'START';
 let animationId;
 const FPS = 60;
@@ -23,484 +23,275 @@ let lastTime = 0;
 let round = 1;
 let playerWins = 0;
 let enemyWins = 0;
-let roundTimer = 60;
+let roundTimer = 99;
 let timerInterval;
+const GROUND_Y = 400;
 
-// -- Input --
-const keys = { w: false, a: false, s: false, d: false, j: false, k: false, l: false };
+const keys = { w: false, a: false, s: false, d: false, j: false, k: false, l: false, ' ': false };
+window.addEventListener('keydown', (e) => { let key = e.key.toLowerCase(); if (keys.hasOwnProperty(key)) keys[key] = true; });
+window.addEventListener('keyup', (e) => { let key = e.key.toLowerCase(); if (keys.hasOwnProperty(key)) keys[key] = false; });
 
-window.addEventListener('keydown', (e) => {
-    let key = e.key.toLowerCase();
-    if (keys.hasOwnProperty(key)) keys[key] = true;
-});
-window.addEventListener('keyup', (e) => {
-    let key = e.key.toLowerCase();
-    if (keys.hasOwnProperty(key)) keys[key] = false;
-});
+// -- FX System --
+let particles = [];
+let screenShake = 0;
 
-// -- Constants --
-const GROUND_Y = 350;
+class Particle {
+    constructor(x, y, color) {
+        this.x = x; this.y = y; this.color = color;
+        this.vx = (Math.random() - 0.5) * 10;
+        this.vy = (Math.random() - 0.5) * 10;
+        this.life = 1.0;
+        this.size = Math.random() * 5 + 2;
+    }
+    update() { this.x += this.vx; this.y += this.vy; this.life -= 0.05; }
+    draw(ctx) {
+        ctx.fillStyle = this.color;
+        ctx.globalAlpha = this.life;
+        ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill();
+        ctx.globalAlpha = 1.0;
+    }
+}
 
-// -- Classes --
 class Fighter {
     constructor(isPlayer) {
         this.isPlayer = isPlayer;
-        this.w = 50;
-        this.h = 50;
-        this.color = isPlayer ? '#42a5f5' : '#ef5350';
-
-        // Stats
-        this.maxHp = 1000;
-        this.hp = this.maxHp;
-
-        // Physics
-        this.speed = 5;
-        this.jumpPower = -12;
-        this.gravity = 0.6;
-        this.vx = 0;
-        this.vy = 0;
-        this.isGrounded = false;
-
-        // State Machine
-        this.state = 'IDLE'; // IDLE, MOVE, JUMP, GUARD, ATK_P, ATK_K, HIT, DEAD
+        this.r = 35;
+        this.w = this.r * 2; this.h = this.r * 2;
+        this.color = isPlayer ? '#ff80ab' : '#7e57c2'; // Kirby Pink vs Dark Meta-style
+        this.hp = 1000; this.maxHp = 1000;
+        this.super = 0; this.maxSuper = 100;
+        this.speed = 6; this.jumpPower = -14; this.gravity = 0.5;
+        this.vx = 0; this.vy = 0; this.isGrounded = false;
+        this.state = 'IDLE'; // IDLE, MOVE, JUMP, ATK_P, ATK_K, SUPER, HIT, DEAD
         this.stateTimer = 0;
         this.facingRight = isPlayer;
-        this.isHovering = false; // Add hovering
-
-        // AI variables
+        this.isHovering = false;
         this.aiCooldown = 0;
     }
 
-    reset(startSide) {
-        this.hp = this.maxHp;
-        this.x = startSide === 'left' ? 150 : canvas.width - 200;
+    reset(side) {
+        this.hp = this.maxHp; this.super = 0;
+        this.x = side === 'left' ? 150 : canvas.width - 150;
         this.y = GROUND_Y - this.h;
-        this.vx = 0;
-        this.vy = 0;
-        this.state = 'IDLE';
-        this.stateTimer = 0;
-        this.facingRight = startSide === 'left';
+        this.vx = 0; this.vy = 0; this.state = 'IDLE'; this.stateTimer = 0;
+        this.facingRight = side === 'left';
     }
 
     update() {
         if (gameState !== 'PLAYING') return;
+        this.stateTimer--; if (this.stateTimer < 0) this.stateTimer = 0;
+        if (this.state === 'HIT' && this.stateTimer === 0) this.state = 'IDLE';
+        if (this.state === 'ATK_P' || this.state === 'ATK_K' || this.state === 'SUPER') {
+            if (this.stateTimer === 0) this.state = 'IDLE';
+        }
 
-        // State update
-        this.stateTimer--;
-        if (this.stateTimer < 0) this.stateTimer = 0;
-
-        // Apply Gravity
-        let currentGravity = (this.isHovering) ? 0.2 : this.gravity;
+        // Apply Physics
+        let currentGravity = this.isHovering ? 0.15 : this.gravity;
         this.vy += currentGravity;
-        if (this.vy > 10) this.vy = 10;
+        if (this.vy > 12) this.vy = 12;
 
         if (this.y + this.h + this.vy >= GROUND_Y) {
-            this.y = GROUND_Y - this.h;
-            this.vy = 0;
-            this.isGrounded = true;
-        } else {
-            this.isGrounded = false;
-        }
+            this.y = GROUND_Y - this.h; this.vy = 0; this.isGrounded = true;
+        } else { this.isGrounded = false; }
 
-        // Action Logic based on state
         if (this.state !== 'HIT' && this.state !== 'DEAD') {
-            if (this.isPlayer) {
-                this.handlePlayerInput();
-            } else {
-                this.handleAILogic();
-            }
+            if (this.isPlayer) this.handleInput();
+            else this.handleAI();
         }
 
-        // Apply Velocity
-        this.x += this.vx;
-        this.y += this.vy;
+        this.x += this.vx; this.y += this.vy;
+        if (this.x < 0) this.x = 0; if (this.x + this.w > canvas.width) this.x = canvas.width - this.w;
 
-        // Bounds
-        if (this.x < 0) this.x = 0;
-        if (this.x + this.w > canvas.width) this.x = canvas.width - this.w;
-
-        // Facing direction based on opponent
-        if (this.state !== 'ATK_P' && this.state !== 'ATK_K') {
-            let opponent = this.isPlayer ? enemy : player;
-            if (opponent) {
-                this.facingRight = (this.x < opponent.x);
-            }
-        }
+        // Facing
+        let enemy = this.isPlayer ? opponentBot : opponentPlayer;
+        if (enemy && this.state !== 'SUPER') this.facingRight = (this.x < enemy.x);
     }
 
-    handlePlayerInput() {
-        // Can't act if attacking or hitting
-        if (['ATK_P', 'ATK_K'].includes(this.state) && this.stateTimer > 0) {
-            this.vx = 0;
-            return;
-        }
+    handleInput() {
+        if (['ATK_P', 'ATK_K', 'SUPER'].includes(this.state)) { this.vx = 0; return; }
+        if (keys.l) { this.state = 'GUARD'; this.vx = 0; return; }
 
-        // Guard
-        if (keys.l && this.isGrounded) {
-            this.state = 'GUARD';
-            this.vx = 0;
-            return;
-        }
+        if (keys[' '] && this.super >= 100) { this.useSuper(); return; }
+        if (keys.j && this.stateTimer === 0) { this.attack('PUNCH'); return; }
+        if (keys.k && this.stateTimer === 0) { this.attack('KICK'); return; }
 
-        // Attacks
-        if (keys.j && this.stateTimer === 0) {
-            this.attack('PUNCH');
-            return;
-        }
-        if (keys.k && this.stateTimer === 0) {
-            this.attack('KICK');
-            return;
-        }
+        if (keys.a) { this.vx = -this.speed; this.state = this.isGrounded ? 'MOVE' : 'JUMP'; }
+        else if (keys.d) { this.vx = this.speed; this.state = this.isGrounded ? 'MOVE' : 'JUMP'; }
+        else { this.vx = 0; if (this.isGrounded) this.state = 'IDLE'; }
 
-        // Movement
-        if (keys.a) {
-            this.vx = -this.speed;
-            this.state = this.isGrounded ? 'MOVE' : 'JUMP';
-        } else if (keys.d) {
-            this.vx = this.speed;
-            this.state = this.isGrounded ? 'MOVE' : 'JUMP';
-        } else {
-            this.vx = 0;
-            if (this.isGrounded) this.state = 'IDLE';
-        }
-
-        // Jump & Hover
         if (keys.w) {
-            if (this.isGrounded) {
-                this.vy = this.jumpPower;
-                this.isGrounded = false;
-                this.state = 'JUMP';
-            } else {
-                // Infinite Hovering (only if falling or ascending slowly)
-                if (this.vy > -3.5) this.vy = -3.5;
-                this.isHovering = true;
-            }
-        } else {
-            this.isHovering = false;
-        }
+            if (this.isGrounded) { this.vy = this.jumpPower; this.isGrounded = false; }
+            else if (this.vy > -4) { this.vy = -4; this.isHovering = true; }
+        } else { this.isHovering = false; }
     }
 
-    handleAILogic() {
-        if (['ATK_P', 'ATK_K'].includes(this.state) && this.stateTimer > 0) {
-            this.vx = 0;
-            return;
-        }
+    handleAI() {
+        if (['ATK_P', 'ATK_K', 'SUPER'].includes(this.state)) { this.vx = 0; return; }
+        if (this.aiCooldown > 0) this.aiCooldown--;
+        let dist = Math.abs(this.x - opponentPlayer.x);
 
-        if (this.aiCooldown > 0) {
-            this.aiCooldown--;
-        }
-
-        let dist = Math.abs(this.x - player.x);
-
-        // Simple AI: Move towards player, attack if close
-        if (dist > 70) {
-            this.vx = (this.x < player.x) ? this.speed * 0.8 : -this.speed * 0.8;
+        if (dist > 100) {
+            this.vx = (this.x < opponentPlayer.x) ? this.speed * 0.7 : -this.speed * 0.7;
             this.state = 'MOVE';
-
-            // Random jump
-            if (Math.random() < 0.01 && this.isGrounded) {
-                this.vy = this.jumpPower;
-                this.isGrounded = false;
-            }
+            if (Math.random() < 0.01 && this.isGrounded) this.vy = this.jumpPower;
         } else {
-            this.vx = 0;
-            this.state = 'IDLE';
-
+            this.vx = 0; this.state = 'IDLE';
             if (this.aiCooldown <= 0) {
-                // Decide attack or guard
-                let rand = Math.random();
-                if (rand < 0.3) {
-                    this.state = 'GUARD';
-                    this.stateTimer = 30;
-                } else if (rand < 0.6) {
-                    this.attack('PUNCH');
-                } else {
-                    this.attack('KICK');
-                }
-                this.aiCooldown = 40 + Math.random() * 30;
+                if (this.super >= 100) this.useSuper();
+                else if (Math.random() < 0.5) this.attack('PUNCH');
+                else this.attack('KICK');
+                this.aiCooldown = 40 + Math.random() * 40;
             }
         }
     }
 
     attack(type) {
-        if (type === 'PUNCH') {
-            this.state = 'ATK_P';
-            this.stateTimer = 15; // Animation frames
-            this.vx = 0;
-            this.checkHitbox(40, 20, 30, 80); // damage, w, h, knocback
-        } else if (type === 'KICK') {
-            this.state = 'ATK_K';
-            this.stateTimer = 25;
-            this.vx = this.facingRight ? 3 : -3; // slight forward dash
-            this.checkHitbox(70, 40, 20, 150);
+        this.state = type === 'PUNCH' ? 'ATK_P' : 'ATK_K';
+        this.stateTimer = type === 'PUNCH' ? 15 : 25;
+        this.checkHit(type === 'PUNCH' ? 40 : 70, type === 'PUNCH' ? 50 : 70, type === 'PUNCH' ? 20 : 120);
+    }
+
+    useSuper() {
+        this.super = 0; this.state = 'SUPER'; this.stateTimer = 60; screenShake = 20;
+        this.checkHit(300, 200, 250);
+        for (let i = 0; i < 30; i++) particles.push(new Particle(this.x + 35, this.y + 35, '#ffd600'));
+        updateHUD();
+    }
+
+    checkHit(dmg, reach, kb) {
+        let opponent = this.isPlayer ? opponentBot : opponentPlayer;
+        let hx = this.facingRight ? this.x + this.w : this.x - reach;
+        if (hx < opponent.x + opponent.w && hx + reach > opponent.x &&
+            this.y < opponent.y + opponent.h && this.y + this.h > opponent.y) {
+            opponent.takeDamage(dmg, this.facingRight ? kb : -kb);
+            this.super = Math.min(100, this.super + 15); updateHUD();
         }
     }
 
-    checkHitbox(damage, hw, hh, knockback) {
-        let hx = this.facingRight ? this.x + this.w : this.x - hw;
-        let hy = this.y + (this.h / 2) - (hh / 2);
-
-        let opponent = this.isPlayer ? enemy : player;
-
-        // Basic AABB Collision
-        if (hx < opponent.x + opponent.w && hx + hw > opponent.x &&
-            hy < opponent.y + opponent.h && hy + hh > opponent.y) {
-
-            opponent.takeDamage(damage, this.facingRight ? knockback : -knockback);
-        }
-    }
-
-    takeDamage(amount, knockbackX) {
+    takeDamage(dmg, kb) {
         if (this.state === 'DEAD') return;
-
-        // Guarding reduces damage significantly and prevents flinching
-        if (this.state === 'GUARD') {
-            this.hp -= amount * 0.2;
-            this.vx = knockbackX * 0.02; // Tiny pushback
-            // display effect
-        } else {
-            this.hp -= amount;
-            this.state = 'HIT';
-            this.stateTimer = 20; // Stun duration
-            this.vx = knockbackX * 0.05;
-            this.vy = -3; // slight pop up
+        if (this.state === 'GUARD') { this.hp -= dmg * 0.2; this.vx = kb * 0.1; }
+        else {
+            this.hp -= dmg; this.state = 'HIT'; this.stateTimer = 15;
+            this.vx = kb * 0.2; this.vy = -4; screenShake = 10;
+            for (let i = 0; i < 10; i++) particles.push(new Particle(this.x + 35, this.y + 35, this.color));
         }
-
-        if (this.hp <= 0) {
-            this.hp = 0;
-            this.state = 'DEAD';
-            this.vx = knockbackX * 0.1;
-            this.vy = -5;
-            this.stateTimer = 999;
-            checkRoundEnd();
-        }
-
-        updateUI();
+        if (this.hp <= 0) { this.hp = 0; this.state = 'DEAD'; checkRound(); }
+        updateHUD();
     }
 
     draw(ctx) {
-        let px = this.x;
-        let py = this.y;
+        let px = this.x; let py = this.y;
+        if (this.state === 'HIT' && Math.floor(Date.now() / 50) % 2 === 0) return;
 
-        // Main Body
-        ctx.fillStyle = (this.state === 'HIT') ? 'white' : this.color;
+        // Draw Feet
+        ctx.fillStyle = '#ff1744';
+        ctx.beginPath(); ctx.ellipse(px + 10, py + this.h - 5, 15, 8, 0, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.ellipse(px + this.w - 10, py + this.h - 5, 15, 8, 0, 0, Math.PI * 2); ctx.fill();
 
-        if (this.state === 'GUARD') {
-            ctx.fillStyle = '#9e9e9e'; // Gray out when guarding
-        }
+        // Draw Body
+        ctx.fillStyle = this.color;
+        if (this.state === 'GUARD') ctx.fillStyle = '#90a4ae';
+        ctx.beginPath(); ctx.arc(px + 35, py + 35, 35, 0, Math.PI * 2); ctx.fill();
 
-        ctx.beginPath();
-        ctx.roundRect(px, py, this.w, this.h, 15);
-        ctx.fill();
-
-        // Eyes
+        // Draw Face
+        let eyeX = this.facingRight ? px + 45 : px + 15;
         ctx.fillStyle = 'black';
-        let eyeX = this.facingRight ? px + 30 : px + 10;
-        ctx.fillRect(eyeX, py + 10, 5, 12);
-        ctx.fillRect(eyeX - 8, py + 10, 5, 12);
+        ctx.beginPath(); ctx.ellipse(eyeX, py + 30, 3, 8, 0, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.ellipse(eyeX + 10, py + 30, 3, 8, 0, 0, Math.PI * 2); ctx.fill();
 
-        // Attack hitboxes (Visual)
-        ctx.fillStyle = 'rgba(255, 255, 0, 0.7)';
-        if (this.state === 'ATK_P') {
-            if (this.facingRight) ctx.fillRect(px + this.w, py + 15, 30, 20);
-            else ctx.fillRect(px - 30, py + 15, 30, 20);
-        } else if (this.state === 'ATK_K') {
-            ctx.fillStyle = 'rgba(255, 100, 0, 0.7)';
-            if (this.facingRight) ctx.fillRect(px + this.w, py + 30, 40, 20);
-            else ctx.fillRect(px - 40, py + 30, 40, 20);
-        }
+        ctx.fillStyle = '#ff80ab'; // Blush
+        ctx.beginPath(); ctx.arc(eyeX - 5, py + 42, 5, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.arc(eyeX + 15, py + 42, 5, 0, Math.PI * 2); ctx.fill();
 
-        // Guard Shield effect
-        if (this.state === 'GUARD') {
-            ctx.strokeStyle = 'rgba(0, 200, 255, 0.5)';
-            ctx.lineWidth = 4;
-            ctx.beginPath();
-            let sx = this.facingRight ? px + this.w + 5 : px - 5;
-            ctx.moveTo(sx, py - 10);
-            ctx.lineTo(sx, py + this.h + 10);
-            ctx.stroke();
+        // Effects
+        if (this.state === 'SUPER') {
+            ctx.strokeStyle = '#ffd600'; ctx.lineWidth = 5;
+            ctx.beginPath(); ctx.arc(px + 35, py + 35, 50, 0, Math.PI * 2); ctx.stroke();
         }
     }
 }
 
-// -- Global Variables --
-let player, enemy;
-
-// -- Core Functions --
+let opponentPlayer, opponentBot;
 function init() {
-    gameState = 'START';
-    ui.startScreen.classList.remove('active');
-    ui.gameOverScreen.classList.remove('active');
-
-    round = 1;
-    playerWins = 0;
-    enemyWins = 0;
-
-    startRound();
+    opponentPlayer = new Fighter(true); opponentBot = new Fighter(false);
+    opponentPlayer.reset('left'); opponentBot.reset('right');
+    round = 1; playerWins = 0; enemyWins = 0;
+    ui.startScreen.classList.remove('active'); ui.gameOverScreen.classList.remove('active');
+    startRound(); loop();
 }
 
 function startRound() {
-    player = new Fighter(true);
-    enemy = new Fighter(false);
-
-    player.reset('left');
-    enemy.reset('right');
-
-    roundTimer = 60;
-    ui.timer.textContent = roundTimer;
-    updateUI();
-
+    opponentPlayer.reset('left'); opponentBot.reset('right');
+    roundTimer = 99; ui.timer.textContent = roundTimer; updateHUD();
     ui.roundOverScreen.classList.remove('active');
-
-    // Countdown
-    gameState = 'COUNTDOWN';
-    announce(`Round ${round}`, 1500);
-
-    setTimeout(() => {
-        if (gameState === 'COUNTDOWN') {
-            announce("FIGHT!", 1000);
-            gameState = 'PLAYING';
-            clearInterval(timerInterval);
-            timerInterval = setInterval(() => {
-                if (gameState === 'PLAYING') {
-                    roundTimer--;
-                    ui.timer.textContent = roundTimer;
-                    if (roundTimer <= 0) {
-                        handleTimeOver();
-                    }
-                }
-            }, 1000);
-        }
-    }, 1500);
+    gameState = 'COUNTDOWN'; announce(`ROUND ${round}`, 1500);
+    setTimeout(() => { if (gameState === 'COUNTDOWN') { announce('FIGHT!', 1000); gameState = 'PLAYING'; startTimer(); } }, 1500);
 }
 
-function checkRoundEnd() {
-    if (gameState !== 'PLAYING') return;
-
-    if (player.hp <= 0 || enemy.hp <= 0) {
-        gameState = 'ROUND_OVER';
-        clearInterval(timerInterval);
-
-        if (player.hp <= 0 && enemy.hp <= 0) {
-            announce("DOUBLE K.O.", 2000);
-        } else if (player.hp <= 0) {
-            enemyWins++;
-            announce("K.O. - CPU WINS!", 2000);
-            ui.roundMsg.textContent = "CPU WINS THE ROUND";
-        } else {
-            playerWins++;
-            announce("K.O. - PLAYER WINS!", 2000);
-            ui.roundMsg.textContent = "PLAYER WINS THE ROUND";
-        }
-
-        setTimeout(() => showRoundResult(), 2500);
-    }
-}
-
-function handleTimeOver() {
-    gameState = 'ROUND_OVER';
+function startTimer() {
     clearInterval(timerInterval);
-    announce("TIME OVER", 2000);
+    timerInterval = setInterval(() => { if (gameState === 'PLAYING') { roundTimer--; ui.timer.textContent = roundTimer; if (roundTimer <= 0) handleTime(); } }, 1000);
+}
 
-    if (player.hp > enemy.hp) {
-        playerWins++;
-        ui.roundMsg.textContent = "PLAYER WINS THE ROUND";
-    } else if (enemy.hp > player.hp) {
-        enemyWins++;
-        ui.roundMsg.textContent = "CPU WINS THE ROUND";
-    } else {
-        ui.roundMsg.textContent = "DRAW";
+function checkRound() {
+    if (gameState !== 'PLAYING') return;
+    gameState = 'FINISHED'; clearInterval(timerInterval);
+    if (opponentPlayer.hp <= 0) { enemyWins++; announce('K.O. - CPU WINS', 2000); }
+    else { playerWins++; announce('K.O. - PLAYER 1 WINS', 2000); }
+    setTimeout(() => {
+        if (playerWins >= 2 || enemyWins >= 2) {
+            ui.gameOverScreen.classList.add('active');
+            ui.finalMsg.textContent = playerWins > enemyWins ? "VICTORY!" : "DEFEAT...";
+        } else { ui.roundOverScreen.classList.add('active'); round++; }
+    }, 2500);
+}
+
+function handleTime() {
+    gameState = 'FINISHED'; clearInterval(timerInterval); announce('TIME UP', 2000);
+    if (opponentPlayer.hp > opponentBot.hp) playerWins++; else if (opponentBot.hp > opponentPlayer.hp) enemyWins++;
+    setTimeout(() => { if (playerWins >= 2 || enemyWins >= 2) ui.gameOverScreen.classList.add('active'); else { ui.roundOverScreen.classList.add('active'); round++; } }, 2500);
+}
+
+function updateHUD() {
+    ui.playerHp.style.width = `${(opponentPlayer.hp / opponentPlayer.maxHp) * 100}%`;
+    ui.enemyHp.style.width = `${(opponentBot.hp / opponentBot.maxHp) * 100}%`;
+    ui.playerSuper.style.width = `${opponentPlayer.super}%`;
+    ui.enemySuper.style.width = `${opponentBot.super}%`;
+}
+
+function announce(msg, duration) { ui.announcement.textContent = msg; ui.announcement.style.opacity = 1; setTimeout(() => ui.announcement.style.opacity = 0, duration); }
+
+function drawBackground() {
+    // Sky
+    let grad = ctx.createLinearGradient(0, 0, 0, GROUND_Y);
+    grad.addColorStop(0, '#00d2ff'); grad.addColorStop(1, '#92fe9d');
+    ctx.fillStyle = grad; ctx.fillRect(0, 0, canvas.width, GROUND_Y);
+
+    // Mountains
+    ctx.fillStyle = '#455a64';
+    ctx.beginPath(); ctx.moveTo(0, GROUND_Y); ctx.lineTo(150, 150); ctx.lineTo(300, GROUND_Y); ctx.fill();
+    ctx.beginPath(); ctx.moveTo(400, GROUND_Y); ctx.lineTo(600, 200); ctx.lineTo(800, GROUND_Y); ctx.fill();
+
+    // Ground
+    ctx.fillStyle = '#689f38'; ctx.fillRect(0, GROUND_Y, canvas.width, canvas.height - GROUND_Y);
+}
+
+function loop() {
+    ctx.save();
+    if (screenShake > 0) { ctx.translate(Math.random() * screenShake - screenShake / 2, Math.random() * screenShake - screenShake / 2); screenShake *= 0.9; if (screenShake < 0.1) screenShake = 0; }
+
+    drawBackground();
+    if (opponentPlayer && opponentBot) {
+        opponentPlayer.update(); opponentBot.update();
+        opponentBot.draw(ctx); opponentPlayer.draw(ctx);
     }
 
-    setTimeout(() => showRoundResult(), 2500);
+    particles.forEach((p, i) => { p.update(); p.draw(ctx); if (p.life <= 0) particles.splice(i, 1); });
+    ctx.restore();
+    requestAnimationFrame(loop);
 }
 
-function showRoundResult() {
-    if (playerWins >= 2 || enemyWins >= 2) {
-        // Game Over
-        ui.gameOverScreen.classList.add('active');
-        if (playerWins > enemyWins) {
-            ui.finalMsg.textContent = "YOU WIN THE MATCH!";
-            ui.finalMsg.style.color = '#00e676';
-        } else {
-            ui.finalMsg.textContent = "YOU LOSE!";
-            ui.finalMsg.style.color = '#ff1744';
-        }
-    } else {
-        // Next Round
-        ui.roundOverScreen.classList.add('active');
-        round++;
-    }
-}
-
-// UI Helpers
-function announce(msg, duration = 2000) {
-    ui.announcement.textContent = msg;
-    ui.announcement.style.opacity = 1;
-    setTimeout(() => { ui.announcement.style.opacity = 0; }, duration);
-}
-
-function updateUI() {
-    let pPercent = Math.max(0, (player.hp / player.maxHp) * 100);
-    ui.playerHp.style.width = `${pPercent}%`;
-
-    let ePercent = Math.max(0, (enemy.hp / enemy.maxHp) * 100);
-    ui.enemyHp.style.width = `${ePercent}%`;
-}
-
-
-// -- Game Loop --
-function update() {
-    if (!player || !enemy) return;
-
-    player.update();
-    enemy.update();
-
-    // Keep them from pushing each other out of bounds entirely
-    // Basic collision pushing
-    let dist = Math.abs(player.x - enemy.x);
-    if (dist < 40 && player.state !== 'DEAD' && enemy.state !== 'DEAD') {
-        let push = (40 - dist) / 2;
-        if (player.x < enemy.x) {
-            player.x -= push;
-            enemy.x += push;
-        } else {
-            player.x += push;
-            enemy.x -= push;
-        }
-    }
-}
-
-function draw() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height); // clears transparent parts
-
-    // Draw Ground Line
-    ctx.fillStyle = '#37474f';
-    ctx.fillRect(0, GROUND_Y, canvas.width, canvas.height - GROUND_Y);
-
-    if (player && enemy) {
-        // Draw the one further back first (simple Z sorting based on state could be done, just draw enemy then player)
-        enemy.draw(ctx);
-        player.draw(ctx);
-    }
-}
-
-function gameLoop(timestamp) {
-    if (timestamp - lastTime >= 1000 / FPS) {
-        lastTime = timestamp;
-
-        if (gameState === 'PLAYING' || gameState === 'COUNTDOWN' || gameState === 'ROUND_OVER') {
-            update();
-            draw();
-        }
-    }
-    animationId = requestAnimationFrame(gameLoop);
-}
-
-// -- Event Listeners --
-document.getElementById('start-btn').addEventListener('click', init);
-document.getElementById('restart-btn').addEventListener('click', init);
-document.getElementById('next-round-btn').addEventListener('click', startRound);
-
-// Boot
-requestAnimationFrame(gameLoop);
+document.getElementById('start-btn').onclick = init;
+document.getElementById('restart-btn').onclick = init;
+document.getElementById('next-round-btn').onclick = startRound;

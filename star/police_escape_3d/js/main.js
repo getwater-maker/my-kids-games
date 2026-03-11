@@ -7,7 +7,7 @@ const CONFIG = {
     gravity: 42.0,
     respawnY: -50,
     eyeHeight: 1.8, // Slightly higher for better perspective
-    startPos: { x: 0, y: 0.025, z: 0 } // Top of 0.05 thick floor
+    startPos: { x: 0, y: 0.5, z: 0 } // Top of 1.0 thick floor
 };
 
 let scene, camera, renderer, controls, clock;
@@ -22,6 +22,7 @@ let velocity = new THREE.Vector3();
 let direction = new THREE.Vector3();
 let isJumping = false;
 const keys = {};
+let platformBoxes = []; // Pre-cached for performance
 
 // UI
 let timerText, deathText, startScreen, winScreen, finalTime, finalDeaths;
@@ -40,9 +41,9 @@ function init() {
     scene.background = new THREE.Color(0x87ceeb); // Sky Blue
     scene.fog = new THREE.Fog(0x87ceeb, 50, 500); // Very far fog
 
-    // Add Grid for orientation
+    // Add Grid for orientation - move below floor bottom
     const grid = new THREE.GridHelper(200, 50, 0x444444, 0x888888);
-    grid.position.y = -0.1;
+    grid.position.y = -0.55;
     scene.add(grid);
 
     camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 2000);
@@ -88,12 +89,12 @@ function createMap() {
     checkpoints = []; // Clear and rebuild
 
     // Stage 1 Start: The Jail
-    // Floor and Ceiling are 5cm (0.05) thick as requested
-    createBox(0, 0, 0, 20, 0.05, 20, 0x4a4a4a); // Floor
+    // Floor and Ceiling are 1m (1.0) thick
+    createBox(0, 0, 0, 20, 1.0, 20, 0x4a4a4a); // Floor
     createBox(-10, 3, 0, 1.0, 6, 20, 0x333333); // Back wall
     createBox(0, 3, -10, 20, 6, 1.0, 0x333333); // Side wall
     createBox(0, 3, 10, 20, 6, 1.0, 0x333333);  // Side wall
-    createBox(0, 6, 0, 20, 0.05, 20, 0x333333); // Ceiling
+    createBox(0, 6, 0, 20, 1.0, 20, 0x333333); // Ceiling
 
     // Prison Bars
     for (let i = -9; i <= 9; i += 2.5) {
@@ -101,7 +102,7 @@ function createMap() {
         createBox(10, 3, i, 0.3, 6, 0.3, 0x222222);
     }
 
-    checkpoints.push({ x: 0, y: 0.025, z: 0 }); // CP 0: Jail Top
+    checkpoints.push({ x: 0, y: 0.5, z: 0 }); // CP 0: Jail Top
 
     const path = [
         // --- STAGE 1: CONCRETE ---
@@ -130,14 +131,27 @@ function createMap() {
     ];
 
     path.forEach(p => {
-        // All platforms are 5cm (0.05) thick
-        const mesh = createBox(p.x, p.y, p.z, p.w || 2, 0.05, p.d || 2, p.color || 0xbdc3c7);
+        // All platforms are 1m (1.0) thick
+        const mesh = createBox(p.x, p.y, p.z, p.w || 2, 1.0, p.d || 2, p.color || 0xbdc3c7);
         if (p.checkpoint) {
             mesh.isCheckpoint = true;
             mesh.cpIdx = checkpoints.length;
-            checkpoints.push({ x: p.x, y: p.y + 0.025, z: p.z }); // y + half thickness
+            checkpoints.push({ x: p.x, y: p.y + 0.5, z: p.z }); // y + half thickness
         }
         if (p.isGoal) mesh.isGoal = true;
+    });
+
+    // Pre-cache bounding boxes after all boxes are created
+    updatePlatformBoxes();
+}
+
+function updatePlatformBoxes() {
+    platformBoxes = platforms.map(p => {
+        p.updateMatrixWorld();
+        return {
+            mesh: p,
+            box: new THREE.Box3().setFromObject(p)
+        };
     });
 }
 
@@ -161,55 +175,71 @@ function setupInput() {
     window.addEventListener('keyup', (e) => keys[e.code] = false);
 }
 
-function updateMovement() {
+function updateMovement(delta) {
     if (gameState !== 'PLAYING') return;
 
-    let delta = clock.getDelta();
-    if (delta > 0.1) delta = 0.1; // CRITICAL: Cap delta to prevent tunneling out of map
-
     const speed = keys['ShiftLeft'] ? CONFIG.runSpeed : CONFIG.walkSpeed;
-    const oldPos = camera.position.clone();
+    const substeps = 4;
+    const subDelta = delta / substeps;
 
-    // Gravity
-    velocity.y -= CONFIG.gravity * delta;
+    for (let i = 0; i < substeps; i++) {
+        const oldPos = camera.position.clone();
 
-    // Jump
-    if (keys['Space'] && !isJumping) {
-        velocity.y = CONFIG.jumpForce;
-        isJumping = true;
+        // Gravity - apply once per subDelta
+        velocity.y -= CONFIG.gravity * subDelta;
+
+        // Jump
+        if (keys['Space'] && !isJumping) {
+            velocity.y = CONFIG.jumpForce;
+            isJumping = true;
+        }
+
+        camera.position.y += velocity.y * subDelta;
+
+        // Movement Direction
+        direction.z = Number(keys['KeyW']) - Number(keys['KeyS']);
+        direction.x = Number(keys['KeyD']) - Number(keys['KeyA']);
+        direction.normalize();
+
+        const moveSpeed = speed * subDelta;
+        if (keys['KeyW'] || keys['KeyS']) controls.moveForward(direction.z * moveSpeed);
+        if (keys['KeyA'] || keys['KeyD']) controls.moveRight(direction.x * moveSpeed);
+
+        // Ceiling Collision
+        checkCeilingCollision(oldPos);
+
+        // X/Z Wall Blocking
+        checkWallCollision(oldPos);
+
+        // Floor Landing
+        checkFloorCollision();
     }
 
-    camera.position.y += velocity.y * delta;
-
-    // Movement Direction
-    direction.z = Number(keys['KeyW']) - Number(keys['KeyS']);
-    direction.x = Number(keys['KeyD']) - Number(keys['KeyA']);
-    direction.normalize();
-
-    if (keys['KeyW'] || keys['KeyS']) controls.moveForward(direction.z * speed * delta);
-    if (keys['KeyA'] || keys['KeyD']) controls.moveRight(direction.x * speed * delta);
-
-    // X/Z Wall Blocking
-    checkWallCollision(oldPos);
-
-    // Floor Landing
-    checkFloorCollision();
-
-    // Respawn Fall
-    if (camera.position.y < CONFIG.respawnY) {
+    // Respawn Fall - checking at the end of substeps is fine
+    if (camera.position.y < -20) {
         respawn();
     }
 }
 
-function checkWallCollision(oldPos) {
-    platforms.forEach(p => {
-        const platformBox = new THREE.Box3().setFromObject(p);
-        const playerBoxXZ = new THREE.Box3();
-        playerBoxXZ.setFromCenterAndSize(camera.position, new THREE.Vector3(0.7, 0.5, 0.7));
+function checkCeilingCollision(oldPos) {
+    platformBoxes.forEach(pb => {
+        if (velocity.y > 0 && pb.box.containsPoint(new THREE.Vector3(camera.position.x, camera.position.y + 0.2, camera.position.z))) {
+            camera.position.y = oldPos.y;
+            velocity.y = 0;
+        }
+    });
+}
 
-        if (platformBox.intersectsBox(playerBoxXZ)) {
+function checkWallCollision(oldPos) {
+    platformBoxes.forEach(pb => {
+        const playerBoxXZ = new THREE.Box3();
+        // Slightly larger box for wall collision
+        playerBoxXZ.setFromCenterAndSize(camera.position, new THREE.Vector3(0.8, 1.0, 0.8));
+
+        if (pb.box.intersectsBox(playerBoxXZ)) {
             // Only block if we are actually within the height range of the wall
-            if (camera.position.y - 1.2 < platformBox.max.y && camera.position.y + 0.2 > platformBox.min.y) {
+            // Using a more generous body range
+            if (camera.position.y - 1.5 < pb.box.max.y && camera.position.y + 0.3 > pb.box.min.y) {
                 camera.position.x = oldPos.x;
                 camera.position.z = oldPos.z;
             }
@@ -224,16 +254,17 @@ function checkFloorCollision() {
     const pz = camera.position.z;
     const footY = py - CONFIG.eyeHeight;
 
-    platforms.forEach(p => {
-        const box = new THREE.Box3().setFromObject(p);
+    platformBoxes.forEach(pb => {
+        const box = pb.box;
+        const p = pb.mesh;
 
-        // Horizontal Check
-        if (px >= box.min.x - 0.4 && px <= box.max.x + 0.4 &&
-            pz >= box.min.z - 0.4 && pz <= box.max.z + 0.4) {
+        // Horizontal Check - slightly smaller padding to be more precise
+        if (px >= box.min.x - 0.2 && px <= box.max.x + 0.2 &&
+            pz >= box.min.z - 0.2 && pz <= box.max.z + 0.2) {
 
             const top = box.max.y;
-            // Vertical Snap Check: if feet are falling and close to the top
-            if (velocity.y <= 0 && footY <= top + 0.1 && footY >= top - 0.8) {
+            // Vertical Snap Check: more robust range for high velocity
+            if (velocity.y <= 0 && footY <= top + 0.15 && footY >= top - 1.0) {
                 camera.position.y = top + CONFIG.eyeHeight;
                 velocity.y = 0;
                 isJumping = false;
@@ -270,7 +301,11 @@ function triggerWin() {
 
 function animate() {
     requestAnimationFrame(animate);
-    updateMovement();
+
+    let delta = clock.getDelta();
+    if (delta > 0.05) delta = 0.05; // Tight cap for stability
+
+    updateMovement(delta);
 
     if (gameState === 'PLAYING') {
         const elapsed = Math.floor((Date.now() - startTime) / 1000);

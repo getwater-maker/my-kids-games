@@ -1,46 +1,51 @@
 // star/minecraft/js/main.js
 
 let scene, camera, renderer, clock;
-let controls = { forward: false, backward: false, left: false, right: false, jump: false };
+let controls = { forward: false, backward: false, left: false, right: false, jump: false, crafting: false };
 let velocity = new THREE.Vector3();
 let direction = new THREE.Vector3();
-let moveSpeed = 40.0;
-let jumpForce = 20.0;
-let gravity = 50.0;
+let moveSpeed = 45.0;
+let jumpForce = 22.0;
+let gravity = 60.0;
 let canJump = false;
 
 let blocks = [];
-letSelectionBox = null;
+let selectionBox = null;
 let currentBlockType = 'grass';
 let raycaster = new THREE.Raycaster();
 
-// --- Time and Sky Cycle ---
-let gameTime = 800; // 0 to 2400 (8:00 AM)
-let dayLength = 2400;
-let skyColor = new THREE.Color(0xaaccff);
-let nightColor = new THREE.Color(0x000814);
-let sunLight;
+// Inventory
+let inventory = {
+    grass: 0,
+    dirt: 0,
+    stone: 0,
+    wood: 0,
+    iron: 0,
+    gold: 0,
+    diamond: 0,
+    sword: 0
+};
 
-// --- Mobs ---
-let monsters = [];
-const MONSTER_COLORS = [0x556b2f, 0x4b0082, 0x8b0000]; // Zombie green, Skeleton purple, Spider red
+let currentSwordPower = 1;
 
 const BLOCK_TYPES = {
     grass: { color: 0x4caf50, icon: '🌿' },
     dirt: { color: 0x8d6e63, icon: '🟫' },
     stone: { color: 0x9e9e9e, icon: '🪨' },
     wood: { color: 0x5d4037, icon: '🪵' },
-    leaves: { color: 0x2e7d32, icon: '🍃' },
-    glass: { color: 0x81d4fa, icon: '💎', opacity: 0.6, transparent: true }
+    iron: { color: 0xcccccc, icon: '⛓️' },
+    gold: { color: 0xffd700, icon: '🪙' },
+    diamond: { color: 0x00d2ff, icon: '💎' },
+    sword: { color: 0x000000, icon: '⚔️', isStatic: true }
 };
 
 function init() {
     scene = new THREE.Scene();
-    scene.background = skyColor;
-    scene.fog = new THREE.FogExp2(0xaaccff, 0.015);
+    scene.background = new THREE.Color(0xaaccff);
+    scene.fog = new THREE.FogExp2(0xaaccff, 0.01);
 
     camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    camera.position.set(0, 10, 0);
+    camera.position.set(0, 20, 0);
 
     renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
@@ -49,17 +54,14 @@ function init() {
 
     clock = new THREE.Clock();
 
-    // Lighting
-    const ambient = new THREE.AmbientLight(0xffffff, 0.5);
+    const ambient = new THREE.AmbientLight(0xffffff, 0.6);
     scene.add(ambient);
-    sunLight = new THREE.DirectionalLight(0xffffff, 0.8);
-    sunLight.position.set(50, 100, 50);
-    sunLight.castShadow = true;
-    scene.add(sunLight);
+    const sun = new THREE.DirectionalLight(0xffffff, 0.8);
+    sun.position.set(50, 100, 50);
+    scene.add(sun);
 
-    generateInitialWorld();
+    generateLargeWorld();
 
-    // Selection Highlight
     const boxGeo = new THREE.BoxGeometry(1.05, 1.05, 1.05);
     const boxMat = new THREE.MeshBasicMaterial({ color: 0x000000, wireframe: true });
     selectionBox = new THREE.Mesh(boxGeo, boxMat);
@@ -67,17 +69,34 @@ function init() {
 
     setupControls();
     setupUI();
-
     animate();
 }
 
-function generateInitialWorld() {
-    const size = 32;
+function generateLargeWorld() {
+    // Generate a much larger and deeper world
+    const size = 64; // Increased size
+    const depth = 20; // Deeper
+
     for (let x = -size / 2; x < size / 2; x++) {
         for (let z = -size / 2; z < size / 2; z++) {
+            // Surface
             createBlock(x, 0, z, 'grass');
-            for (let y = -1; y >= -3; y--) {
-                createBlock(x, y, z, 'dirt');
+
+            // Underground
+            for (let y = -1; y >= -depth; y--) {
+                let type = 'dirt';
+                if (y < -3) type = 'stone';
+
+                // Random Ores
+                const rand = Math.random();
+                if (y < -5 && rand < 0.05) type = 'iron';
+                if (y < -10 && rand < 0.03) type = 'gold';
+                if (y < -15 && rand < 0.015) type = 'diamond';
+
+                // Caves (Air)
+                if (Math.random() < 0.02) continue;
+
+                createBlock(x, y, z, type);
             }
         }
     }
@@ -86,86 +105,24 @@ function generateInitialWorld() {
 function createBlock(x, y, z, type) {
     const config = BLOCK_TYPES[type];
     const geo = new THREE.BoxGeometry(1, 1, 1);
-    const mat = new THREE.MeshPhongMaterial({
-        color: config.color,
-        opacity: config.opacity || 1,
-        transparent: config.transparent || false
-    });
+    const mat = new THREE.MeshPhongMaterial({ color: config.color });
     const block = new THREE.Mesh(geo, mat);
     block.position.set(Math.round(x), Math.round(y), Math.round(z));
     block.userData.type = type;
     scene.add(block);
     blocks.push(block);
-    document.getElementById('block-count').textContent = blocks.length;
-}
-
-function spawnMonster() {
-    const angle = Math.random() * Math.PI * 2;
-    const distance = 20 + Math.random() * 20;
-    const x = camera.position.x + Math.cos(angle) * distance;
-    const z = camera.position.z + Math.sin(angle) * distance;
-
-    // Create simple blocky monster
-    const monsterGroup = new THREE.Group();
-    const body = new THREE.Mesh(new THREE.BoxGeometry(1.2, 3, 1), new THREE.MeshPhongMaterial({ color: MONSTER_COLORS[Math.floor(Math.random() * MONSTER_COLORS.length)] }));
-    body.position.y = 1.5;
-    monsterGroup.add(body);
-
-    const head = new THREE.Mesh(new THREE.BoxGeometry(1.4, 1.4, 1.4), new THREE.MeshPhongMaterial({ color: 0x111111 }));
-    head.position.y = 3.2;
-    monsterGroup.add(head);
-
-    // Glowing eyes
-    const eyeGeo = new THREE.BoxGeometry(0.3, 0.3, 0.1);
-    const eyeMat = new THREE.MeshBasicMaterial({ color: 0xff0000 });
-    const e1 = new THREE.Mesh(eyeGeo, eyeMat); e1.position.set(0.4, 3.4, 0.71); monsterGroup.add(e1);
-    const e2 = new THREE.Mesh(eyeGeo, eyeMat); e2.position.set(-0.4, 3.4, 0.71); monsterGroup.add(e2);
-
-    monsterGroup.position.set(x, 0, z);
-    scene.add(monsterGroup);
-    monsters.push(monsterGroup);
-}
-
-function updateTime(delta) {
-    gameTime += delta * 15; // Speed up time
-    if (gameTime >= dayLength) {
-        gameTime = 0;
-    }
-
-    const hour = Math.floor(gameTime / 100);
-    const min = Math.floor((gameTime % 100) * 0.6);
-    document.getElementById('time-display').textContent = `${hour.toString().padStart(2, '0')}:${min.toString().padStart(2, '0')}`;
-
-    // Night detection (6 PM to 6 AM)
-    const isNight = hour >= 18 || hour < 6;
-
-    // Transition sky color
-    let skyLerp = 0;
-    if (hour >= 17 && hour < 19) skyLerp = (gameTime - 1700) / 200; // Sunset
-    else if (hour >= 19 || hour < 5) skyLerp = 1; // Full Night
-    else if (hour >= 5 && hour < 7) skyLerp = 1 - (gameTime - 500) / 200; // Sunrise
-
-    scene.background.copy(skyColor).lerp(nightColor, skyLerp);
-    scene.fog.color.copy(scene.background);
-    sunLight.intensity = (1 - skyLerp) * 0.8;
-
-    // Spawn monsters at night
-    if (isNight && monsters.length < 15 && Math.random() < 0.01) {
-        spawnMonster();
-    }
-
-    // Remove monsters at day
-    if (!isNight && monsters.length > 0) {
-        const m = monsters.pop();
-        scene.remove(m);
-    }
 }
 
 function setupControls() {
-    document.body.onclick = () => document.body.requestPointerLock();
+    document.body.onclick = () => {
+        if (!controls.crafting) document.body.requestPointerLock();
+    };
+
     document.addEventListener('pointerlockchange', () => {
-        document.getElementById('instructions').classList.toggle('hidden', document.pointerLockElement === document.body);
+        const isLocked = document.pointerLockElement === document.body;
+        document.getElementById('instructions').classList.toggle('hidden', isLocked || controls.crafting);
     });
+
     document.addEventListener('mousemove', (e) => {
         if (document.pointerLockElement === document.body) {
             camera.rotation.y -= e.movementX * 0.002;
@@ -180,11 +137,14 @@ function setupControls() {
         if (e.code === 'KeyA') controls.left = true;
         if (e.code === 'KeyD') controls.right = true;
         if (e.code === 'Space' && canJump) { velocity.y += jumpForce; canJump = false; }
-        if (['Digit1', 'Digit2', 'Digit3', 'Digit4', 'Digit5', 'Digit6'].includes(e.code)) {
-            const types = ['grass', 'dirt', 'stone', 'wood', 'leaves', 'glass'];
+        if (e.code === 'KeyE') toggleCrafting();
+
+        if (['Digit1', 'Digit2', 'Digit3', 'Digit4', 'Digit5', 'Digit6', 'Digit7', 'Digit8'].includes(e.code)) {
+            const types = ['grass', 'dirt', 'stone', 'wood', 'iron', 'gold', 'diamond', 'sword'];
             selectBlock(types[parseInt(e.key) - 1]);
         }
     });
+
     window.addEventListener('keyup', (e) => {
         if (e.code === 'KeyW') controls.forward = false;
         if (e.code === 'KeyS') controls.backward = false;
@@ -194,29 +154,32 @@ function setupControls() {
 
     window.addEventListener('mousedown', (e) => {
         if (document.pointerLockElement !== document.body) return;
+
         raycaster.setFromCamera(new THREE.Vector2(0, 0), camera);
         const intersects = raycaster.intersectObjects(blocks);
 
         if (intersects.length > 0) {
             const intersect = intersects[0];
             if (e.button === 0) { // Break
+                const type = intersect.object.userData.type;
+                inventory[type]++; // Collect
                 scene.remove(intersect.object);
                 blocks = blocks.filter(b => b !== intersect.object);
-                document.getElementById('block-count').textContent = blocks.length;
+                updateStats();
             } else if (e.button === 2) { // Place
-                const pos = intersect.object.position.clone().add(intersect.face.normal);
-                createBlock(pos.x, pos.y, pos.z, currentBlockType);
+                if (currentBlockType !== 'sword' && inventory[currentBlockType] > 0) {
+                    const pos = intersect.object.position.clone().add(intersect.face.normal);
+                    createBlock(pos.x, pos.y, pos.z, currentBlockType);
+                    inventory[currentBlockType]--;
+                    updateStats();
+                }
             }
         }
     });
-    window.addEventListener('contextmenu', (e) => e.preventDefault());
 }
 
-function setupUI() {
-    document.querySelectorAll('.slot').forEach(slot => {
-        slot.onclick = () => selectBlock(slot.dataset.type);
-    });
-    document.getElementById('start-btn').onclick = () => document.body.requestPointerLock();
+function updateStats() {
+    document.getElementById('block-count').textContent = `Inv: W:${inventory.wood} I:${inventory.iron} G:${inventory.gold} D:${inventory.diamond}`;
 }
 
 function selectBlock(type) {
@@ -224,14 +187,35 @@ function selectBlock(type) {
     document.querySelectorAll('.slot').forEach(s => s.classList.toggle('active', s.dataset.type === type));
 }
 
+function toggleCrafting() {
+    controls.crafting = !controls.crafting;
+    document.getElementById('crafting-overlay').classList.toggle('hidden', !controls.crafting);
+    if (controls.crafting) document.exitPointerLock();
+    else document.body.requestPointerLock();
+}
+
+window.craft = function (item) {
+    if (item === 'iron_sword' && inventory.wood >= 2 && inventory.iron >= 2) {
+        inventory.wood -= 2; inventory.iron -= 2; inventory.sword++;
+        currentSwordPower = 2; alert("철검 제작 완료!");
+    } else if (item === 'gold_sword' && inventory.wood >= 2 && inventory.gold >= 2) {
+        inventory.wood -= 2; inventory.gold -= 2; inventory.sword++;
+        currentSwordPower = 3; alert("황금검 제작 완료!");
+    } else if (item === 'diamond_sword' && inventory.wood >= 2 && inventory.diamond >= 2) {
+        inventory.wood -= 2; inventory.diamond -= 2; inventory.sword++;
+        currentSwordPower = 5; alert("다이아몬드검 제작 완료!");
+    } else {
+        alert("재료가 부족합니다!");
+    }
+    updateStats();
+};
+
 function animate() {
     requestAnimationFrame(animate);
     const delta = clock.getDelta();
 
     if (document.pointerLockElement === document.body) {
-        updateTime(delta);
-
-        // Movement
+        // Simple Physics/Movement
         velocity.x -= velocity.x * 10.0 * delta;
         velocity.z -= velocity.z * 10.0 * delta;
         velocity.y -= gravity * delta;
@@ -244,15 +228,15 @@ function animate() {
         camera.getWorldDirection(camDir); camDir.y = 0; camDir.normalize();
         const camRight = new THREE.Vector3().crossVectors(camera.up, camDir).normalize();
 
-        camera.position.add(camDir.clone().multiplyScalar(-velocity.z * delta));
-        camera.position.add(camRight.clone().multiplyScalar(velocity.x * delta));
+        camera.position.add(camDir.clone().multiplyScalar(-velocity.z * 40 * delta));
+        camera.position.add(camRight.clone().multiplyScalar(velocity.x * 40 * delta));
         camera.position.y += velocity.y * delta;
 
-        if (camera.position.y < 1.8) {
-            velocity.y = 0; camera.position.y = 1.8; canJump = true;
+        if (camera.position.y < 2) {
+            velocity.y = 0; camera.position.y = 2; canJump = true;
         }
 
-        // Raycast Selection
+        // Selection
         raycaster.setFromCamera(new THREE.Vector2(0, 0), camera);
         const intersects = raycaster.intersectObjects(blocks);
         if (intersects.length > 0) {
@@ -261,24 +245,12 @@ function animate() {
         } else selectionBox.visible = false;
 
         document.getElementById('pos-display').textContent = `${Math.floor(camera.position.x)}, ${Math.floor(camera.position.y)}, ${Math.floor(camera.position.z)}`;
-
-        // Monster AI: Follow player
-        monsters.forEach(m => {
-            const dx = camera.position.x - m.position.x;
-            const dz = camera.position.z - m.position.z;
-            const dist = Math.sqrt(dx * dx + dz * dz);
-            if (dist > 1.5) {
-                m.position.x += (dx / dist) * 5 * delta;
-                m.position.z += (dz / dist) * 5 * delta;
-                m.lookAt(camera.position.x, 0, camera.position.z);
-            }
-            if (dist < 1.2) {
-                // Simplistic damage: push back
-                velocity.z += 20;
-            }
-        });
     }
     renderer.render(scene, camera);
+}
+
+function setupUI() {
+    document.getElementById('start-btn').onclick = () => document.body.requestPointerLock();
 }
 
 window.onload = init;
@@ -287,3 +259,4 @@ window.addEventListener('resize', () => {
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
 });
+window.toggleCrafting = toggleCrafting;

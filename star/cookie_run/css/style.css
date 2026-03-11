@@ -1,0 +1,157 @@
+/* star/cookie_run/css/style.css */
+body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background: #2c1608;
+    font-family: 'Gowun Dodum', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+#game-wrapper {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    max-width: 1280px;
+    max-height: 720px;
+    background: #000;
+    overflow: hidden;
+    box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
+    border: 4px solid #4a2711;
+}
+
+canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+#hud {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    right: 20px;
+    display: flex;
+    justify-content: space-between;
+    pointer-events: none;
+    z-index: 10;
+}
+
+#energy-container {
+    width: 300px;
+    height: 25px;
+    background: rgba(0, 0, 0, 0.4);
+    border: 3px solid #fff;
+    border-radius: 15px;
+    position: relative;
+    overflow: hidden;
+}
+
+#energy-bar {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to right, #ff4b2b, #ff416c);
+    transition: width 0.1s;
+}
+
+#energy-text {
+    position: absolute;
+    top: 50%;
+    left: 10px;
+    transform: translateY(-50%);
+    color: #fff;
+    font-weight: bold;
+    font-size: 14px;
+    text-shadow: 1px 1px 2px #000;
+}
+
+#score-container {
+    text-align: right;
+    color: #fff;
+}
+
+#score-label {
+    font-size: 14px;
+    font-weight: bold;
+    opacity: 0.8;
+}
+
+#score-val {
+    font-size: 32px;
+    font-weight: 800;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+/* CARDS */
+#overlay,
+#game-over {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.start-card,
+.over-card {
+    background: #fff;
+    padding: 40px;
+    border-radius: 30px;
+    text-align: center;
+    border: 8px solid #f9ca24;
+    max-width: 400px;
+}
+
+.logo {
+    color: #eb4d4b;
+    font-size: 48px;
+    margin: 0;
+    font-weight: 900;
+    text-shadow: 3px 3px 0 #2c1608;
+}
+
+.character-preview {
+    font-size: 60px;
+    margin: 20px 0;
+}
+
+#start-btn,
+button {
+    background: #f0932b;
+    color: #fff;
+    border: none;
+    padding: 15px 50px;
+    font-size: 24px;
+    font-weight: bold;
+    border-radius: 30px;
+    cursor: pointer;
+    box-shadow: 0 8px 0 #d35400;
+    transition: 0.1s;
+}
+
+#start-btn:active,
+button:active {
+    transform: translateY(4px);
+    box-shadow: 0 4px 0 #d35400;
+}
+
+.controls {
+    margin-top: 20px;
+    font-size: 14px;
+    color: #666;
+}
+
+#final-score {
+    font-size: 60px;
+    color: #f0932b;
+    margin: 10px 0 30px;
+}
