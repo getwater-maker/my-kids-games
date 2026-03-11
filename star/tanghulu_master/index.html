@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>탕후루의 달인 (Tanghulu Master)</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;700&family=Nanum+Pen+Script&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <div id="game-container">
+        <canvas id="gameCanvas"></canvas>
+
+        <!-- HUD -->
+        <div id="hud">
+            <div id="score-box">💰 <span id="money">0</span></div>
+            <div id="order-box">
+                <div class="label">오늘의 주문</div>
+                <div id="order-list">🍓🍇🍅</div>
+            </div>
+        </div>
+
+        <!-- Fruit Selection -->
+        <div id="ingredient-bar">
+            <div class="ingredient" data-type="strawberry">🍓</div>
+            <div class="ingredient" data-type="grape">🍇</div>
+            <div class="ingredient" data-type="orange">🍊</div>
+            <div class="ingredient" data-type="pineapple">🍍</div>
+            <div class="ingredient" data-type="tomato">🍅</div>
+        </div>
+
+        <!-- Action Controls -->
+        <div id="action-controls">
+            <button id="sugar-btn" class="action-btn">🍯 설탕 코팅</button>
+            <button id="serve-btn" class="action-btn">✅ 완성 & 판매</button>
+            <button id="reset-btn" class="action-btn small">🔄 다시 시작</button>
+        </div>
+
+        <!-- Overlays -->
+        <div id="start-overlay" class="overlay">
+            <div class="modal">
+                <div class="logo">🍡🍯</div>
+                <h1 class="title">탕후루의<span>달인</span></h1>
+                <p>과일을 꽂고 설탕 시럽을 입혀 달콤한 탕후루를 만드세요!</p>
+                <button id="start-game-btn">장사 시작!</button>
+            </div>
+        </div>
+
+        <div id="success-overlay" class="overlay hidden">
+            <div class="modal success">
+                <h2 id="result-msg">존맛탱 탕후루 완성!</h2>
+                <div class="earn-money">+ 3,000원</div>
+                <button id="next-order-btn">다음 손님</button>
+            </div>
+        </div>
+    </div>
+    <script src="js/main.js"></script>
+</body>
+
+</html>
