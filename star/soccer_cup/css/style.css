@@ -1,0 +1,182 @@
+:root {
+    --field-green: #2ecc71;
+    --goal-white: #ffffff;
+    --ow-yellow: #f1c40f;
+    --bg-dark: #0f172a;
+    --glass-bg: rgba(255, 255, 255, 0.1);
+}
+
+body,
+html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: var(--field-green);
+    font-family: 'Fredoka', sans-serif;
+    user-select: none;
+}
+
+#game-container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+}
+
+canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+/* HUD Overlay */
+#hud {
+    position: absolute;
+    top: 20px;
+    left: 0;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    pointer-events: none;
+    z-index: 10;
+}
+
+#score-board {
+    display: flex;
+    gap: 40px;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(10px);
+    padding: 15px 40px;
+    border-radius: 20px;
+    border: 3px solid #fff;
+    color: white;
+    font-family: 'Oswald', sans-serif;
+    font-weight: 700;
+    text-align: center;
+}
+
+.team {
+    font-size: 1.5rem;
+    letter-spacing: 2px;
+}
+
+#score-val {
+    color: var(--ow-yellow);
+    font-size: 2rem;
+}
+
+.timer {
+    font-size: 1.5rem;
+    color: #e74c3c;
+}
+
+#combo-box {
+    margin-top: 15px;
+    background: var(--ow-yellow);
+    color: black;
+    padding: 10px 30px;
+    border-radius: 50px;
+    font-weight: 900;
+    font-size: 1.2rem;
+    animation: bounce 0.5s infinite alternate;
+}
+
+@keyframes bounce {
+    from {
+        transform: scale(1);
+    }
+
+    to {
+        transform: scale(1.1);
+    }
+}
+
+/* Menu Overlays */
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(46, 204, 113, 0.9);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+    backdrop-filter: blur(10px);
+}
+
+.menu-box {
+    text-align: center;
+    background: #fff;
+    padding: 60px;
+    border-radius: 40px;
+    border: 6px solid #27ae60;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+    max-width: 500px;
+    width: 90%;
+}
+
+.logo-text {
+    font-family: 'Oswald', sans-serif;
+    font-size: 4rem;
+    color: #2c3e50;
+    margin-bottom: 20px;
+    font-weight: 900;
+}
+
+.logo-text span {
+    color: #27ae60;
+}
+
+.goal-preview {
+    font-size: 4rem;
+    margin-bottom: 20px;
+}
+
+p {
+    color: #7f8c8d;
+    margin-bottom: 40px;
+    font-size: 1.2rem;
+}
+
+button {
+    background: #2ecc71;
+    color: #fff;
+    border: none;
+    padding: 20px 60px;
+    font-family: inherit;
+    font-size: 2rem;
+    font-weight: 900;
+    cursor: pointer;
+    transition: 0.2s;
+    border-radius: 20px;
+    box-shadow: 0 8px 0 #27ae60;
+}
+
+button:hover {
+    transform: translateY(-5px);
+    background: #27ae60;
+    box-shadow: 0 12px 0 #219150;
+}
+
+button:active {
+    transform: translateY(2px);
+    box-shadow: 0 4px 0 #219150;
+}
+
+.final-stats {
+    margin: 30px 0;
+    font-size: 2rem;
+    font-weight: 700;
+    color: #2c3e50;
+}
+
+.hidden {
+    display: none !important;
+}
