@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>페이퍼 .io 2 (Paper.io 2 Clone)</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div id="game-container">
+        <canvas id="gameCanvas"></canvas>
+
+        <!-- HUD -->
+        <div id="hud">
+            <div id="leaderboard">
+                <div class="lb-title">LEADERBOARD</div>
+                <div id="lb-list">
+                    <div class="lb-item player">1. YOU - 1%</div>
+                </div>
+            </div>
+            <div id="stats">
+                AREA: <span id="area-val">1.00</span>%
+            </div>
+        </div>
+
+        <!-- Overlays -->
+        <div id="overlay" class="overlay">
+            <div class="menu-box">
+                <div class="logo">🖍️🗺️</div>
+                <h1 class="logo-text">PAPER<span>.IO 2</span></h1>
+                <p>Capture as much territory as possible!</p>
+                <div class="controls-guide">WASD / ARROWS: MOVE | Close the loop to capture</div>
+                <button id="start-btn">CONQUER!</button>
+            </div>
+        </div>
+
+        <div id="game-over" class="overlay hidden">
+            <div class="menu-box">
+                <h1 class="game-over-title">ELIMINATED</h1>
+                <p>Better luck next time!</p>
+                <div class="final-stats">Total Capture: <span id="final-area">0</span>%</div>
+                <button id="restart-btn">RETRY</button>
+            </div>
+        </div>
+    </div>
+    <script src="js/main.js"></script>
+</body>
+
+</html>

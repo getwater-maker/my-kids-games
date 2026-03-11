@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>레벨 데빌: 트롤 금지 (Level Devil - NOT A TROLL GAME)</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;700&family=Oswald:wght@500;700&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <div id="game-container">
+        <canvas id="gameCanvas"></canvas>
+
+        <!-- HUD -->
+        <div id="hud">
+            <div id="level-indicator">LEVEL <span id="level-val">1</span></div>
+            <div id="death-counter">DEATHS: <span id="death-val">0</span></div>
+        </div>
+
+        <!-- Overlays -->
+        <div id="overlay" class="overlay">
+            <div class="menu-box">
+                <div class="logo">😈😈</div>
+                <h1 class="logo-text">LEVEL<span>DEVIL</span></h1>
+                <p>Simple platformer. Definitely not a troll game. Trust me.</p>
+                <div class="controls-guide">WASD / ARROWS: MOVE | SPACE / UP: JUMP</div>
+                <button id="start-btn">NOT A TROLL</button>
+            </div>
+        </div>
+
+        <div id="game-over" class="overlay hidden">
+            <div class="menu-box">
+                <h1 class="game-over-title">YOU DIED</h1>
+                <p>I told you it's simple!</p>
+                <button id="respawn-btn">RESPAWN</button>
+            </div>
+        </div>
+
+        <div id="victory-screen" class="overlay hidden">
+            <div class="menu-box">
+                <h1 class="victory-title">CONGRATS!</h1>
+                <p>You survived the (not) troll levels!</p>
+                <div class="final-stats">Total Deaths: <span id="final-deaths">0</span></div>
+                <button id="restart-btn">PLAY AGAIN</button>
+            </div>
+        </div>
+    </div>
+    <script src="js/main.js"></script>
+</body>
+
+</html>
