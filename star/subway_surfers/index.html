@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>서브웨이 서퍼: 메트로 런</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;700&family=Titan+One&display=swap"
+        rel="stylesheet">
+    <script async src="https://unpkg.com/es-module-shims@1.6.3/dist/es-module-shims.js"></script>
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://unpkg.com/three@0.154.0/build/three.module.js",
+            "three/addons/": "https://unpkg.com/three@0.154.0/examples/jsm/"
+        }
+    }
+    </script>
+</head>
+
+<body>
+    <div id="game-container">
+        <div id="hud">
+            <div class="score-box">SCORE: <span id="score">0</span></div>
+            <div class="coin-box">🟡 <span id="coins">0</span></div>
+        </div>
+
+        <div id="overlay" class="overlay">
+            <div class="menu">
+                <h1 class="title">SUBWAY <span>SURFERS</span></h1>
+                <p>A, D to Move | SPACE to Jump</p>
+                <button id="start-btn">TAP TO PLAY</button>
+            </div>
+        </div>
+
+        <div id="game-over" class="overlay hidden">
+            <div class="menu">
+                <h1 class="title">BUSTED!</h1>
+                <div class="results">
+                    <p>Score: <span id="final-score">0</span></p>
+                    <p>Coins: <span id="final-coins">0</span></p>
+                </div>
+                <button id="restart-btn">RELOAD</button>
+            </div>
+        </div>
+    </div>
+    <script type="module" src="js/main.js"></script>
+</body>
+
+</html>

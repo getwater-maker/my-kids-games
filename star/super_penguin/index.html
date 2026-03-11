@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>슈퍼 펭귄 (Super Penguin 3D)</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;700&family=Pacifico&display=swap"
+        rel="stylesheet">
+    <!-- Three.js Library -->
+    <script async src="https://unpkg.com/es-module-shims@1.6.3/dist/es-module-shims.js"></script>
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://unpkg.com/three@0.154.0/build/three.module.js",
+            "three/addons/": "https://unpkg.com/three@0.154.0/examples/jsm/"
+        }
+    }
+    </script>
+</head>
+
+<body>
+    <div id="game-container">
+        <!-- HUD Overlay -->
+        <div id="hud">
+            <div id="score-container">
+                <div class="label">DISTANCE</div>
+                <div id="score-value">0m</div>
+            </div>
+            <div id="fish-container">
+                <div class="label">FISH</div>
+                <div id="fish-count">🐟 0</div>
+            </div>
+        </div>
+
+        <!-- Overlays -->
+        <div id="overlay" class="overlay">
+            <div class="menu-box">
+                <h1 class="logo-text">SUPER <span>PENGUIN</span></h1>
+                <p>Use Arrow Keys or A/D to Slide & Jump!</p>
+                <button id="start-btn">SLIDE START!</button>
+            </div>
+        </div>
+
+        <div id="game-over-screen" class="overlay hidden">
+            <div class="menu-box">
+                <h1 class="logo-text">OOPS!</h1>
+                <p>You hit an obstacle!</p>
+                <div class="final-stats">
+                    <div>Distance: <span id="final-distance">0</span>m</div>
+                    <div>Fish Collected: <span id="final-fish">0</span></div>
+                </div>
+                <button id="restart-btn">RETRY</button>
+            </div>
+        </div>
+    </div>
+    <script type="module" src="js/main.js"></script>
+</body>
+
+</html>
