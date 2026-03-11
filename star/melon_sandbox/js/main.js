@@ -144,14 +144,47 @@ function handleTool(tool) {
 
         // Visual feedback
         createFlash(x, y);
+    } else if (tool === 'chainsaw') {
+        const { x, y } = mConstraint.mouse.position;
+        applyLocalDamage(x, y, 100, 'slice');
+    } else if (tool === 'acid') {
+        const { x, y } = mConstraint.mouse.position;
+        applyLocalDamage(x, y, 150, 'dissolve');
+    } else if (tool === 'fire') {
+        const { x, y } = mConstraint.mouse.position;
+        applyLocalDamage(x, y, 200, 'burn');
     } else if (tool === 'gravity') {
         engine.gravity.y = engine.gravity.y === 1 ? -1 : 1;
     }
 }
 
-function createFlash(x, y) {
+function applyLocalDamage(x, y, radius, type) {
+    const bodies = Composite.allBodies(world);
+    bodies.forEach(body => {
+        if (body.isStatic) return;
+        const dist = Matter.Vector.magnitude(Matter.Vector.sub(body.position, { x, y }));
+        if (dist < radius) {
+            // Visual damage: change color
+            if (type === 'slice') {
+                body.render.fillStyle = '#ff0000'; // Blood red
+                // Forceful push
+                const force = Matter.Vector.normalise(Matter.Vector.sub(body.position, { x, y }));
+                Matter.Body.applyForce(body, body.position, Matter.Vector.mult(force, 0.02));
+            } else if (type === 'dissolve') {
+                body.render.fillStyle = '#27ae60'; // Acid green
+                body.render.opacity = (body.render.opacity || 1) - 0.1;
+                if (body.render.opacity <= 0) World.remove(world, body);
+            } else if (type === 'burn') {
+                body.render.fillStyle = '#333'; // Charred
+                createFlash(body.position.x, body.position.y, 'rgba(255, 69, 0, 0.5)');
+            }
+        }
+    });
+}
+
+function createFlash(x, y, color = 'rgba(255, 255, 255, 0.4)') {
     // Simple visual puff
-    const puff = Bodies.circle(x, y, 80, { isSensor: true, render: { fillStyle: 'rgba(255, 255, 255, 0.4)' } });
+    const puff = Bodies.circle(x, y, 80, { isSensor: true, render: { fillStyle: color } });
     World.add(world, puff);
     setTimeout(() => World.remove(world, puff), 100);
 }
