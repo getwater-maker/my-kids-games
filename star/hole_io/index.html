@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hole.io: City Eater</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;700&family=Titan+One&display=swap"
+        rel="stylesheet">
+    <!-- Three.js Library -->
+    <script async src="https://unpkg.com/es-module-shims@1.6.3/dist/es-module-shims.js"></script>
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://unpkg.com/three@0.154.0/build/three.module.js",
+            "three/addons/": "https://unpkg.com/three@0.154.0/examples/jsm/"
+        }
+    }
+    </script>
+</head>
+
+<body>
+    <div id="game-container">
+        <!-- HUD Overlay -->
+        <div id="hud">
+            <div id="score-container">
+                <span id="score-label">SIZE</span>
+                <span id="score-value">0</span>
+            </div>
+            <div id="timer-container">
+                <span id="timer-value">02:00</span>
+            </div>
+        </div>
+
+        <!-- Start Overlay -->
+        <div id="overlay" class="overlay">
+            <div class="menu-box">
+                <h1 class="logo-text">HOLE<span>.io</span></h1>
+                <p>Move your mouse to swallow everything and grow!</p>
+                <button id="start-btn">EAT THE CITY</button>
+            </div>
+        </div>
+
+        <!-- Game Over Overlay -->
+        <div id="game-over" class="overlay hidden">
+            <div class="menu-box">
+                <h1 class="logo-text">TIME OVER!</h1>
+                <div class="final-stats">
+                    <p>Final Size: <span id="final-score">0</span></p>
+                </div>
+                <button id="restart-btn">PLAY AGAIN</button>
+            </div>
+        </div>
+    </div>
+    <script type="module" src="js/main.js"></script>
+</body>
+
+</html>
