@@ -81,7 +81,18 @@ const levels = [
         ],
         goal: { x: 800, y: 440, type: 'troll_goal', moveX: 200 }
     },
-    { // Level 5 - Hidden Surprise
+    { // Level 5 - Falling Ceiling (New Challenge)
+        spawn: { x: 100, y: 300 },
+        platforms: [
+            { x: 0, y: 500, w: 800, h: 50 },
+            { x: 900, y: 500, w: 100, h: 50 }
+        ],
+        hazards: [
+            { x: 400, y: -200, w: 50, h: 400, type: 'popup_wall', triggerX: 300 } // Falling from top
+        ],
+        goal: { x: 950, y: 440 }
+    },
+    { // Level 6 - Hidden Surprise (FINAL STAGE)
         spawn: { x: 100, y: 300 },
         platforms: [
             { x: 0, y: 500, w: 300, h: 50 },
@@ -251,8 +262,14 @@ function updateTrolls() {
         }
         if (h.type === 'popup_wall') {
             if (player.x > h.triggerX) {
-                h.y -= 20;
-                if (h.y < 0) h.y = 0;
+                // If it starts below the platform, it pops up. If it's above, it falls down.
+                if (h.originalY > 500) {
+                    h.y -= 20;
+                    if (h.y < 500 - h.h) h.y = 500 - h.h;
+                } else if (h.originalY < 0) {
+                    h.y += 20;
+                    if (h.y > 500 - h.h) h.y = 500 - h.h;
+                }
             }
         }
     });
