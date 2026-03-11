@@ -12,7 +12,8 @@ const FRUIT_EMOJIS = {
     grape: '🍇',
     orange: '🍊',
     pineapple: '🍍',
-    tomato: '🍅'
+    tomato: '🍅',
+    duzzonku: '🍪'
 };
 
 const TYPE_TO_EMOJI = {
@@ -20,7 +21,8 @@ const TYPE_TO_EMOJI = {
     'grape': '🍇',
     'orange': '🍊',
     'pineapple': '🍍',
-    'tomato': '🍅'
+    'tomato': '🍅',
+    'duzzonku': '🍪'
 };
 
 const EMOJI_TO_TYPE = Object.fromEntries(Object.entries(TYPE_TO_EMOJI).map(([k, v]) => [v, k]));
