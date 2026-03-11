@@ -1,0 +1,211 @@
+:root {
+    --ow-red: #ff3838;
+    --ow-blue: #0984e3;
+    --ow-yellow: #f1c40f;
+    --bg-dark: #000;
+}
+
+body,
+html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: var(--bg-dark);
+    font-family: 'Fredoka', sans-serif;
+    user-select: none;
+}
+
+#game-container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+}
+
+canvas {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+/* TOP HUD */
+#hud {
+    position: absolute;
+    top: 20px;
+    left: 10%;
+    right: 10%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    pointer-events: none;
+    z-index: 10;
+}
+
+#status-bar {
+    background: rgba(0, 0, 0, 0.6);
+    padding: 10px 20px;
+    border-radius: 10px;
+    border-left: 5px solid var(--ow-red);
+}
+
+#role-tag {
+    font-weight: 900;
+    font-size: 1.5rem;
+    letter-spacing: 2px;
+}
+
+.imposter {
+    color: var(--ow-red);
+}
+
+#kill-timer {
+    margin-left: 20px;
+    color: #fff;
+    opacity: 0.8;
+}
+
+#task-progress {
+    background: rgba(0, 0, 0, 0.6);
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 10px;
+    border-right: 5px solid var(--ow-yellow);
+    font-weight: bold;
+}
+
+/* BOTTOM HUD */
+#action-hud {
+    position: absolute;
+    bottom: 40px;
+    right: 40px;
+    display: flex;
+    gap: 20px;
+    z-index: 10;
+}
+
+.action-btn {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    border: none;
+    font-weight: 900;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    transition: 0.2s;
+    font-family: inherit;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+#kill-btn {
+    background: linear-gradient(135deg, #ff4d4d, #b30000);
+    color: #fff;
+    border: 3px solid #fff;
+}
+
+#kill-btn:disabled {
+    filter: grayscale(1);
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+#vent-btn {
+    background: linear-gradient(135deg, #444, #111);
+    color: #00ff00;
+    border: 3px solid #00ff00;
+}
+
+/* MENU OVERLAYS */
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+    backdrop-filter: blur(10px);
+}
+
+.menu-box {
+    text-align: center;
+    background: #000;
+    padding: 60px;
+    border-radius: 20px;
+    border: 3px solid #333;
+    max-width: 500px;
+}
+
+.character-preview {
+    font-size: 6rem;
+    margin-bottom: 20px;
+    animation: bounce 1s infinite alternate;
+}
+
+@keyframes bounce {
+    from {
+        transform: translateY(0);
+    }
+
+    to {
+        transform: translateY(-20px);
+    }
+}
+
+.logo-text {
+    font-size: 3rem;
+    color: #fff;
+    margin-bottom: 10px;
+    font-weight: 900;
+    letter-spacing: 5px;
+}
+
+.logo-text span {
+    color: var(--ow-red);
+}
+
+.controls {
+    background: #111;
+    color: #888;
+    padding: 10px;
+    margin: 20px 0;
+    border-radius: 5px;
+    font-size: 0.9rem;
+}
+
+button {
+    background: #fff;
+    color: #000;
+    border: none;
+    padding: 15px 40px;
+    font-family: inherit;
+    font-weight: 900;
+    font-size: 1.5rem;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.win-title {
+    color: var(--ow-red);
+    font-size: 4rem;
+    text-shadow: 0 0 20px var(--ow-red);
+}
+
+.lose-title {
+    color: #888;
+    font-size: 4rem;
+}
+
+.hidden {
+    display: none !important;
+}
