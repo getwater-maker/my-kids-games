@@ -1,0 +1,217 @@
+:root {
+    --primary: #ff4757;
+    --secondary: #2f3542;
+    --player-blue: #1e90ff;
+    --cpu-red: #ff4757;
+    --glass: rgba(0, 0, 0, 0.7);
+    --font-fancy: 'Black Han Sans', sans-serif;
+    --font-main: 'Outfit', sans-serif;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    user-select: none;
+}
+
+body {
+    background-color: #0c0d10;
+    color: white;
+    font-family: var(--font-main);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    overflow: hidden;
+}
+
+#game-container {
+    position: relative;
+    width: 1024px;
+    height: 576px;
+    background: #000;
+    border: 4px solid #1a1b1f;
+    box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+}
+
+canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+    background-image: url('bg.png');
+    background-size: cover;
+    background-position: center;
+    image-rendering: pixelated;
+}
+
+.screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: var(--glass);
+    z-index: 10;
+    backdrop-filter: blur(8px);
+    transition: opacity 0.3s ease;
+}
+
+.hidden {
+    display: none !important;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.game-title {
+    font-family: var(--font-fancy);
+    font-size: 80px;
+    margin-bottom: 20px;
+    background: linear-gradient(180deg, #ffd32a, #ff9f1a);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 5px 0 rgba(0, 0, 0, 0.5));
+    animation: titleFloat 3s ease-in-out infinite;
+}
+
+@keyframes titleFloat {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+.game-desc {
+    font-size: 18px;
+    margin-bottom: 40px;
+    color: #a4b0be;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.menu-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.btn-primary,
+.btn-secondary {
+    padding: 15px 40px;
+    font-size: 24px;
+    font-family: var(--font-fancy);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.btn-primary {
+    background: linear-gradient(to bottom, #ff4757, #ee5253);
+    color: white;
+    box-shadow: 0 5px 0 #b33939;
+}
+
+.btn-primary:hover {
+    transform: scale(1.05);
+    filter: brightness(1.1);
+}
+
+.btn-primary:active {
+    transform: translateY(4px);
+    box-shadow: 0 1px 0 #b33939;
+}
+
+.btn-secondary {
+    background: #57606f;
+    color: white;
+    box-shadow: 0 5px 0 #2f3542;
+}
+
+.btn-secondary:hover {
+    transform: scale(1.05);
+}
+
+/* HUD STYLES */
+#hud {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 20px 40px;
+    display: flex;
+    justify-content: center;
+    z-index: 5;
+}
+
+.health-system {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.player-info {
+    width: 40%;
+}
+
+.player-info.p2 .name {
+    text-align: right;
+}
+
+.name {
+    font-family: var(--font-fancy);
+    font-size: 16px;
+    margin-bottom: 5px;
+    text-shadow: 1px 1px 2px black;
+}
+
+.health-bar-container {
+    width: 100%;
+    height: 30px;
+    background: rgba(0, 0, 0, 0.5);
+    border: 2px solid #333;
+    overflow: hidden;
+    transform: skew(-20deg);
+}
+
+.health-bar {
+    height: 100%;
+    width: 100%;
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.health-bar.blue {
+    background: linear-gradient(90deg, #1e90ff, #3742fa);
+}
+
+.health-bar.red {
+    background: linear-gradient(-90deg, #ff4757, #ff6b81);
+}
+
+#timer {
+    font-family: var(--font-fancy);
+    font-size: 48px;
+    color: #ffd32a;
+    text-shadow: 0 0 10px rgba(255, 211, 42, 0.5);
+    margin: 0 20px;
+}
+
+/* RESULT SCREEN */
+#game-over h2 {
+    font-family: var(--font-fancy);
+    font-size: 64px;
+    margin-bottom: 30px;
+    color: white;
+}

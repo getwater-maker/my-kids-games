@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>비둘기 라이벌 - Pigeon Rival</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Outfit:wght@400;700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="game-container">
+        <!-- Main Menu -->
+        <div id="main-menu" class="screen active">
+            <h1 class="game-title">비둘기 라이벌</h1>
+            <p class="game-desc">1v1 격투 게임! 조작: WASD 이동, J 펀치, K 킥, L 가드</p>
+            <div class="menu-buttons">
+                <button id="start-btn" class="btn-primary">게임 시작</button>
+            </div>
+        </div>
+
+        <!-- HUD -->
+        <div id="hud" class="hidden">
+            <div class="health-system">
+                <div class="player-info p1">
+                    <div class="name">Player 1 (Blue)</div>
+                    <div class="health-bar-container">
+                        <div id="p1-health" class="health-bar blue"></div>
+                    </div>
+                </div>
+                <div id="timer">60</div>
+                <div class="player-info p2">
+                    <div class="name">CPU (Red)</div>
+                    <div class="health-bar-container">
+                        <div id="p2-health" class="health-bar red"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Game Canvas -->
+        <canvas id="gameCanvas"></canvas>
+
+        <!-- Game Over Screen -->
+        <div id="game-over" class="screen hidden">
+            <h2 id="result-text">WINNER!</h2>
+            <div class="menu-buttons">
+                <button id="restart-btn" class="btn-primary">다시 시작</button>
+                <button id="menu-btn" class="btn-secondary">메인화면으로</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="game.js"></script>
+</body>
+</html>

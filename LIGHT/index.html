@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LIGHT 게임 선택하기 ⚔️</title>
+    <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #f0f7ff;
+            --primary-color: #74b9ff;
+            --primary-dark: #0984e3;
+            --secondary-color: #a29bfe;
+            --secondary-dark: #6c5ce7;
+            --accent-color: #55efc4;
+            --accent-dark: #00b894;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: var(--bg-color);
+            background-image: radial-gradient(#dcdde1 1.5px, transparent 1.5px);
+            background-size: 25px 25px;
+            font-family: 'Jua', sans-serif;
+            text-align: center;
+        }
+
+        .container {
+            background-color: white;
+            padding: 50px 40px;
+            border-radius: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+            width: 90%;
+            max-width: 600px;
+            border: 4px solid var(--primary-color);
+        }
+
+        h1 {
+            color: #2d3436;
+            margin-bottom: 40px;
+            font-size: 2.5rem;
+            text-shadow: 2px 2px 0px white;
+        }
+
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 25px 30px;
+            font-size: 1.5rem;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn:active {
+            transform: translateY(4px);
+            box-shadow: none !important;
+        }
+
+        .btn-bedwars {
+            background-color: var(--primary-color);
+            box-shadow: 0 8px 0 var(--primary-dark);
+        }
+
+        .btn-pigeon {
+            background-color: var(--secondary-color);
+            box-shadow: 0 8px 0 var(--secondary-dark);
+        }
+
+        .btn-tetris {
+            background-color: var(--accent-color);
+            box-shadow: 0 8px 0 var(--accent-dark);
+            color: #2d3436;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+
+        .btn-icon {
+            font-size: 2rem;
+            margin-right: 15px;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 30px;
+            color: #b2bec3;
+            text-decoration: none;
+            font-size: 1.1rem;
+        }
+
+        .back-link:hover {
+            color: var(--primary-dark);
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>⚔️ LIGHT 게임 월드</h1>
+        <div class="button-group">
+            <a href="2d-bedwars/index.html" class="btn btn-bedwars">
+                <span class="btn-icon">🛏️</span> 2D Bedwars
+            </a>
+            <a href="비둘기 격투/index.html" class="btn btn-pigeon">
+                <span class="btn-icon">🐦</span> 비둘기 격투 (Pigeon Fight)
+            </a>
+            <a href="테트리스/index.html" class="btn btn-tetris">
+                <span class="btn-icon">🧩</span> 네온 테트리스
+            </a>
+        </div>
+        <a href="../index.html" class="back-link">← 메인 페이지로 돌아가기</a>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>네온 테트리스 - Neon Tetris</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* Embedded critical styles to ensure visibility */
+        #start-btn-container {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        #start-btn {
+            background: linear-gradient(45deg, #4facfe, #00f2fe);
+            border: none;
+            padding: 15px 40px;
+            color: white;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 242, 254, 0.4);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="background">
+        <div class="circle circle-1"></div>
+        <div class="circle circle-2"></div>
+    </div>
+
+    <main id="game-container">
+        <h1>NEON <span class="accent">TETRIS</span></h1>
+
+        <div class="game-layout">
+            <div class="side-panel">
+                <div class="stat-box glass">
+                    <h3>SCORE</h3>
+                    <div id="score">0</div>
+                </div>
+                <div class="stat-box glass">
+                    <h3>LEVEL</h3>
+                    <div id="level">1</div>
+                </div>
+            </div>
+
+            <div class="canvas-container glass" id="canvas-container">
+                <canvas id="tetris" width="360" height="720"></canvas>
+                <div id="combo-display" class="hidden">COMBO X1</div>
+            </div>
+
+            <div class="side-panel">
+                <div class="next-box glass">
+                    <h3>NEXT</h3><canvas id="next" width="100" height="100"></canvas>
+                </div>
+                <div class="stat-box glass">
+                    <h3>LINES</h3>
+                    <div id="lines">0</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="start-btn-container">
+            <button id="start-btn">START GAME</button>
+        </div>
+
+        <div class="mobile-controls">
+            <button class="ctrl-btn" id="ctrl-left">←</button>
+            <button class="ctrl-btn" id="ctrl-rotate">↻</button>
+            <button class="ctrl-btn" id="ctrl-right">→</button>
+            <button class="ctrl-btn" id="ctrl-drop">↓</button>
+        </div>
+    </main>
+
+    <script src="game.js"></script>
+</body>
+
+</html>
