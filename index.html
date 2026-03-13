@@ -217,6 +217,63 @@
             color: #e17055;
         }
 
+        /* Click count badge */
+        .click-count {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: rgba(255,255,255,0.85);
+            border-radius: 20px;
+            padding: 4px 12px;
+            font-size: 0.9rem;
+            color: #2d3436;
+            margin-top: 8px;
+            font-weight: bold;
+        }
+
+        .card-light .click-count { border: 2px solid var(--light-color); }
+        .card-insight .click-count { border: 2px solid var(--insight-color); }
+        .card-star .click-count { border: 2px solid var(--star-dark); }
+
+        /* Stats section */
+        .stats-section {
+            width: 100%;
+            max-width: 800px;
+            padding: 10px 20px 30px;
+        }
+
+        .stats-title {
+            text-align: center;
+            font-size: 1.5rem;
+            color: #636e72;
+            margin-bottom: 16px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 14px;
+        }
+
+        .stat-card {
+            background: #fff;
+            border-radius: 14px;
+            padding: 16px 12px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.07);
+        }
+
+        .stat-card .stat-num {
+            font-size: 2rem;
+            display: block;
+        }
+
+        .stat-card .stat-label {
+            font-size: 0.9rem;
+            color: #b2bec3;
+            margin-top: 4px;
+        }
+
         /* Footer */
         .footer {
             text-align: center;
@@ -263,7 +320,8 @@
             <ul class="game-list">
                 <li>🛏️ 2D Bedwars</li>
             </ul>
-            <a href="LIGHT/2d-bedwars/" class="play-btn">게임하러 가기!</a>
+            <div class="click-count">🎮 <span id="count-light">...</span> 번 플레이</div>
+            <a href="LIGHT/2d-bedwars/" class="play-btn" onclick="trackClick('light')">게임하러 가기!</a>
         </div>
 
         <!-- insight -->
@@ -284,7 +342,8 @@
                 <span class="game-tag">🎁 선물</span>
             </div>
             <p style="color: #b2bec3; font-size: 0.9rem;">외 16개 게임 더!</p>
-            <a href="insight/" class="play-btn">게임하러 가기!</a>
+            <div class="click-count">🎮 <span id="count-insight">...</span> 번 플레이</div>
+            <a href="insight/" class="play-btn" onclick="trackClick('insight')">게임하러 가기!</a>
         </div>
 
         <!-- star -->
@@ -305,13 +364,104 @@
                 <span class="game-tag">🍧 빙수</span>
             </div>
             <p style="color: #b2bec3; font-size: 0.9rem;">외 12개 커비 게임 더!</p>
-            <a href="star/" class="play-btn">게임하러 가기!</a>
+            <div class="click-count">🎮 <span id="count-star">...</span> 번 플레이</div>
+            <a href="star/" class="play-btn" onclick="trackClick('star')">게임하러 가기!</a>
+        </div>
+    </section>
+
+    <!-- 접속 통계 -->
+    <section class="stats-section">
+        <p class="stats-title">📊 방문 통계</p>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <span class="stat-num">👀</span>
+                <span class="stat-num" id="stat-visits">...</span>
+                <div class="stat-label">총 방문 수</div>
+            </div>
+            <div class="stat-card">
+                <span class="stat-num">⚔️</span>
+                <span class="stat-num" id="stat-light">...</span>
+                <div class="stat-label">LIGHT 플레이</div>
+            </div>
+            <div class="stat-card">
+                <span class="stat-num">🎨</span>
+                <span class="stat-num" id="stat-insight">...</span>
+                <div class="stat-label">insight 플레이</div>
+            </div>
+            <div class="stat-card">
+                <span class="stat-num">⭐</span>
+                <span class="stat-num" id="stat-star">...</span>
+                <div class="stat-label">star 플레이</div>
+            </div>
         </div>
     </section>
 
     <footer class="footer">
         A Family Project 💕
     </footer>
+
+    <script>
+        const NS = 'kids-games-getwater-2024';
+
+        async function hitCount(key) {
+            try {
+                const res = await fetch(`https://api.countapi.xyz/hit/${NS}/${key}`);
+                const data = await res.json();
+                return data.value ?? 0;
+            } catch {
+                const local = parseInt(localStorage.getItem(key) || '0') + 1;
+                localStorage.setItem(key, local);
+                return local;
+            }
+        }
+
+        async function getCount(key) {
+            try {
+                const res = await fetch(`https://api.countapi.xyz/get/${NS}/${key}`);
+                const data = await res.json();
+                return data.value ?? 0;
+            } catch {
+                return parseInt(localStorage.getItem(key) || '0');
+            }
+        }
+
+        function setDisplay(id, value) {
+            const el = document.getElementById(id);
+            if (el) el.textContent = value.toLocaleString();
+        }
+
+        async function trackClick(game) {
+            // 클릭 시 카운트 증가 (페이지 이동 전에 호출됨)
+            localStorage.setItem(`click-${game}`, Date.now()); // 중복 방지용 타임스탬프
+            fetch(`https://api.countapi.xyz/hit/${NS}/click-${game}`).catch(() => {
+                const k = `click-${game}`;
+                localStorage.setItem(k, parseInt(localStorage.getItem(k) || '0') + 1);
+            });
+        }
+
+        async function loadStats() {
+            // 페이지 방문 카운트
+            const visits = await hitCount('visits');
+            setDisplay('stat-visits', visits);
+
+            // 게임별 클릭 수 조회
+            const [light, insight, star] = await Promise.all([
+                getCount('click-light'),
+                getCount('click-insight'),
+                getCount('click-star'),
+            ]);
+
+            setDisplay('count-light', light);
+            setDisplay('count-insight', insight);
+            setDisplay('count-star', star);
+
+            setDisplay('stat-light', light);
+            setDisplay('stat-insight', insight);
+            setDisplay('stat-star', star);
+        }
+
+        loadStats();
+    </script>
 </body>
 
 </html>
