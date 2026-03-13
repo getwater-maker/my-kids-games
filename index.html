@@ -536,56 +536,53 @@
     </footer>
 
     <script>
-        const NS = 'gw-kids-games-v2-private';
-
-        async function hitCount(key) {
-            try {
-                const res = await fetch(`https://api.countapi.xyz/hit/${NS}/${key}`);
-                const data = await res.json();
-                return data.value ?? 0;
-            } catch {
-                const local = parseInt(localStorage.getItem(key) || '0') + 1;
-                localStorage.setItem(key, local);
-                return local;
-            }
-        }
+        const DB = 'https://my-family-kids-default-rtdb.firebaseio.com/gameStats';
 
         async function getCount(key) {
             try {
-                const res = await fetch(`https://api.countapi.xyz/get/${NS}/${key}`);
-                const data = await res.json();
-                return data.value ?? 0;
+                const res = await fetch(`${DB}/${key}.json`);
+                return (await res.json()) || 0;
             } catch {
                 return parseInt(localStorage.getItem(key) || '0');
             }
         }
 
-        function setDisplay(id, value) {
-            const el = document.getElementById(id);
-            if (el) el.textContent = value.toLocaleString();
+        async function increment(key) {
+            try {
+                const current = await getCount(key);
+                const next = current + 1;
+                await fetch(`${DB}/${key}.json`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(next)
+                });
+                return next;
+            } catch {
+                const next = parseInt(localStorage.getItem(key) || '0') + 1;
+                localStorage.setItem(key, next);
+                return next;
+            }
         }
 
-        async function trackClick(game) {
-            // 클릭 시 카운트 증가 (페이지 이동 전에 호출됨)
-            localStorage.setItem(`click-${game}`, Date.now()); // 중복 방지용 타임스탬프
-            fetch(`https://api.countapi.xyz/hit/${NS}/click-${game}`).catch(() => {
-                const k = `click-${game}`;
-                localStorage.setItem(k, parseInt(localStorage.getItem(k) || '0') + 1);
-            });
+        function setDisplay(id, value) {
+            const el = document.getElementById(id);
+            if (el) el.textContent = Number(value).toLocaleString();
+        }
+
+        function trackClick(game) {
+            increment(`click_${game}`);
         }
 
         async function loadStats() {
-            // 페이지 방문 카운트
-            const visits = await hitCount('visits');
-            setDisplay('stat-visits', visits);
-
-            // 게임별 클릭 수 조회
-            const [light, insight, star, lader] = await Promise.all([
-                getCount('click-light'),
-                getCount('click-insight'),
-                getCount('click-star'),
-                getCount('click-lader'),
+            const [visits, light, insight, star, lader] = await Promise.all([
+                increment('visits'),
+                getCount('click_light'),
+                getCount('click_insight'),
+                getCount('click_star'),
+                getCount('click_lader'),
             ]);
+
+            setDisplay('stat-visits', visits);
 
             setDisplay('count-light', light);
             setDisplay('count-insight', insight);
