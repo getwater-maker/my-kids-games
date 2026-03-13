@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BATTLE CATS: Cosmic Warfare</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Open+Sans:wght@400;700&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <div id="game-container">
+        <!-- Parallax Background Layers -->
+        <div class="sky"></div>
+        <div class="mountains"></div>
+        <div class="ground"></div>
+
+        <!-- Battlefield -->
+        <div id="battlefield">
+            <!-- Player Base -->
+            <div id="player-base" class="base">
+                <div class="hp-bar">
+                    <div class="hp-fill"></div>
+                </div>
+                <div class="base-model">🏠</div>
+                <div id="cannon-beam"></div>
+            </div>
+
+            <!-- Enemy Base -->
+            <div id="enemy-base" class="base">
+                <div class="hp-bar">
+                    <div class="hp-fill"></div>
+                </div>
+                <div class="base-model">👿</div>
+            </div>
+
+            <!-- Units go here via JS -->
+            <div id="units-container"></div>
+            <div id="effects-container"></div>
+        </div>
+
+        <!-- Top HUD (Resources) -->
+        <div id="top-hud">
+            <div class="money-container">
+                <span class="wallet-icon">💰</span>
+                <span id="money-val">0</span> / <span id="max-money-val">1000</span>
+            </div>
+            <div class="cannon-container">
+                <button id="fire-cannon-btn" class="ready">
+                    <span class="btn-label">CAT CANNON</span>
+                    <div id="cannon-charge-bar"></div>
+                </button>
+            </div>
+            <div class="worker-level">
+                <button id="upgrade-worker-btn">
+                    WORKER UPGRADE<br>
+                    <span id="upgrade-cost">Lv.1 - 100</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Bottom HUD (Unit Controls) -->
+        <div id="bottom-hud">
+            <div class="unit-slots">
+                <div class="unit-slot" id="unit-1" data-type="cat">
+                    <div class="unit-icon">🐈</div>
+                    <div class="unit-name">Basic Cat</div>
+                    <div class="unit-cost">50</div>
+                    <div class="cooldown-overlay"></div>
+                </div>
+                <div class="unit-slot" id="unit-2" data-type="tank">
+                    <div class="unit-icon">🧱</div>
+                    <div class="unit-name">Tank Cat</div>
+                    <div class="unit-cost">150</div>
+                    <div class="cooldown-overlay"></div>
+                </div>
+                <div class="unit-slot" id="unit-3" data-type="axe">
+                    <div class="unit-icon">🪓</div>
+                    <div class="unit-name">Axe Cat</div>
+                    <div class="unit-cost">300</div>
+                    <div class="cooldown-overlay"></div>
+                </div>
+                <div class="unit-slot" id="unit-4" data-type="cow">
+                    <div class="unit-icon">🐄</div>
+                    <div class="unit-name">Cow Cat</div>
+                    <div class="unit-cost">500</div>
+                    <div class="cooldown-overlay"></div>
+                </div>
+                <div class="unit-slot" id="unit-5" data-type="bird">
+                    <div class="unit-icon">🐦</div>
+                    <div class="unit-name">Bird Cat</div>
+                    <div class="unit-cost">650</div>
+                    <div class="cooldown-overlay"></div>
+                </div>
+                <div class="unit-slot" id="unit-6" data-type="fish">
+                    <div class="unit-icon">🐟</div>
+                    <div class="unit-name">Fish Cat</div>
+                    <div class="unit-cost">800</div>
+                    <div class="cooldown-overlay"></div>
+                </div>
+                <div class="unit-slot" id="unit-7" data-type="titan">
+                    <div class="unit-icon">🦁</div>
+                    <div class="unit-name">Titan Cat</div>
+                    <div class="unit-cost">1500</div>
+                    <div class="cooldown-overlay"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Overlays -->
+        <div id="start-overlay" class="overlay">
+            <div class="menu-card">
+                <h1 class="game-title">BATTLE CATS</h1>
+                <p class="subtitle">STRATEGIC BASE DEFENSE</p>
+                <button id="start-btn">DEPLOY UNITS</button>
+            </div>
+        </div>
+
+        <div id="game-over-overlay" class="overlay hidden">
+            <div class="menu-card">
+                <h1 id="result-title">VICTORY!</h1>
+                <p id="result-msg">Planet Earth is yours.</p>
+                <button onclick="location.reload()">REPLAY</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+</body>
+
+</html>

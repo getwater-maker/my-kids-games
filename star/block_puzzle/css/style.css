@@ -1,0 +1,301 @@
+:root {
+    --bg-dark: #0a0e1a;
+    --grid-bg: rgba(255, 255, 255, 0.05);
+    --grid-border: rgba(255, 255, 255, 0.1);
+    --neon-blue: #00d2ff;
+    --neon-purple: #9d50bb;
+    --neon-orange: #f0932b;
+    --neon-green: #2ecc71;
+    --neon-red: #eb4d4b;
+    --neon-yellow: #f1c40f;
+    --neon-cyan: #00cec9;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body,
+html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: var(--bg-dark);
+    font-family: 'Rajdhani', sans-serif;
+    color: white;
+}
+
+#game-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    perspective: 1000px;
+}
+
+/* Starry Background Animation */
+.stars,
+.twinkling {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.stars {
+    background: #000 url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/123163/stars.png') repeat top center;
+    z-index: -2;
+}
+
+.twinkling {
+    background: transparent url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/123163/twinkling.png') repeat top center;
+    z-index: -1;
+    animation: move-twink-back 200s linear infinite;
+}
+
+@keyframes move-twink-back {
+    from {
+        background-position: 0 0;
+    }
+
+    to {
+        background-position: -10000px 5000px;
+    }
+}
+
+/* HUD Styling */
+#hud {
+    display: flex;
+    width: 100%;
+    max-width: 600px;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    margin-bottom: 20px;
+    z-index: 5;
+}
+
+.logo-box {
+    text-align: left;
+}
+
+.trophy {
+    font-size: 2.5rem;
+    margin-bottom: 5px;
+    filter: drop-shadow(0 0 10px rgba(241, 196, 15, 0.5));
+}
+
+#score-label {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.5rem;
+    margin: 0;
+    color: #fff;
+}
+
+#best-score-label {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.5);
+    letter-spacing: 2px;
+}
+
+.logo-title {
+    text-align: right;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 900;
+    transform: perspective(400px) rotateY(-10deg);
+}
+
+.logo-title span {
+    font-size: 2.5rem;
+    display: inline-block;
+    margin-left: 2px;
+}
+
+.b {
+    color: var(--neon-red);
+    text-shadow: 0 0 10px var(--neon-red);
+}
+
+.l {
+    color: var(--neon-orange);
+    text-shadow: 0 0 10px var(--neon-orange);
+}
+
+.o {
+    color: var(--neon-blue);
+    text-shadow: 0 0 10px var(--neon-blue);
+}
+
+.c {
+    color: var(--neon-green);
+    text-shadow: 0 0 10px var(--neon-green);
+}
+
+.k {
+    color: var(--neon-purple);
+    text-shadow: 0 0 10px var(--neon-purple);
+}
+
+.subtitle {
+    font-size: 0.8rem;
+    letter-spacing: 4px;
+    color: #f1c40f;
+    margin-top: -5px;
+}
+
+/* Main Grid Styling */
+#main-grid-container {
+    position: relative;
+    width: 440px;
+    height: 440px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 8px solid #1a2533;
+    border-radius: 12px;
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.5);
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    grid-template-rows: repeat(10, 1fr);
+    padding: 10px;
+    gap: 4px;
+    z-index: 2;
+}
+
+.grid-cell {
+    width: 100%;
+    height: 100%;
+    background: var(--grid-bg);
+    border: 1px solid var(--grid-border);
+    border-radius: 4px;
+    transition: background 0.3s;
+}
+
+.grid-cell.highlight {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+/* Shape Selection Area */
+#shape-selection-container {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    margin-top: 40px;
+    z-index: 5;
+}
+
+.shape-slot {
+    width: 140px;
+    height: 140px;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: grab;
+}
+
+.shape-slot:active {
+    cursor: grabbing;
+}
+
+/* Block Rendering */
+.block {
+    width: 38px;
+    height: 38px;
+    border-radius: 6px;
+    position: relative;
+    box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.3), 0 2px 4px rgba(0, 0, 0, 0.4);
+    transition: transform 0.2s, background 0.3s;
+}
+
+.block::after {
+    content: '';
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    right: 3px;
+    height: 40%;
+    background: rgba(255, 255, 255, 0.25);
+    border-radius: 4px;
+    pointer-events: none;
+}
+
+.shape-container {
+    display: grid;
+    gap: 2px;
+    pointer-events: none;
+    /* Let the slot handle the drag start */
+}
+
+/* Drag Styling */
+.dragging {
+    opacity: 0.8;
+    transform: scale(1.1);
+    z-index: 1000;
+}
+
+/* OVERLAYS */
+#game-over-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(10px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+}
+
+.menu-box {
+    background: #111;
+    padding: 50px;
+    border: 2px solid var(--neon-blue);
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 0 40px rgba(0, 210, 255, 0.3);
+}
+
+.game-over-text {
+    font-family: 'Orbitron', sans-serif;
+    color: var(--neon-red);
+    font-size: 3rem;
+    margin-bottom: 20px;
+}
+
+.final-score {
+    font-size: 2rem;
+    margin-bottom: 40px;
+}
+
+button {
+    background: var(--neon-blue);
+    color: white;
+    border: none;
+    padding: 15px 40px;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 900;
+    font-size: 1.2rem;
+    cursor: pointer;
+    border-radius: 10px;
+    transition: 0.3s;
+}
+
+button:hover {
+    background: var(--neon-cyan);
+    transform: scale(1.05);
+}
+
+.hidden {
+    display: none !important;
+}

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Craft World - 마인크래프트 스타일</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&family=Noto+Sans+KR:wght@300;500;700&display=swap"
+        rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+
+<body>
+    <div id="game-container"></div>
+
+    <!-- Crosshair -->
+    <div id="crosshair"></div>
+
+    <!-- HUD -->
+    <div id="hud">
+        <div class="stats">
+            <div class="stat-item">
+                <span class="label">TIME:</span>
+                <span id="time-display">Day 08:00</span>
+            </div>
+            <div class="stat-item">
+                <span class="label">COORDINATES:</span>
+                <span id="pos-display">0, 0, 0</span>
+            </div>
+            <div class="stat-item">
+                <span class="label">BLOCKS:</span>
+                <span id="block-count">0</span>
+            </div>
+        </div>
+
+        <div id="inventory">
+            <div class="slot active" data-type="grass">🌿</div>
+            <div class="slot" data-type="dirt">🟫</div>
+            <div class="slot" data-type="stone">🪨</div>
+            <div class="slot" data-type="wood">🪵</div>
+            <div class="slot" data-type="iron">⛓️</div>
+            <div class="slot" data-type="gold">🪙</div>
+            <div class="slot" data-type="diamond">💎</div>
+            <div class="slot" data-type="sword">⚔️</div>
+        </div>
+    </div>
+
+    <!-- Crafting Overlay -->
+    <div id="crafting-overlay" class="overlay hidden">
+        <div class="content">
+            <h1>CRAFTING (제작)</h1>
+            <p>E를 눌러서 제작창을 여닫으세요.</p>
+            <div id="recipe-list">
+                <div class="recipe" onclick="craft('iron_sword')">⛓️ 철검: 나무(2) + 철(2) <button>제작</button></div>
+                <div class="recipe" onclick="craft('gold_sword')">🪙 황금검: 나무(2) + 금(2) <button>제작</button></div>
+                <div class="recipe" onclick="craft('diamond_sword')">💎 다이아몬드검: 나무(2) + 다이아(2) <button>제작</button></div>
+            </div>
+            <button onclick="toggleCrafting()">닫기</button>
+        </div>
+    </div>
+
+    <!-- Overlay / Instruction -->
+    <div id="instructions" class="overlay">
+        <div class="content">
+            <h1>3D CRAFT WORLD</h1>
+            <p>나만의 세상을 만들어 보세요!</p>
+            <div class="controls">
+                <span><b>W,A,S,D</b> : 이동</span>
+                <span><b>SPACE</b> : 점프</span>
+                <span><b>L-CLICK</b> : 블록 부수기 / 검 휘두르기</span>
+                <span><b>R-CLICK</b> : 블록 설치</span>
+                <span><b>1-8</b> : 슬롯 선택</span>
+                <span><b>E</b> : 제작창 열기</span>
+                <span><b>ESC</b> : 메뉴</span>
+            </div>
+            <button id="start-btn">게임 시작</button>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+</body>
+
+</html>

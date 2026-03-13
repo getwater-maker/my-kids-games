@@ -142,12 +142,11 @@ function onKeyDown(e) {
         if (e.key === ' ') keys['Space'] = true;
         else keys[e.key] = true;
 
-        // Trigger jump immediately on key down to prevent holding consuming multiple jumps
+        // Trigger jump only once on ground
         if (e.key === 'w' || e.key === 'ArrowUp' || e.key === ' ') {
-            if (player.jumpCount < player.maxJumps) {
+            if (player.isGrounded) {
                 player.vy = player.jumpPower;
                 player.isGrounded = false;
-                player.jumpCount++;
             }
         }
     }
@@ -170,8 +169,13 @@ function update() {
     else if (keys.d || keys.ArrowRight) player.vx = player.speed;
     else player.vx = 0;
 
-    // Apply Gravity
-    player.vy += player.gravity;
+    // Apply Gravity & Infinite Hovering
+    let jumpKey = keys.w || keys.ArrowUp || keys.Space;
+    if (jumpKey && !player.isGrounded) {
+        if (player.vy > -4) player.vy = -4; // Holding jump gives lift if falling or ascending slowly
+    } else {
+        player.vy += player.gravity;
+    }
 
     // Apply Velocity
     player.x += player.vx;

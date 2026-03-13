@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VALORANT: 2D Tactical Strike</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Teko:wght@300;500;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div id="game-wrapper">
+        <canvas id="gameCanvas"></canvas>
+
+        <div id="hud">
+            <div class="top-bar">
+                <div class="score-team defender">0</div>
+                <div class="timer">1:40</div>
+                <div class="score-team attacker">0</div>
+            </div>
+
+            <div class="bottom-hud">
+                <div class="health-container">
+                    <span class="hp-icon">❤️</span>
+                    <span id="hp-val">100</span>
+                </div>
+
+                <div class="abilities">
+                    <div class="ability" id="abi-c">C</div>
+                    <div class="ability" id="abi-q">Q</div>
+                    <div class="ability" id="abi-e">E</div>
+                    <div class="ability" id="abi-x">X</div>
+                </div>
+
+                <div class="ammo-container">
+                    <span id="ammo-val">25</span> / <span id="reserve-val">75</span>
+                    <div class="weapon-name">VANDAL</div>
+                </div>
+            </div>
+
+            <div id="crosshair"></div>
+        </div>
+
+        <div id="overlay">
+            <div class="start-card">
+                <h1 class="logo">VALORANT</h1>
+                <p>2D TACTICAL SHOOTER</p>
+                <div class="preview">🔫</div>
+                <button id="start-btn">ENTER BATTLE</button>
+                <div class="controls">
+                    <p><b>WASD</b>: Move | <b>Mouse</b>: Aim/Shoot</p>
+                    <p><b>R</b>: Reload | <b>E</b>: Ability (Dash)</p>
+                    <p><b>F</b>: Plant/Defuse Spike</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="round-status" class="hidden">
+            <h1 id="status-text">CLUTCH!</h1>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+</body>
+
+</html>

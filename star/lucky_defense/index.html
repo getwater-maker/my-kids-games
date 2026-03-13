@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>운빨존만겜 (Lucky Defense)</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;700&family=Orbitron:wght@900&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <div id="game-container">
+        <canvas id="bg-canvas"></canvas>
+        <canvas id="game-canvas"></canvas>
+
+        <!-- Top HUD: Resources -->
+        <div id="top-hud">
+            <div class="resource-group">
+                <div class="resource" id="coins-display">💰 <span id="coin-count">100</span></div>
+                <div class="resource" id="diamonds-display">💎 <span id="diamond-count">0</span></div>
+            </div>
+            <div id="wave-info">WAVE <span id="current-wave">1</span></div>
+            <div class="lives-group">
+                <div id="lives-display">❤️ <span id="lives-count">50</span></div>
+            </div>
+        </div>
+
+        <!-- Center: Wave Progress -->
+        <div id="wave-progress-container">
+            <div id="wave-enemies">ENEMIES: <span id="enemy-count">0</span> / 100</div>
+            <div id="progress-bar-bg">
+                <div id="progress-fill"></div>
+            </div>
+        </div>
+
+        <!-- Bottom HUD: Actions -->
+        <div id="bottom-hud">
+            <div class="action-buttons">
+                <button id="summon-btn" class="main-action">
+                    <span class="btn-icon">✨</span>
+                    <span class="btn-text">SUMMON</span>
+                    <span class="btn-cost">💰 10</span>
+                </button>
+                <button id="upgrade-btn" class="main-action">
+                    <span class="btn-icon">⚡</span>
+                    <span class="btn-text">UPGRADE</span>
+                </button>
+            </div>
+
+            <div id="unit-info-panel" class="hidden">
+                <div id="unit-preview"></div>
+                <div class="unit-details">
+                    <h3 id="unit-name">UNIT NAME</h3>
+                    <p id="unit-desc">Merging required...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Overlays -->
+        <div id="start-overlay" class="overlay">
+            <div class="modal">
+                <h1 class="game-title">運빨존만겜</h1>
+                <p>Luck is everything. Summon units and merge them to survive!</p>
+                <button id="start-game-btn">GAME START</button>
+            </div>
+        </div>
+
+        <div id="game-over-overlay" class="overlay hidden">
+            <div class="modal">
+                <h1 class="death-title">GAME OVER</h1>
+                <p>Wave reached: <span id="final-wave">0</span></p>
+                <button id="restart-btn">RETRY</button>
+            </div>
+        </div>
+    </div>
+    <script src="js/main.js"></script>
+</body>
+
+</html>

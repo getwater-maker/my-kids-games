@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>진주 술래잡기: 조개 소쿠리 - Clam Pearl Hunter</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700;900&family=Noto+Sans+KR:wght@300;500;700&display=swap"
+        rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+
+<body>
+    <div id="game-container"></div>
+
+    <!-- HUD -->
+    <div id="hud">
+        <div class="top-row">
+            <div class="money-display">
+                <span class="label">MY CAPITAL</span>
+                <span id="money-value" class="value">0</span>
+                <span class="unit">₩</span>
+            </div>
+            <div class="location-badge" id="location-name">갯벌 (Mudflat)</div>
+        </div>
+
+        <div class="inventory-bar">
+            <div class="inv-slot">
+                <span class="icon">🐚</span>
+                <span id="clams-count">0</span>
+            </div>
+        </div>
+
+        <div class="action-dock">
+            <button id="travel-btn" class="dock-btn">🏠 집으로 돌아가기</button>
+            <button id="shop-btn" class="dock-btn">💎 보석 상점</button>
+        </div>
+    </div>
+
+    <!-- Inventory / Clam Opening Screen (Home Only) -->
+    <div id="home-overlay" class="overlay hidden">
+        <div class="glass-panel">
+            <h2>🏠 나의 작업실</h2>
+            <p>수집한 조개를 열어 보석을 찾으세요!</p>
+            <div class="opening-bench">
+                <div id="clams-grid" class="clams-grid">
+                    <!-- Clams will be rendered here dynamically -->
+                </div>
+            </div>
+            <button id="back-to-mudflat" class="primary-btn">🌊 다시 갯벌로 가기</button>
+        </div>
+    </div>
+
+    <!-- Shop Screen -->
+    <div id="shop-overlay" class="overlay hidden">
+        <div class="glass-panel shop-panel">
+            <div class="shop-tabs">
+                <button id="tab-sell" class="tab-btn active">💎 보석 팔기</button>
+                <button id="tab-buy" class="tab-btn">🏰 로망 구매하기</button>
+            </div>
+
+            <!-- Sell Jewels Section -->
+            <div id="sell-section" class="shop-content">
+                <p>찾은 보석을 팔아 부자가 되세요!</p>
+                <div id="jewel-list" class="jewel-list"></div>
+                <button id="sell-all-btn" class="sell-btn">전부 판매하기</button>
+            </div>
+
+            <!-- Buy Luxury Section -->
+            <div id="buy-section" class="shop-content hidden">
+                <p>진정한 부자의 로망을 실현하세요!</p>
+                <div id="luxury-list" class="luxury-list">
+                    <div class="luxury-item">
+                        <span class="icon">🏎️</span>
+                        <div class="info">
+                            <span class="name">슈퍼카 (Sports Car)</span>
+                            <span class="price">₩ 5,000,000</span>
+                        </div>
+                        <button class="buy-luxury-btn" onclick="buyLuxury('car', 5000000)">구매</button>
+                    </div>
+                    <div class="luxury-item">
+                        <span class="icon">🛥️</span>
+                        <div class="info">
+                            <span class="name">초호화 요트 (Luxury Yacht)</span>
+                            <span class="price">₩ 50,000,000</span>
+                        </div>
+                        <button class="buy-luxury-btn" onclick="buyLuxury('yacht', 50000000)">구매</button>
+                    </div>
+                    <div class="luxury-item">
+                        <span class="icon">✈️</span>
+                        <div class="info">
+                            <span class="name">개인용 전용기 (Private Jet)</span>
+                            <span class="price">₩ 500,000,000</span>
+                        </div>
+                        <button class="buy-luxury-btn" onclick="buyLuxury('jet', 500000000)">구매</button>
+                    </div>
+                    <div class="luxury-item">
+                        <span class="icon">🏰</span>
+                        <div class="info">
+                            <span class="name">중세 성 (Medieval Castle)</span>
+                            <span class="price">₩ 1,000,000,000</span>
+                        </div>
+                        <button class="buy-luxury-btn" onclick="buyLuxury('castle', 1000000000)">구매</button>
+                    </div>
+                    <div class="luxury-item">
+                        <span class="icon">🚀</span>
+                        <div id="rocket-item" class="info">
+                            <span class="name">우주선 (Space Rocket)</span>
+                            <span class="price">₩ 10,000,000,000</span>
+                        </div>
+                        <button class="buy-luxury-btn" onclick="buyLuxury('rocket', 10000000000)">구매</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="shop-actions">
+                <button id="close-shop" class="secondary-btn">닫기</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Owned Luxury Display -->
+    <div id="owned-luxury" class="owned-luxury">
+        <!-- Icons of owned items appear here -->
+    </div>
+
+    <!-- Start/Message Screen -->
+    <div id="start-screen" class="overlay">
+        <div class="glass-panel splash">
+            <h1 class="glow-text">CLAM PEARL<br>HUNTER</h1>
+            <p class="description">갯벌에서 숨겨진 보물을 찾아 백만장자가 되어보세요.</p>
+            <div class="tutorial">
+                <div class="tip">🌊 <b>갯벌</b>: 땅 위를 클릭하여 조개를 캐세요.</div>
+                <div class="tip">🏠 <b>집</b>: 캐온 조개를 클릭하여 여세요.</div>
+                <div class="tip">💰 <b>상점</b>: 찾은 진주와 다이아를 파세요.</div>
+            </div>
+            <button id="start-btn" class="primary-btn">모험 시작</button>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+</body>
+
+</html>

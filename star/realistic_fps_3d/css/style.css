@@ -1,0 +1,320 @@
+/* css/style.css */
+
+:root {
+    --primary-color: #2ecc71;
+    --accent-color: #f1c40f;
+    --danger-color: #e74c3c;
+    --bg-dark: #1e272e;
+    --hud-bg: rgba(0, 0, 0, 0.4);
+    --border-glow: 0 0 10px rgba(46, 204, 113, 0.5);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Share Tech Mono', monospace;
+}
+
+body {
+    background-color: #000;
+    overflow: hidden;
+    user-select: none;
+}
+
+#game-container {
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+    cursor: default;
+}
+
+canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+/* Crosshair */
+#crosshair {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 10px;
+    height: 10px;
+    background: transparent;
+    border: 2px solid white;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 100;
+}
+
+#crosshair::before,
+#crosshair::after {
+    content: '';
+    position: absolute;
+    background: white;
+}
+
+#crosshair::before {
+    top: 50%;
+    left: -10px;
+    width: 8px;
+    height: 2px;
+}
+
+#crosshair::after {
+    top: 50%;
+    right: -10px;
+    width: 8px;
+    height: 2px;
+}
+
+/* Overlays */
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.8) 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 200;
+    backdrop-filter: blur(5px);
+}
+
+.hidden {
+    display: none !important;
+}
+
+.menu-box {
+    background: var(--bg-dark);
+    padding: 50px;
+    border: 2px solid #3d3d3d;
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.7);
+    text-align: center;
+    max-width: 600px;
+    width: 90%;
+}
+
+h1 {
+    font-family: 'Oswald', sans-serif;
+    font-size: 4rem;
+    color: #fff;
+    margin-bottom: 5px;
+    letter-spacing: 5px;
+}
+
+.subtitle {
+    color: var(--primary-color);
+    font-size: 1.2rem;
+    margin-bottom: 30px;
+}
+
+.briefing {
+    text-align: left;
+    margin-bottom: 40px;
+    color: #bdc3c7;
+    line-height: 1.8;
+}
+
+.briefing b {
+    color: #fff;
+    margin-right: 10px;
+}
+
+button {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 15px 40px;
+    font-size: 1.3rem;
+    cursor: pointer;
+    transition: 0.2s;
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+
+button:hover {
+    background: #27ae60;
+    transform: scale(1.05);
+}
+
+/* HUD System */
+#hud {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.top-info {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.mission-text {
+    background: var(--hud-bg);
+    padding: 5px 15px;
+    border-left: 3px solid var(--primary-color);
+    color: white;
+    font-size: 1rem;
+}
+
+#kill-count {
+    font-size: 1.2rem;
+    color: white;
+    text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.bottom-hud {
+    position: absolute;
+    bottom: 30px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 50px;
+    align-items: flex-end;
+}
+
+.left-stat {
+    width: 300px;
+    background: var(--hud-bg);
+    padding: 15px;
+    border-left: 4px solid var(--primary-color);
+}
+
+.stat-label {
+    font-size: 0.9rem;
+    color: var(--primary-color);
+    margin-bottom: 5px;
+}
+
+.bar-container {
+    height: 12px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.bar-fill {
+    width: 100%;
+    height: 100%;
+    background: var(--primary-color);
+    transition: width 0.3s;
+}
+
+.center-weapon {
+    background: var(--hud-bg);
+    padding: 15px 30px;
+    text-align: center;
+    border-bottom: 4px solid var(--accent-color);
+}
+
+#weapon-name {
+    color: white;
+    font-size: 1.2rem;
+    margin-bottom: 5px;
+}
+
+.ammo-display {
+    font-size: 2.2rem;
+    font-weight: bold;
+    color: #fff;
+}
+
+.ammo-display .sep {
+    color: #7f8c8d;
+    font-size: 1.5rem;
+    margin: 0 5px;
+}
+
+#reserve-val {
+    color: #7f8c8d;
+    font-size: 1.5rem;
+}
+
+/* Hotbar Styles */
+#hotbar {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.slot {
+    width: 60px;
+    height: 60px;
+    background: rgba(0, 0, 0, 0.6);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.8rem;
+    transition: 0.2s;
+    position: relative;
+    border-radius: 5px;
+}
+
+.slot.active {
+    border-color: var(--primary-color);
+    box-shadow: var(--border-glow);
+    background: rgba(46, 204, 113, 0.2);
+    transform: scale(1.1);
+}
+
+.slot::after {
+    content: attr(title);
+    position: absolute;
+    bottom: -25px;
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.5);
+    white-space: nowrap;
+}
+
+/* Damage Vignette */
+#damage-vignette {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    box-shadow: inset 0 0 150px rgba(192, 57, 43, 0);
+    pointer-events: none;
+    transition: box-shadow 0.2s;
+}
+
+#damage-vignette.hit {
+    box-shadow: inset 0 0 150px rgba(192, 57, 43, 0.8);
+}
+
+/* Animations */
+@keyframes glitch {
+    0% {
+        transform: translate(0);
+    }
+
+    10% {
+        transform: translate(-2px, 2px);
+    }
+
+    20% {
+        transform: translate(2px, -2px);
+    }
+
+    100% {
+        transform: translate(0);
+    }
+}
+
+.glitch:hover {
+    animation: glitch 0.1s linear infinite;
+}

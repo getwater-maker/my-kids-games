@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cookie Run: Web Edition (2D)</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum:wght@400;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div id="game-wrapper">
+        <canvas id="gameCanvas"></canvas>
+
+        <div id="hud">
+            <div id="energy-container">
+                <div id="energy-bar"></div>
+                <div id="energy-text">HP</div>
+            </div>
+            <div id="score-container">
+                <div id="score-label">SCORE</div>
+                <div id="score-val">0</div>
+            </div>
+        </div>
+
+        <div id="overlay">
+            <div class="start-card">
+                <h1 class="logo">COOKIE RUN</h1>
+                <p>OvenBreak Web</p>
+                <div class="character-preview">🍪🏃💨</div>
+                <button id="start-btn">RUN!</button>
+                <div class="controls">
+                    <p><b>SPACE / CLICK</b>: Jump (Double Jump possible)</p>
+                    <p><b>DOWN ARROW / S</b>: Slide</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="game-over" class="hidden">
+            <div class="over-card">
+                <h1>CRASHED!</h1>
+                <p>Final Score</p>
+                <h2 id="final-score">0</h2>
+                <button onclick="location.reload()">RETRY</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+</body>
+
+</html>

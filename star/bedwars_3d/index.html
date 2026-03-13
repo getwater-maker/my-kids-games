@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D BEDWARS: HUMAN SURVIVAL 🛡️</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <div id="game-container">
+        <!-- Crosshair -->
+        <div id="crosshair">+</div>
+
+        <!-- Start Screen -->
+        <div id="start-screen" class="overlay">
+            <div class="menu-box">
+                <h1>⚔️ 3D BEDWARS</h1>
+                <p>커비가 아닌 우리들의 3D 생존 전투!</p>
+                <div class="controls-info">
+                    [W A S D]: 이동<br>
+                    [SPACE]: 점프<br>
+                    [마우스 왼쪽]: 공격 (칼)<br>
+                    [마우스 오른쪽]: 블록 설치 (양털)<br>
+                    [1, 2]: 무기/블록 선택
+                </div>
+                <button id="start-btn">게임 시작 (START)</button>
+            </div>
+        </div>
+
+        <!-- HUD (Minecraft / Roblox Bedwars Style) -->
+        <div id="hud" class="hidden">
+            <div class="team-badge">RED TEAM (You)</div>
+            <div id="hp-bar-container">
+                <div id="hp-bar-fill"></div>
+            </div>
+            <div class="resource-list">
+                <div class="res-item">🔘 철: <span id="iron-count">0</span> 🪙 금: <span id="gold-count">0</span></div>
+                <div class="res-item">🧱 블록: <span id="wool-count">24</span></div>
+            </div>
+            <div class="block-status">
+                <div class="bed-status active" id="red-bed-status">✅ 내 침대 (RED)</div>
+                <div class="bed-status active" id="blue-bed-status">✅ 적 침대 (BLUE)</div>
+            </div>
+        </div>
+
+        <!-- Hotbar -->
+        <div class="hotbar hidden" id="hotbar-ui">
+            <div class="slot active" id="slot-0">⚔️</div>
+            <div class="slot" id="slot-1">🧶</div>
+        </div>
+
+        <div id="msg" class="hidden">마우스 휠로 칼/블록을 바꿀 수 있습니다.</div>
+
+        <!-- Shop Screen -->
+        <div id="shop-screen" class="overlay hidden">
+            <div class="menu-box" style="text-align: left;">
+                <h2 style="margin-bottom: 20px;">🏬 상점 (B키로 닫기)</h2>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <button class="shop-btn" onclick="buyItem('wool')" style="font-size: 1rem; padding: 10px;">🧶 양털 x16
+                        (철 8개)</button>
+                    <button class="shop-btn" onclick="buySword()" id="sword-upgrade-btn"
+                        style="font-size: 1rem; padding: 10px;">🗡️ 돌검 (철 10개)</button>
+                </div>
+                <button onclick="toggleShop()" style="margin-top: 20px; width: 100%; padding: 10px;">닫기</button>
+            </div>
+        </div>
+
+        <!-- Game Over -->
+        <div id="game-over" class="overlay hidden">
+            <div class="menu-box">
+                <h1 id="result-title">탈락했습니다!</h1>
+                <p id="result-msg">다시 도전해 보세요.</p>
+                <div style="display: flex; gap: 20px;">
+                    <button onclick="location.reload()" style="flex: 1;">다시 하기</button>
+                    <button onclick="location.href='../index.html'" style="flex: 1; background: #333;">메인으로</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/PointerLockControls.js"></script>
+    <script src="js/main.js"></script>
+</body>
+
+</html>

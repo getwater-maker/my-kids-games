@@ -1,0 +1,201 @@
+:root {
+    --primary-green: #2ecc71;
+    --primary-blue: #3498db;
+    --primary-yellow: #f1c40f;
+    --primary-red: #e74c3c;
+    --dark-bg: #2c3e50;
+    --ui-bg: rgba(0, 0, 0, 0.6);
+}
+
+body,
+html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: #556b2f;
+    /* Dark grass green */
+    font-family: 'Fredoka', sans-serif;
+}
+
+#game-container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+}
+
+#gameCanvas {
+    display: block;
+}
+
+/* HUD */
+#hud {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 20px;
+    pointer-events: none;
+    z-index: 10;
+    box-sizing: border-box;
+}
+
+#level-bar-container {
+    width: 100%;
+    height: 20px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    border: 2px solid #fff;
+    overflow: hidden;
+    position: relative;
+    margin-bottom: 10px;
+}
+
+#level-fill {
+    width: 0%;
+    height: 100%;
+    background: linear-gradient(90deg, #00d2ff, #3a7bd5);
+    transition: width 0.3s ease-out;
+}
+
+#level-text {
+    position: absolute;
+    width: 100%;
+    text-align: center;
+    top: 0;
+    color: white;
+    font-weight: bold;
+    font-size: 14px;
+    line-height: 20px;
+}
+
+#stats {
+    display: flex;
+    justify-content: space-between;
+    color: white;
+    font-size: 1.2rem;
+    font-weight: bold;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+#hp-bar-container {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 200px;
+    height: 15px;
+    background: rgba(0, 0, 0, 0.5);
+    border: 2px solid white;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+#hp-fill {
+    width: 100%;
+    height: 100%;
+    background: #e74c3c;
+    transition: width 0.2s;
+}
+
+/* Overlay */
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+}
+
+.menu-box {
+    background: #fff;
+    padding: 40px;
+    border-radius: 20px;
+    text-align: center;
+    border: 5px solid var(--primary-blue);
+    width: 400px;
+    max-width: 90%;
+}
+
+.logo {
+    font-size: 3rem;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.logo span {
+    color: var(--primary-red);
+}
+
+.title {
+    color: var(--primary-blue);
+    margin-bottom: 30px;
+}
+
+#skill-options {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.skill-card {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 10px;
+    cursor: pointer;
+    border: 2px solid #dee2e6;
+    transition: 0.2s;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.skill-card:hover {
+    border-color: var(--primary-blue);
+    background: #e1f5fe;
+    transform: translateY(-2px);
+}
+
+.skill-icon {
+    font-size: 2rem;
+}
+
+.skill-info h4 {
+    margin: 0;
+    color: #333;
+}
+
+.skill-info p {
+    margin: 5px 0 0;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+button {
+    background: var(--primary-blue);
+    color: white;
+    border: none;
+    padding: 15px 40px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    border-radius: 10px;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: 0.2s;
+}
+
+button:hover {
+    background: #2980b9;
+    transform: scale(1.05);
+}
+
+.hidden {
+    display: none !important;
+}

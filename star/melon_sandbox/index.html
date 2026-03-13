@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>멜론 샌드박스: 크레이지 피지스 (Melon Sandbox)</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;700&family=Oswald:wght@500;700&display=swap"
+        rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
+</head>
+
+<body>
+    <div id="game-container">
+        <!-- Main Canvas will be injected by Matter.js -->
+
+        <!-- Toolbar Left: Spawning -->
+        <div id="toolbar-left">
+            <div class="tool-group">
+                <div class="label">CHARACTERS 👥</div>
+                <button class="spawn-btn" data-type="melon">🍈 멜론 맨</button>
+                <button class="spawn-btn" data-type="pumpkin">🎃 펌킨 맨</button>
+            </div>
+            <div class="tool-group">
+                <div class="label">ITEMS 📦</div>
+                <button class="spawn-btn" data-type="box">📦 상자</button>
+                <button class="spawn-btn" data-type="wheel">⚙️ 바퀴</button>
+                <button class="spawn-btn" data-type="beam">🏗️ 금속 빔</button>
+            </div>
+            <div class="tool-group">
+                <div class="label">TOOLS 🛠️</div>
+                <button class="tool-btn" data-tool="bomb">💣 폭발</button>
+                <button class="tool-btn" data-tool="chainsaw">🪚 전기톱</button>
+                <button class="tool-btn" data-tool="acid">🧪 산성액</button>
+                <button class="tool-btn" data-tool="fire">🔥 화염</button>
+                <button class="tool-btn" data-tool="gravity">🌍 중력 반전</button>
+                <button id="clear-btn" class="tool-btn danger">🗑️ 모두 삭제</button>
+            </div>
+        </div>
+
+        <!-- HUD -->
+        <div id="hud">
+            <div id="fps-display">Physics: 60 FPS</div>
+            <div id="entity-count">Objects: 0</div>
+        </div>
+
+        <!-- Overlays -->
+        <div id="overlay" class="overlay">
+            <div class="menu-box">
+                <div class="logo">🍈☢️</div>
+                <h1 class="logo-text">MELON<span>SANDBOX</span></h1>
+                <p>무한한 상상력으로 실험하고 파괴하세요! Physics Sandbox v1.0</p>
+                <div class="controls">
+                    Drag: Move Objects | Buttons: Spawn
+                </div>
+                <button id="start-btn">실험 시작!</button>
+            </div>
+        </div>
+    </div>
+    <script src="js/main.js"></script>
+</body>
+
+</html>

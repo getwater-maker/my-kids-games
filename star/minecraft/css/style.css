@@ -1,0 +1,239 @@
+:root {
+    --bg-dark: #050505;
+    --accent: #00d2ff;
+    --gold: #FFD700;
+    --glass-bg: rgba(255, 255, 255, 0.05);
+    --glass-border: rgba(255, 255, 255, 0.1);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Outfit', 'Noto Sans KR', sans-serif;
+}
+
+body {
+    background-color: var(--bg-dark);
+    overflow: hidden;
+    color: white;
+}
+
+#game-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+#crosshair {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    border: 2px solid rgba(255, 255, 255, 0.8);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 100;
+    pointer-events: none;
+}
+
+#crosshair::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 4px;
+    height: 4px;
+    background: white;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+}
+
+#hud {
+    position: fixed;
+    top: 30px;
+    left: 30px;
+    width: calc(100% - 60px);
+    pointer-events: none;
+    z-index: 10;
+}
+
+.stats {
+    display: flex;
+    gap: 30px;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(10px);
+    padding: 15px 30px;
+    border-radius: 20px;
+    border: 1px solid var(--glass-border);
+    display: inline-flex;
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.label {
+    font-size: 0.7rem;
+    color: #888;
+    letter-spacing: 2px;
+}
+
+#pos-display,
+#block-count {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--accent);
+}
+
+#inventory {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 15px;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(20px);
+    padding: 15px;
+    border-radius: 25px;
+    border: 1px solid var(--glass-border);
+    pointer-events: all;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+}
+
+.slot {
+    width: 60px;
+    height: 60px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px solid transparent;
+    border-radius: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2rem;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.slot:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateY(-5px);
+}
+
+.slot.active {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: var(--gold);
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.8) 100%);
+    backdrop-filter: blur(15px);
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: 0.5s;
+}
+
+.hidden {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.content {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 60px;
+    border-radius: 40px;
+    border: 1px solid var(--glass-border);
+    text-align: center;
+    max-width: 600px;
+}
+
+h1 {
+    font-size: 3rem;
+    font-weight: 900;
+    margin-bottom: 20px;
+    background: linear-gradient(45deg, var(--accent), var(--gold));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.controls {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin: 40px 0;
+    color: #ccc;
+    text-align: left;
+}
+
+#start-btn {
+    padding: 15px 50px;
+    font-size: 1.2rem;
+    font-weight: 700;
+    background: var(--accent);
+    color: black;
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+#start-btn:hover {
+    transform: scale(1.05);
+    background: white;
+}
+
+/* Crafting Styles */
+#recipe-list {
+    margin: 30px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.recipe {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 15px 25px;
+    border-radius: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1.1rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: 0.3s;
+}
+
+.recipe:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: var(--gold);
+}
+
+.recipe button {
+    background: var(--gold);
+    color: black;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.recipe button:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+}

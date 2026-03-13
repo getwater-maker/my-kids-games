@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BLADE RIVALS: 3D Sword Duel</title>
+    <link rel="stylesheet" href="css/style.css">
+    <!-- Three.js Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/PointerLockControls.js"></script>
+</head>
+
+<body>
+    <div id="game-container">
+        <!-- HUD -->
+        <div id="hud">
+            <div class="top-left">
+                <div class="stat-box">
+                    <span class="label">HP</span>
+                    <div class="bar-bg">
+                        <div id="hp-bar" class="bar-fill"></div>
+                    </div>
+                </div>
+                <div class="stat-box">
+                    <span class="label">STAMINA</span>
+                    <div class="bar-bg">
+                        <div id="stamina-bar" class="bar-fill"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="top-right">
+                <div id="kill-count">KILLS: 0</div>
+            </div>
+
+            <div class="bottom-center">
+                <div id="weapon-display">
+                    <div id="weapon-name">KATANA</div>
+                    <div id="hotbar">
+                        <div class="slot active" id="slot-1" title="[1] Katana">⚔️</div>
+                        <div class="slot" id="slot-2" title="[2] Dagger">🗡️</div>
+                        <div class="slot" id="slot-3" title="[3] Heavy Claymore">🔨</div>
+                        <div class="slot" id="slot-4" title="[G] Medkit">🩹</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Damage Effects -->
+        <div id="damage-vignette"></div>
+
+        <!-- Menus -->
+        <div id="overlay" class="menu-screen">
+            <div class="menu-content">
+                <h1 class="glitch" data-text="BLADE RIVALS">BLADE RIVALS</h1>
+                <p class="subtitle">// ANCIENT WHARF DUEL v1.0</p>
+                <div class="briefing">
+                    <p><b>[WASD / Arrow Keys]</b>: 이동</p>
+                    <p><b>[CLICK]</b>: 휘두르기 (Combo 가능)</p>
+                    <p><b>[RIGHT CLICK]</b>: 방어 (Block)</p>
+                    <p><b>[SPACE]</b>: 점프 / <b>[SHIFT]</b>: 질주</p>
+                    <p><b>[1/2/3]</b>: 무기 교체 / <b>[G]</b>: 회복</p>
+                </div>
+                <button id="start-btn">결투 시작 (DUEL)</button>
+            </div>
+        </div>
+
+        <div id="death-overlay" class="menu-screen hidden">
+            <div class="menu-content">
+                <h1 class="dead-text">전사하였습니다</h1>
+                <p id="final-stats">적 제거: 0명</p>
+                <button onclick="location.reload()">다시 도전</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+</body>
+
+</html>

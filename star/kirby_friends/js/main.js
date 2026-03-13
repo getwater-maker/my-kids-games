@@ -139,9 +139,17 @@ class Entity {
         this.color = color;
         this.dx = 0;
         this.dy = 0;
+        this.isHovering = false; // Add hovering for top-down games (to ignore walls)
     }
 
     move() {
+        // Hovering allows passing through walls!
+        if (this.isHovering) {
+            this.x += this.dx;
+            this.y += this.dy;
+            return;
+        }
+
         if (!gameMap.isWall(this.x + this.dx, this.y, this.width, this.height)) {
             this.x += this.dx;
         } else {
@@ -201,6 +209,15 @@ class Player {
         if (keys.a || keys.ArrowLeft) dx = -this.speed;
         if (keys.d || keys.ArrowRight) dx = this.speed;
 
+        // Holding Space to Hover (ignore walls in top-down)
+        if (keys.Space) {
+            this.isHovering = true;
+            this.color = '#ffccff'; // Light up when hovering
+        } else {
+            this.isHovering = false;
+            this.color = '#ff80ab';
+        }
+
         // 대각선 이동 속도 보정
         if (dx !== 0 && dy !== 0) {
             let length = Math.sqrt(dx * dx + dy * dy);
@@ -208,13 +225,19 @@ class Player {
             dy = (dy / length) * this.speed;
         }
 
-        // X축 충돌 검사
-        if (!gameMap.isWall(this.x + dx, this.y, this.width, this.height)) {
+        // X/Y movement with hovering support
+        if (this.isHovering) {
             this.x += dx;
-        }
-        // Y축 충돌 검사
-        if (!gameMap.isWall(this.x, this.y + dy, this.width, this.height)) {
             this.y += dy;
+        } else {
+            // X축 충돌 검사
+            if (!gameMap.isWall(this.x + dx, this.y, this.width, this.height)) {
+                this.x += dx;
+            }
+            // Y축 충돌 검사
+            if (!gameMap.isWall(this.x, this.y + dy, this.width, this.height)) {
+                this.y += dy;
+            }
         }
 
         // Update Camera to center on player

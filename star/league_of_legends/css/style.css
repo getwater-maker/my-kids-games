@@ -1,0 +1,215 @@
+/* star/league_of_legends/css/style.css */
+body {
+    margin: 0;
+    overflow: hidden;
+    background-color: #010a13;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    cursor: url('https://raw.githubusercontent.com/AnshS/league-of-legends-cursor/master/lol-cursor.png'), auto;
+}
+
+#game-container {
+    width: 100vw;
+    height: 100vh;
+}
+
+#hud {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+    padding-bottom: 20px;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* BOTTOM HUD */
+#bottom-hud {
+    display: flex;
+    align-items: flex-end;
+    gap: 15px;
+    background: rgba(1, 10, 19, 0.9);
+    padding: 10px 30px;
+    border-radius: 12px 12px 0 0;
+    border: 2px solid #785a28;
+    /* LoL Gold Hex */
+    pointer-events: auto;
+}
+
+#champ-stats {
+    width: 60px;
+    height: 60px;
+    background: #000;
+    border: 2px solid #785a28;
+    position: relative;
+}
+
+.level-circle {
+    position: absolute;
+    bottom: -5px;
+    right: -5px;
+    background: #785a28;
+    color: #fff;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+#ability-bar {
+    display: flex;
+    gap: 5px;
+}
+
+.ability-slot {
+    width: 50px;
+    height: 50px;
+    background: #111;
+    border: 2px solid #785a28;
+    position: relative;
+    background-size: cover;
+}
+
+.hotkey {
+    position: absolute;
+    top: 2px;
+    left: 4px;
+    font-size: 10px;
+    color: #785a28;
+    font-weight: bold;
+}
+
+.cooldown-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.7);
+    height: 0%;
+    /* Dynamic */
+    transition: height 0.1s linear;
+}
+
+#bars {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    width: 300px;
+}
+
+.bar-container {
+    height: 20px;
+    background: #333;
+    border: 1px solid #785a28;
+    position: relative;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.fill {
+    height: 100%;
+    width: 100%;
+    transition: width 0.3s;
+}
+
+.green {
+    background: linear-gradient(to right, #2ecc71, #27ae60);
+}
+
+.blue {
+    background: linear-gradient(to right, #3498db, #2980b9);
+}
+
+.red {
+    background: linear-gradient(to right, #e74c3c, #c0392b);
+}
+
+span {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    color: white;
+    font-weight: bold;
+    text-shadow: 1px 1px 2px #000;
+}
+
+/* TARGET INFO */
+#target-info {
+    position: fixed;
+    top: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 250px;
+    text-align: center;
+}
+
+.target-name {
+    color: #fff;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.health-bar-bg {
+    height: 10px;
+    background: #000;
+    width: 100%;
+    border: 1px solid #785a28;
+}
+
+.health-fill {
+    height: 100%;
+    width: 100%;
+}
+
+/* START OVERLAY */
+#overlay {
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(circle, #091428 0%, #010a13 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.start-card {
+    text-align: center;
+    color: #c8aa6e;
+}
+
+#lol-logo {
+    width: 300px;
+    margin-bottom: 40px;
+}
+
+#start-btn {
+    background: none;
+    border: 2px solid #c8aa6e;
+    color: #c8aa6e;
+    padding: 15px 40px;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s;
+    letter-spacing: 2px;
+}
+
+#start-btn:hover {
+    background: #c8aa6e;
+    color: #010a13;
+}
+
+.guide {
+    margin-top: 30px;
+    font-size: 14px;
+    color: #785a28;
+}

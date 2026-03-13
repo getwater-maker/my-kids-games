@@ -161,9 +161,9 @@ function drawMap(ctx) {
 // 충돌 AABB 검사 (개체와 맵)
 function checkMapCollision(x, y, w, h) {
     let leftTile = Math.floor(x / TILE_SIZE);
-    let rightTile = Math.floor((x + w - 1) / TILE_SIZE);
+    let rightTile = Math.floor((x + w - 0.01) / TILE_SIZE);
     let topTile = Math.floor(y / TILE_SIZE);
-    let bottomTile = Math.floor((y + h - 1) / TILE_SIZE);
+    let bottomTile = Math.floor((y + h - 0.01) / TILE_SIZE);
 
     for (let r = topTile; r <= bottomTile; r++) {
         for (let c = leftTile; c <= rightTile; c++) {
@@ -282,6 +282,7 @@ class Player {
         this.jumpPower = -10;
         this.gravity = 0.5;
         this.isGrounded = false;
+        this.jumpDebounce = false; // Add jump debounce flag
 
         // Stats
         this.hp = 100;
@@ -294,9 +295,12 @@ class Player {
         this.emerald = 0;
 
         // Combat
-        this.swordLevel = 0; // 0: 목검, 1: 돌검, 2: 철검
+        this.swordLevel = 0; // 0: 목검, 1: 돌검, 2: 철검, 3: 다검, 4: 레이지 블레이드
         this.attackCooldown = 0;
         this.facingRight = true;
+
+        this.kills = 0;
+        this.kit = 'Barbarian';
     }
 
     update() {
@@ -305,54 +309,79 @@ class Player {
             return;
         }
 
-        // Horizontal
-        if (keys.a) { this.vx = -this.speed; this.facingRight = false; }
-        else if (keys.d) { this.vx = this.speed; this.facingRight = true; }
-        else { this.vx = 0; }
-
-        if (!checkMapCollision(this.x + this.vx, this.y, this.w, this.h)) {
-            this.x += this.vx;
-        }
-
-        // Vertical
-        this.vy += this.gravity;
-        if (this.vy > 12) this.vy = 12;
-
-        this.isGrounded = false;
-        if (!checkMapCollision(this.x, this.y + this.vy, this.w, this.h)) {
-            this.y += this.vy;
+        // 1. 가로 이동 결정
+        if (this === player) {
+            if (keys.a) { this.vx = -this.speed; this.facingRight = false; }
+            else if (keys.d) { this.vx = this.speed; this.facingRight = true; }
+            else { this.vx = 0; }
         } else {
-            if (this.vy > 0) this.isGrounded = true;
-            this.vy = 0;
-            // 스냅 (위/아래 벽에 붙기)
-            this.y = Math.round(this.y);
+            this.aiLogic();
         }
 
-        if (keys.Space || keys.w) {
-            if (this.isGrounded) {
-                this.vy = this.jumpPower;
+        // 2. 가로 충돌 해결 (벽에 비빌 때 튀는 현상 방지)
+        // 캐릭터의 높이를 살짝 줄여서(상하 5px씩) 발밑/머리 끝 타일에 걸리지 않게 함
+        if (!checkMapCollision(this.x + this.vx, this.y + 5, this.w, this.h - 10)) {
+            this.x += this.vx;
+        } else {
+            // 벽에 부딪힘: 좌표 정밀 스냅
+            if (this.vx > 0) this.x = Math.floor((this.x + this.w) / TILE_SIZE) * TILE_SIZE - this.w;
+            else if (this.vx < 0) this.x = Math.ceil(this.x / TILE_SIZE) * TILE_SIZE;
+            this.vx = 0;
+        }
+
+        // Vertical Movement & Gravity
+        this.vy += this.gravity;
+        if (this.vy > 10) this.vy = 10;
+
+        // 4. 세로 충돌 해결 (발밑 판정)
+        // 충돌 여부를 먼저 확인
+        let verticalCollision = checkMapCollision(this.x + 8, this.y + this.vy, this.w - 16, this.h);
+
+        if (verticalCollision) {
+            if (this.vy > 0) { // 하강 중 충돌 (바닥)
+                this.isGrounded = true;
+                this.y = Math.floor((this.y + this.h + 0.1) / TILE_SIZE) * TILE_SIZE - this.h;
+            } else if (this.vy < 0) { // 상승 중 충돌 (천장)
+                this.y = Math.ceil(this.y / TILE_SIZE) * TILE_SIZE;
+            }
+            this.vy = 0;
+        } else {
+            this.y += this.vy;
+            // 바닥에서 아주 미세하게 떨어지는 경우(0.5px 미만)는 여전히 grounded로 간주하여 통통 튀는 걸 방지
+            if (!checkMapCollision(this.x + 8, this.y + 1, this.w - 16, this.h)) {
                 this.isGrounded = false;
             }
         }
 
-        // Action (Build / Attack)
+        // 5. 점프 및 호버링 로직 (플레이어 전용)
+        if (this === player) {
+            let jumpKey = keys.Space || keys.w;
+            if (jumpKey) {
+                if (this.isGrounded && !this.jumpDebounce) {
+                    // 땅에서 첫 점프
+                    this.vy = this.jumpPower;
+                    this.isGrounded = false;
+                    this.jumpDebounce = true;
+                } else if (!this.isGrounded) {
+                    // 공중 무한 호버링: 점프 힘보다 크지 않을 때만 (점프 힘을 방해하지 않게)
+                    if (this.vy > -3.5) this.vy = -3.5;
+                }
+            } else {
+                this.jumpDebounce = false;
+            }
+        }
+
+        // 6. 기타 액션 (쿨타임, 공격, 설치 등)
         if (this.attackCooldown > 0) this.attackCooldown--;
 
-        if (mouse.leftDown && this.attackCooldown <= 0) {
-            this.attack();
-        }
-        if (mouse.rightDown) {
-            this.buildBlock();
-        }
+        if (this === player) {
+            if (mouse.leftDown && this.attackCooldown <= 0) this.attack();
+            if (mouse.rightDown) this.buildBlock();
 
-        // Fall Death
-        if (this.y > MAP_ROWS * TILE_SIZE) {
-            this.hp = 0;
+            // 카메라 업데이트
+            camera.x = this.x + this.w / 2 - canvas.width / 2;
+            camera.y = this.y + this.h / 2 - canvas.height / 2;
         }
-
-        // Camera Update
-        camera.x = this.x + this.w / 2 - canvas.width / 2;
-        camera.y = this.y + this.h / 2 - canvas.height / 2;
     }
 
     attack() {
@@ -392,7 +421,12 @@ class Player {
 
         if (enemy && hitBoxX < enemy.x + enemy.w && hitBoxX + hitBoxW > enemy.x &&
             hitBoxY < enemy.y + enemy.h && hitBoxY + hitBoxH > enemy.y) {
-            enemy.hp -= 15 + (this.swordLevel * 5);
+
+            let damage = 15 + (this.swordLevel * 5);
+            // Rage Blade Special Damage (75)
+            if (this.swordLevel >= 4) damage = 75;
+
+            enemy.hp -= damage;
             enemy.vy = -5;
             enemy.x += this.facingRight ? 20 : -20; // 넉백
         }
@@ -452,7 +486,10 @@ class Player {
 
         // 검
         if (this.attackCooldown > 10) {
-            ctx.fillStyle = '#9e9e9e'; // 은색 검
+            // Sword colors for different levels
+            let swordColors = ['#8d6e63', '#9e9e9e', '#cfd8dc', '#00bcd4', '#7e57c2'];
+            ctx.fillStyle = swordColors[this.swordLevel] || '#9e9e9e';
+
             if (this.facingRight) {
                 ctx.fillRect(px + this.w, py + 10, 20, 5);
             } else {
@@ -479,35 +516,7 @@ class EnemyPlayer extends Player {
     }
 
     update() {
-        if (this.hp <= 0) {
-            this.handleDeath();
-            return;
-        }
-
-        this.aiLogic();
-
-        // 물리 적용
-        if (!checkMapCollision(this.x + this.vx, this.y, this.w, this.h)) {
-            this.x += this.vx;
-        }
-
-        this.vy += this.gravity;
-        if (this.vy > 12) this.vy = 12;
-
-        this.isGrounded = false;
-        if (!checkMapCollision(this.x, this.y + this.vy, this.w, this.h)) {
-            this.y += this.vy;
-        } else {
-            if (this.vy > 0) this.isGrounded = true;
-            this.vy = 0;
-            this.y = Math.round(this.y);
-        }
-
-        if (this.attackCooldown > 0) this.attackCooldown--;
-
-        if (this.y > MAP_ROWS * TILE_SIZE) {
-            this.hp = 0;
-        }
+        super.update(); // 부모 클래스의 통합된 물리 엔진 사용
     }
 
     aiLogic() {
@@ -540,7 +549,7 @@ class EnemyPlayer extends Player {
 
         // 플레이어가 가까우면 공격
         let distToPlayer = Math.hypot(this.x - player.x, this.y - player.y);
-        if (distToPlayer < 60 && this.attackCooldown <= 0) {
+        if (distToPlayer < 70 && this.attackCooldown <= 0) {
             this.vx = 0; // 멈춰서 공격
             this.attack();
         }
@@ -597,6 +606,18 @@ class EnemyPlayer extends Player {
     }
 
     handleDeath() {
+        // Barbarian Kill logic
+        if (player.kit === 'Barbarian') {
+            player.kills++;
+            // Upgrade Sword based on kills
+            if (player.kills >= 5) player.swordLevel = 4; // Rage Blade
+            else if (player.kills >= 3) player.swordLevel = 3; // Diamond Blade
+            else if (player.kills >= 2) player.swordLevel = 2; // Iron Blade
+            else if (player.kills >= 1) player.swordLevel = 1; // Stone Blade
+
+            announce(`[Barbarian] 킬 보너스! (총 ${player.kills}킬)`);
+        }
+
         if (redBed) {
             this.reset();
         } else {
@@ -636,7 +657,7 @@ function toggleShop() {
 }
 
 function updateHUD() {
-    ui.playerHp.textContent = `HP: ${player.hp}`;
+    ui.playerHp.textContent = `HP: ${player.hp} | Kills: ${player.kills} (Kit: ${player.kit})`;
     ui.resIron.textContent = player.iron;
     ui.resGold.textContent = player.gold;
     ui.resEmerald.textContent = player.emerald;

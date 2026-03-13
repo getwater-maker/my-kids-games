@@ -1,0 +1,359 @@
+:root {
+    --ow-blue: #00a2ff;
+    --ow-yellow: #f1c40f;
+    --ow-orange: #ff9f1a;
+    --ow-red: #ff3838;
+    --bg-trans: rgba(0, 0, 0, 0.4);
+    --ow-font: 'Rajdhani', sans-serif;
+}
+
+body,
+html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: #000;
+    font-family: var(--ow-font);
+    user-select: none;
+}
+
+#game-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+/* Crosshair */
+#crosshair {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+}
+
+#crosshair::before,
+#crosshair::after {
+    content: '';
+    position: absolute;
+    background-color: rgba(255, 255, 255, 0.8);
+}
+
+#crosshair::before {
+    top: 50%;
+    left: 0;
+    width: 100%;
+    height: 2px;
+}
+
+#crosshair::after {
+    left: 50%;
+    top: 0;
+    width: 2px;
+    height: 100%;
+}
+
+/* HUD Common */
+#hud {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 200px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    padding: 40px;
+    pointer-events: none;
+    z-index: 10;
+}
+
+/* Left: Health */
+#player-status {
+    display: flex;
+    align-items: flex-end;
+    gap: 15px;
+}
+
+.portrait-box {
+    width: 80px;
+    height: 80px;
+    background: var(--bg-trans);
+    border: 3px solid #fff;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 40px;
+    transform: skewX(-10deg);
+}
+
+.health-box {
+    width: 300px;
+    transform: skewX(-10deg);
+}
+
+.hp-label {
+    font-weight: 900;
+    color: #fff;
+    font-size: 1.2rem;
+    margin-bottom: 5px;
+    letter-spacing: 2px;
+}
+
+.hp-bar-container {
+    width: 100%;
+    height: 25px;
+    background: rgba(255, 255, 255, 0.2);
+    border: 2px solid #fff;
+    position: relative;
+    overflow: hidden;
+}
+
+#hp-bar-fill {
+    width: 100%;
+    height: 100%;
+    background: #fff;
+    transition: width 0.1s ease-out;
+}
+
+.hp-values {
+    font-size: 1.5rem;
+    font-weight: 900;
+    color: #fff;
+    text-align: right;
+    margin-top: 5px;
+}
+
+/* Center: Ultimate */
+#ultimate-container {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 120px;
+    height: 120px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+svg {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    transform: rotate(-90deg);
+}
+
+circle {
+    fill: none;
+    stroke-width: 8;
+}
+
+.bg-circle {
+    stroke: rgba(255, 255, 255, 0.1);
+}
+
+#ult-progress-circle {
+    stroke: var(--ow-blue);
+    stroke-dasharray: 283;
+    stroke-dashoffset: 283;
+    transition: stroke-dashoffset 0.3s;
+    filter: drop-shadow(0 0 5px var(--ow-blue));
+}
+
+.ult-label {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #fff;
+    z-index: 1;
+    margin-top: 10px;
+}
+
+#ult-percent {
+    font-size: 1.8rem;
+    font-weight: 900;
+    color: #fff;
+    z-index: 1;
+}
+
+/* Right: Combat */
+#combat-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 15px;
+}
+
+.abilities {
+    display: flex;
+    gap: 10px;
+}
+
+.ability-slot {
+    width: 60px;
+    height: 60px;
+    background: var(--bg-trans);
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    border-top: 4px solid var(--ow-blue);
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+    transform: skewX(-10deg);
+}
+
+.ability-slot .key {
+    position: absolute;
+    bottom: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.8rem;
+    font-weight: bold;
+    color: #fff;
+}
+
+.cooldown-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 0%;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 1;
+}
+
+.ammo-box {
+    display: flex;
+    align-items: baseline;
+    gap: 5px;
+    color: #fff;
+    font-weight: 900;
+    transform: skewX(-10deg);
+}
+
+#current-ammo {
+    font-size: 4rem;
+    text-shadow: 0 0 10px var(--ow-blue);
+}
+
+.ammo-total {
+    font-size: 1.5rem;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+/* Objective */
+#objective-hud {
+    position: absolute;
+    top: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 400px;
+    pointer-events: none;
+}
+
+.obj-bar {
+    text-align: center;
+}
+
+.obj-label {
+    font-weight: 900;
+    color: #fff;
+    letter-spacing: 5px;
+    margin-bottom: 10px;
+}
+
+.obj-progress-bg {
+    width: 100%;
+    height: 10px;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+#obj-progress-fill {
+    width: 30%;
+    height: 100%;
+    background: var(--ow-blue);
+    box-shadow: 0 0 10px var(--ow-blue);
+}
+
+/* Menu Overlays */
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+    backdrop-filter: blur(10px);
+}
+
+.menu-box {
+    text-align: center;
+    padding: 60px;
+    background: rgba(10, 10, 20, 0.8);
+    border: 2px solid var(--ow-blue);
+    border-radius: 5px;
+    box-shadow: 0 0 50px rgba(0, 162, 255, 0.2);
+}
+
+.logo-text {
+    font-size: 4rem;
+    color: #fff;
+    font-weight: 900;
+    letter-spacing: 10px;
+    margin-bottom: 20px;
+}
+
+.logo-text span {
+    color: var(--ow-yellow);
+}
+
+p {
+    color: rgba(255, 255, 255, 0.6);
+    margin-bottom: 40px;
+    letter-spacing: 2px;
+}
+
+button {
+    background: var(--ow-orange);
+    color: #fff;
+    border: none;
+    padding: 20px 60px;
+    font-family: inherit;
+    font-size: 2rem;
+    font-weight: 900;
+    cursor: pointer;
+    transition: 0.2s;
+    border-radius: 5px;
+}
+
+button:hover {
+    background: #fff;
+    color: var(--ow-orange);
+    transform: scale(1.05);
+}
+
+.hidden {
+    display: none !important;
+}

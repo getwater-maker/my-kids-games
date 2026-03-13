@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⚡ 네온 줄넘기 챌린지 ⚡</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <div id="game-container">
+        <!-- HUD -->
+        <div id="hud">
+            <div id="score-box">
+                <span class="label">SUCCESS (성공)</span>
+                <span id="score">0</span>
+            </div>
+            <div id="best-box">
+                <span class="label">BEST SCORE</span>
+                <span id="best-score">0</span>
+            </div>
+        </div>
+
+        <!-- Start Overlay -->
+        <div id="start-overlay" class="overlay">
+            <div class="menu">
+                <h1>NEON ROPE</h1>
+                <p>타이밍에 맞춰 스페이스를 눌러 줄을 넘으세요!</p>
+                <div class="guide">
+                    <span class="key">SPACE</span>
+                    <span>: 점프 (JUMP)</span>
+                </div>
+                <button id="start-btn">경기 시작</button>
+            </div>
+        </div>
+
+        <!-- Game Over Overlay -->
+        <div id="game-over-overlay" class="overlay hidden">
+            <div class="menu">
+                <h1 style="color: #ff1744;">GAME OVER</h1>
+                <p id="final-stats">기록: 0회</p>
+                <div style="display: flex; gap: 20px;">
+                    <button id="restart-btn" style="flex: 1;">다시 도전</button>
+                    <button onclick="location.href='../index.html'"
+                        style="flex: 1; background: #333; color: white;">메뉴로</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Three.js Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="js/main.js"></script>
+</body>
+
+</html>

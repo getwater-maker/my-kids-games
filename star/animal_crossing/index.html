@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Animal Crossing: New Horizons - Web Edition</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Mali:wght@400;700&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <div id="game-container"></div>
+
+    <!-- HUD -->
+    <div id="hud" class="hidden">
+        <div id="bell-counter">
+            <img src="https://static.wikia.nocookie.net/animalcrossing/images/8/8b/NH-Icon-Bells.png" alt="Bells"
+                class="bell-icon">
+            <span id="bell-amount">0</span>
+        </div>
+
+        <div id="nook-phone">
+            <div class="phone-app" id="inventory-app">🎒</div>
+            <div class="phone-app">📸</div>
+            <div class="phone-app">🗺️</div>
+        </div>
+
+        <div id="interaction-prompt" class="hidden">PRESS [E] TO INTERACT</div>
+    </div>
+
+    <!-- Inventory Overlay -->
+    <div id="inventory-screen" class="hidden">
+        <div class="inventory-card">
+            <h3>Inventory</h3>
+            <div id="inventory-grid">
+                <!-- Slots will be populated by JS -->
+            </div>
+            <button id="close-inventory">CLOSE</button>
+        </div>
+    </div>
+
+    <!-- Start Overlay -->
+    <div id="overlay">
+        <div class="start-card">
+            <h1 class="game-title">Animal Crossing</h1>
+            <h2 class="sub-title">New Horizons</h2>
+            <div class="island-icon">🌴🌊</div>
+            <button id="start-btn">FLY TO YOUR ISLAND</button>
+            <div class="guide">
+                <p><b>WASD</b>: Walk around | <b>Mouse</b>: Look</p>
+                <p><b>E</b>: Pick up items / Shake trees</p>
+                <p>Relax and enjoy the island life!</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/PointerLockControls.js"></script>
+    <script src="js/main.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>어몽어스 2D: 임포스터 습격</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div id="game-container">
+        <canvas id="gameCanvas"></canvas>
+
+        <!-- HUD Overlay -->
+        <div id="hud">
+            <div id="status-bar">
+                <span id="role-tag" class="imposter">IMPOSTOR</span>
+                <span id="kill-timer">KILL COOLDOWN: <span id="cooldown-val">0</span>s</span>
+            </div>
+            <div id="task-progress">
+                CREDENTIALS STOLEN: <span id="kill-count">0</span> / <span id="target-count">6</span>
+            </div>
+        </div>
+
+        <!-- Action Buttons (Mobile/Key indicators) -->
+        <div id="action-hud">
+            <button id="kill-btn" class="action-btn">🔪 KILL [Q]</button>
+            <button id="vent-btn" class="action-btn">🕳️ VENT [E]</button>
+        </div>
+
+        <!-- Overlays -->
+        <div id="overlay" class="overlay">
+            <div class="menu-box">
+                <div class="character-preview">🧧</div>
+                <h1 class="logo-text">AMONG<span>US 2D</span></h1>
+                <p>You are the <b>IMPOSTOR</b>. Kill all crewmates without being seen!</p>
+                <div class="controls">WASD: Move | Q: Kill | E: Vent</div>
+                <button id="start-btn">S-H-H-H!</button>
+            </div>
+        </div>
+
+        <div id="win-screen" class="overlay hidden">
+            <div class="menu-box">
+                <h1 class="win-title">VICTORY</h1>
+                <p>All crewmates eliminated. The ship is yours.</p>
+                <button id="win-restart-btn">PLAY AGAIN</button>
+            </div>
+        </div>
+
+        <div id="lose-screen" class="overlay hidden">
+            <div class="menu-box">
+                <h1 class="lose-title">DEFEATED</h1>
+                <p>You were caught in the act!</p>
+                <button id="lose-restart-btn">RETRY MISSION</button>
+            </div>
+        </div>
+    </div>
+    <script src="js/main.js"></script>
+</body>
+
+</html>

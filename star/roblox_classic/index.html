@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ROBLOX (Classic Baseplate)</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700;900&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div id="game-container"></div>
+
+    <div id="hud">
+        <div id="top-bar">
+            <div id="experience-info">
+                <img src="https://images.rbxcdn.com/f04c633a647ceb4661845bb08a70ed69.png" alt="Roblox" id="rbx-logo">
+                <span id="game-title">ROBLOX - Classic Baseplate</span>
+            </div>
+            <div id="player-list-btn">
+                <img src="https://images.rbxcdn.com/4a034633a647ceb4661845bb08a70ed69.png" alt="Players" class="icon">
+                <span>Players</span>
+            </div>
+        </div>
+
+        <div id="sidebar">
+            <div class="sidebar-item active" title="Move">
+                <img src="https://images.rbxcdn.com/64b34633a647ceb4661845bb08a70ed69.png" alt="Select" class="icon">
+            </div>
+            <div class="sidebar-item" id="build-tool" title="Spawn Part">
+                <img src="https://images.rbxcdn.com/e04c633a647ceb4661845bb08a70ed69.png" alt="Part" class="icon">
+            </div>
+            <div class="sidebar-item" id="delete-tool" title="Delete Part">
+                <img src="https://images.rbxcdn.com/f8434633a647ceb4661845bb08a70ed69.png" alt="Delete" class="icon">
+            </div>
+        </div>
+
+        <div id="chat">
+            <div id="chat-box"></div>
+            <input type="text" id="chat-input" placeholder="Click here or press '/' to chat">
+        </div>
+
+        <div id="stat-bar">
+            <div class="stat-item" id="health-bar-container">
+                <div id="health-bar-fill"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Instructions Overlay -->
+    <div id="overlay">
+        <div id="start-menu" class="card">
+            <h1>ROBLOX</h1>
+            <p>Classic World (r6 Character Test)</p>
+            <button id="start-btn" class="rbx-btn-primary">Play</button>
+            <div class="controls-guide">
+                <p><b>WASD</b>: Move | <b>Space</b>: Jump</p>
+                <p><b>Mouse</b>: Move Camera | <b>Click</b>: Use Tool</p>
+                <p><b>1</b>: Build | <b>2</b>: Delete</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- UI Audio (Roblox Oof) -->
+    <audio id="oof-sound" src="https://www.myinstants.com/media/sounds/roblox-death-sound_1.mp3"></audio>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/PointerLockControls.js"></script>
+    <script src="js/main.js"></script>
+</body>
+
+</html>

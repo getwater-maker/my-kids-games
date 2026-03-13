@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>탕탕특공대 Survivor.io</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div id="game-container">
+        <canvas id="gameCanvas"></canvas>
+
+        <!-- HUD -->
+        <div id="hud">
+            <div id="level-bar-container">
+                <div id="level-fill"></div>
+                <div id="level-text">Level 1</div>
+            </div>
+            <div id="stats">
+                <div id="kills">Kills: 0</div>
+                <div id="time">00:00</div>
+            </div>
+            <div id="hp-bar-container">
+                <div id="hp-fill"></div>
+            </div>
+        </div>
+
+        <!-- Level Up Selection -->
+        <div id="level-up-screen" class="overlay hidden">
+            <div class="menu-box">
+                <h2 class="title">SKILL UPGRADE</h2>
+                <div id="skill-options">
+                    <!-- Skills will be injected here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Start/Death Overlays -->
+        <div id="start-screen" class="overlay">
+            <div class="menu-box">
+                <h1 class="logo">탕탕<span>특공대</span></h1>
+                <p>Move to avoid enemies. Auto-attack enabled!</p>
+                <button id="start-btn">START MISSION</button>
+            </div>
+        </div>
+
+        <div id="game-over-screen" class="overlay hidden">
+            <div class="menu-box">
+                <h1 class="logo">DEFEATED</h1>
+                <p id="final-stats">Kills: 0 | Time: 00:00</p>
+                <button id="restart-btn">RETRY</button>
+            </div>
+        </div>
+    </div>
+    <script src="js/main.js"></script>
+</body>
+
+</html>
