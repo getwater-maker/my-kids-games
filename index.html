@@ -15,8 +15,8 @@
             --insight-dark: #d63031;
             --star-color: #ffeaa7;
             --star-dark: #fdcb6e;
-            --lader-color: #55efc4;
-            --lader-dark: #00b894;
+            --getwater-color: #55efc4;
+            --getwater-dark: #00b894;
             --border-radius: 20px;
             --shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
         }
@@ -148,8 +148,8 @@
             border-color: var(--star-color);
         }
 
-        .card-lader {
-            border-color: var(--lader-color);
+        .card-getwater {
+            border-color: var(--getwater-color);
         }
 
         .card-header {
@@ -170,7 +170,7 @@
             background: linear-gradient(135deg, #ffeaa7, #fdcb6e);
         }
 
-        .card-lader .card-header {
+        .card-getwater .card-header {
             background: linear-gradient(135deg, #55efc4, #00b894);
         }
 
@@ -212,8 +212,8 @@
             color: #2d3436;
         }
 
-        .card-lader .card-badge {
-            background: var(--lader-dark);
+        .card-getwater .card-badge {
+            background: var(--getwater-dark);
         }
 
         .game-list {
@@ -267,8 +267,8 @@
             color: #2d3436;
         }
 
-        .card-lader .play-btn {
-            background: var(--lader-dark);
+        .card-getwater .play-btn {
+            background: var(--getwater-dark);
             box-shadow: 0 4px 0 #00856e;
         }
 
@@ -314,7 +314,7 @@
         .card-light .click-count { border: 2px solid var(--light-color); }
         .card-insight .click-count { border: 2px solid var(--insight-color); }
         .card-star .click-count { border: 2px solid var(--star-dark); }
-        .card-lader .click-count { border: 2px solid var(--lader-dark); }
+        .card-getwater .click-count { border: 2px solid var(--getwater-dark); }
 
         /* Stats section */
         .stats-section {
@@ -481,11 +481,11 @@
             <a href="star/" class="play-btn" onclick="trackClick('star')">게임하러 가기!</a>
         </div>
 
-        <!-- lader -->
-        <div class="card card-lader">
+        <!-- getwater -->
+        <div class="card card-getwater">
             <div class="card-header">
                 <span class="card-icon">🎲</span>
-                <span class="card-name">lader</span>
+                <span class="card-name">getwater</span>
             </div>
             <span class="card-badge">5 Games</span>
             <ul class="game-list">
@@ -494,8 +494,8 @@
                 <li>⚫ 오목</li>
                 <li>📅 할 일 & 용돈</li>
             </ul>
-            <div class="click-count">🎮 <span id="count-lader">...</span> 번 플레이</div>
-            <a href="lader/" class="play-btn" onclick="trackClick('lader')">게임하러 가기!</a>
+            <div class="click-count">🎮 <span id="count-getwater">...</span> 번 플레이</div>
+            <a href="getwater/" class="play-btn" onclick="trackClick('getwater')">게임하러 가기!</a>
         </div>
     </section>
 
@@ -525,8 +525,8 @@
             </div>
             <div class="stat-card">
                 <span class="stat-num">🎲</span>
-                <span class="stat-num" id="stat-lader">...</span>
-                <div class="stat-label">lader 플레이</div>
+                <span class="stat-num" id="stat-getwater">...</span>
+                <div class="stat-label">getwater 플레이</div>
             </div>
         </div>
     </section>
@@ -574,12 +574,12 @@
         }
 
         async function loadStats() {
-            const [visits, light, insight, star, lader] = await Promise.all([
+            const [visits, light, insight, star, getwater] = await Promise.all([
                 increment('visits'),
                 getCount('click_light'),
                 getCount('click_insight'),
                 getCount('click_star'),
-                getCount('click_lader'),
+                getCount('click_getwater'),
             ]);
 
             setDisplay('stat-visits', visits);
@@ -587,12 +587,12 @@
             setDisplay('count-light', light);
             setDisplay('count-insight', insight);
             setDisplay('count-star', star);
-            setDisplay('count-lader', lader);
+            setDisplay('count-getwater', getwater);
 
             setDisplay('stat-light', light);
             setDisplay('stat-insight', insight);
             setDisplay('stat-star', star);
-            setDisplay('stat-lader', lader);
+            setDisplay('stat-getwater', getwater);
         }
 
         loadStats();
