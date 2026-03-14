@@ -63,63 +63,109 @@ canvas {
     color: var(--ow-red);
 }
 
+.crewmate {
+    color: var(--ow-blue);
+}
+
+#task-info {
+    margin-left: 20px;
+    color: #fff;
+    opacity: 0.9;
+}
+
+.mission-bar-container {
+    width: 300px;
+    height: 15px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+#mission-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #2ecc71, #27ae60);
+    transition: width 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
 #kill-timer {
     margin-left: 20px;
     color: #fff;
     opacity: 0.8;
 }
 
-#task-progress {
-    background: rgba(0, 0, 0, 0.6);
+#interaction-prompt {
+    background: rgba(0, 0, 0, 0.8);
     color: #fff;
-    padding: 10px 20px;
-    border-radius: 10px;
-    border-right: 5px solid var(--ow-yellow);
+    padding: 15px 30px;
+    border-radius: 50px;
     font-weight: bold;
+    font-size: 1.2rem;
+    border: 2px solid white;
+    animation: pulse 1s infinite alternate;
 }
 
-/* BOTTOM HUD */
+@keyframes pulse {
+    from { transform: scale(1); box-shadow: 0 0 10px white; }
+    to { transform: scale(1.1); box-shadow: 0 0 30px white; }
+}
+
+/* ACTION HUD NEW */
 #action-hud {
     position: absolute;
     bottom: 40px;
     right: 40px;
     display: flex;
     gap: 20px;
-    z-index: 10;
+    z-index: 50;
+    pointer-events: auto;
 }
 
-.action-btn {
-    width: 90px;
-    height: 90px;
-    border-radius: 50%;
-    border: none;
+.action-btn-new {
+    width: 100px;
+    height: 100px;
+    border-radius: 20px;
+    background: rgba(44, 62, 80, 0.8);
+    border: 3px solid #fff;
+    color: white;
     font-weight: 900;
-    cursor: pointer;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-    transition: 0.2s;
-    font-family: inherit;
+    font-size: 1.2rem;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    text-align: center;
+    cursor: pointer;
+    transition: 0.2s;
+    backdrop-filter: blur(5px);
 }
 
-#kill-btn {
-    background: linear-gradient(135deg, #ff4d4d, #b30000);
-    color: #fff;
-    border: 3px solid #fff;
+.action-btn-new:hover { transform: scale(1.1); }
+.action-btn-new:active { transform: scale(0.9); }
+
+.m-btn .red-square {
+    width: 30px;
+    height: 30px;
+    background: #ff3333;
+    border: 2px solid white;
+    margin-bottom: 5px;
+    box-shadow: 0 0 15px #ff3333;
 }
 
-#kill-btn:disabled {
-    filter: grayscale(1);
-    opacity: 0.5;
-    cursor: not-allowed;
+.t-btn .scary-eye {
+    font-size: 2.5rem;
+    margin-bottom: 5px;
+    animation: eye-flash 0.3s infinite alternate;
+    text-shadow: 0 0 20px red;
 }
 
-#vent-btn {
-    background: linear-gradient(135deg, #444, #111);
-    color: #00ff00;
-    border: 3px solid #00ff00;
+@keyframes eye-flash {
+    from { opacity: 0.4; transform: scale(0.8); filter: hue-rotate(0deg); }
+    to { opacity: 1; transform: scale(1.2); filter: hue-rotate(360deg); }
+}
+
+#interaction-prompt {
+    display: none; /* Replaced by localized buttons but keeping structure */
 }
 
 /* MENU OVERLAYS */
@@ -171,7 +217,7 @@ canvas {
 }
 
 .logo-text span {
-    color: var(--ow-red);
+    color: var(--ow-blue);
 }
 
 .controls {
@@ -196,9 +242,9 @@ button {
 }
 
 .win-title {
-    color: var(--ow-red);
+    color: var(--ow-blue);
     font-size: 4rem;
-    text-shadow: 0 0 20px var(--ow-red);
+    text-shadow: 0 0 20px var(--ow-blue);
 }
 
 .lose-title {
@@ -208,4 +254,24 @@ button {
 
 .hidden {
     display: none !important;
+}
+
+/* Meeting Styles */
+.meeting-title {
+    color: var(--ow-red);
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+    letter-spacing: 2px;
+}
+
+.meeting-speaker {
+    font-size: 5rem;
+    margin: 20px 0;
+    animation: pulse 0.5s infinite alternate;
+}
+
+#meeting-status {
+    font-size: 1.5rem;
+    line-height: 1.5;
+    color: #fff;
 }

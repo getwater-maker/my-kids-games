@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>GHOST EXORCIST 2D - 귀신 퇴마사</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Nanum+Myeongjo:wght@700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="game-wrapper">
+        <canvas id="gameCanvas"></canvas>
+        
+        <!-- HUD -->
+        <div id="hud">
+            <div class="stats">
+                <div class="stat-item hp">
+                    <span class="label">체력</span>
+                    <div class="bar-outer"><div id="hp-bar" class="bar-fill"></div></div>
+                </div>
+                <div class="stat-item mp">
+                    <span class="label">영력</span>
+                    <div class="bar-outer"><div id="mp-bar" class="bar-fill"></div></div>
+                </div>
+            </div>
+            <div class="score-box">
+                <span id="score">0</span> 魂 (영혼)
+            </div>
+            <div class="ability-slots">
+                <div class="slot" id="slot-q">Q [결계]</div>
+                <div class="slot" id="slot-e">E [정화]</div>
+            </div>
+        </div>
+
+        <!-- Start Screen -->
+        <div id="start-screen" class="overlay">
+            <div class="content">
+                <h1 class="title">귀신 퇴마사</h1>
+                <p class="subtitle">어두운 밤, 원혼들을 달래고 부적으로 봉인하세요.</p>
+                <div class="controls">
+                    <p>WASD: 이동 | 마우스 클릭: 부적 던지기</p>
+                    <p>Q: 신성한 결계 | E: 영적 폭발</p>
+                </div>
+                <button id="start-btn">퇴마 시작</button>
+            </div>
+        </div>
+
+        <!-- Game Over Screen -->
+        <div id="game-over" class="overlay hidden">
+            <div class="content">
+                <h1 class="death-title">영혼이 잠식되었습니다</h1>
+                <p>퇴마한 원혼 수: <span id="final-score">0</span></p>
+                <button onclick="location.reload()">다시 수련하기</button>
+            </div>
+        </div>
+    </div>
+    <script src="js/main.js"></script>
+</body>
+</html>

@@ -36,8 +36,18 @@ let clock = new THREE.Clock();
 // --- Initialization ---
 function init() {
     scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x87ceeb);
-    scene.fog = new THREE.Fog(0x87ceeb, 0, 500);
+    const canvas = document.createElement('canvas');
+    canvas.width = 1;
+    canvas.height = 32;
+    const ctx = canvas.getContext('2d');
+    const gradient = ctx.createLinearGradient(0, 0, 0, 32);
+    gradient.addColorStop(0, '#1e3c72');
+    gradient.addColorStop(1, '#2a5298');
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, 1, 32);
+    const skyTex = new THREE.CanvasTexture(canvas);
+    scene.background = skyTex;
+    scene.fog = new THREE.FogExp2(0x1e3c72, 0.005);
 
     camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
     camera.position.y = 10;
@@ -72,27 +82,40 @@ function setupLighting() {
 }
 
 function setupEnvironment() {
-    // Ground
-    const groundGeometry = new THREE.PlaneGeometry(1000, 1000);
-    const groundMaterial = new THREE.MeshStandardMaterial({ color: 0x222222 });
+    // Pro Ground
+    const groundGeometry = new THREE.PlaneGeometry(1000, 1000, 100, 100);
+    const groundMaterial = new THREE.MeshStandardMaterial({ 
+        color: 0x111111,
+        roughness: 0.8,
+        metalness: 0.2
+    });
     const ground = new THREE.Mesh(groundGeometry, groundMaterial);
     ground.rotation.x = -Math.PI / 2;
     ground.receiveShadow = true;
     scene.add(ground);
 
-    // City Map (Overwatch style)
-    for (let i = 0; i < 40; i++) {
-        const height = 10 + Math.random() * 50;
-        const width = 10 + Math.random() * 20;
+    // Grid Helper for more 'Cyber' feel
+    const grid = new THREE.GridHelper(1000, 100, 0x00aeff, 0x222222);
+    grid.position.y = 0.01;
+    scene.add(grid);
+
+    // City Map (Realistic Buildings)
+    for (let i = 0; i < 60; i++) {
+        const height = 20 + Math.random() * 80;
+        const width = 15 + Math.random() * 25;
         const boxGeo = new THREE.BoxGeometry(width, height, width);
         const boxMat = new THREE.MeshStandardMaterial({
-            color: new THREE.Color().setHSL(Math.random(), 0.5, 0.2),
-            emissive: new THREE.Color(0x000033)
+            color: new THREE.Color().setHSL(0.6, 0.2, 0.1 + Math.random() * 0.1),
+            metalness: 0.5,
+            roughness: 0.2
         });
         const building = new THREE.Mesh(boxGeo, boxMat);
 
-        building.position.x = (Math.random() - 0.5) * 300;
-        building.position.z = (Math.random() - 0.5) * 300;
+        building.position.x = (Math.random() - 0.5) * 500;
+        building.position.z = (Math.random() - 0.5) * 500;
+        if (Math.abs(building.position.x) < 30 && Math.abs(building.position.z) < 30) {
+            building.position.x += 100; // Keep spawn clear
+        }
         building.position.y = height / 2;
         building.castShadow = true;
         building.receiveShadow = true;
@@ -104,56 +127,111 @@ let playerWeapon;
 function setupPlayerWeapon() {
     const weaponGroup = new THREE.Group();
 
-    // Simple rifle mesh
-    const bodyGeo = new THREE.BoxGeometry(0.2, 0.3, 1);
-    const bodyMat = new THREE.MeshStandardMaterial({ color: 0x333333 });
+    // High Quality Rifle
+    const bodyGeo = new THREE.BoxGeometry(0.15, 0.25, 0.8);
+    const bodyMat = new THREE.MeshStandardMaterial({ 
+        color: 0x222222, 
+        roughness: 0.2, 
+        metalness: 0.8 
+    });
     const body = new THREE.Mesh(bodyGeo, bodyMat);
     weaponGroup.add(body);
 
-    const barrelGeo = new THREE.CylinderGeometry(0.05, 0.05, 0.6);
-    const barrel = new THREE.Mesh(barrelGeo, bodyMat);
+    // Barrel
+    const barrelGeo = new THREE.CylinderGeometry(0.03, 0.03, 0.7);
+    const barrelMat = new THREE.MeshStandardMaterial({ color: 0x111111, metalness: 0.9 });
+    const barrel = new THREE.Mesh(barrelGeo, barrelMat);
     barrel.rotation.x = Math.PI / 2;
-    barrel.position.z = -0.7;
+    barrel.position.z = -0.6;
     weaponGroup.add(barrel);
+
+    // Scope
+    const scopeGeo = new THREE.CylinderGeometry(0.04, 0.04, 0.2);
+    const scope = new THREE.Mesh(scopeGeo, bodyMat);
+    scope.rotation.x = Math.PI / 2;
+    scope.position.y = 0.15;
+    scope.position.z = -0.1;
+    weaponGroup.add(scope);
+
+    // Magazine
+    const magGeo = new THREE.BoxGeometry(0.1, 0.3, 0.2);
+    const mag = new THREE.Mesh(magGeo, bodyMat);
+    mag.position.y = -0.2;
+    mag.position.z = -0.1;
+    weaponGroup.add(mag);
 
     playerWeapon = weaponGroup;
     camera.add(playerWeapon);
     scene.add(camera);
 
-    playerWeapon.position.set(0.4, -0.4, -0.8);
+    playerWeapon.position.set(0.35, -0.35, -0.7);
 }
 
 function setupEnemies() {
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < 8; i++) {
         spawnEnemy();
     }
 }
 
+function createRealisticHuman(color) {
+    const group = new THREE.Group();
+    const skinMat = new THREE.MeshStandardMaterial({ color: 0xffdbac }); // Skin color
+    const clothMat = new THREE.MeshStandardMaterial({ color: color });
+
+    // Torso
+    const torsoGeo = new THREE.CapsuleGeometry(0.4, 0.8, 4, 8);
+    const torso = new THREE.Mesh(torsoGeo, clothMat);
+    torso.position.y = 1.2;
+    torso.castShadow = true;
+    group.add(torso);
+
+    // Head
+    const headGeo = new THREE.SphereGeometry(0.25, 16, 16);
+    const head = new THREE.Mesh(headGeo, skinMat);
+    head.position.y = 2.1;
+    head.castShadow = true;
+    group.add(head);
+
+    // Arms
+    const armGeo = new THREE.CapsuleGeometry(0.12, 0.6, 4, 8);
+    const leftArm = new THREE.Mesh(armGeo, skinMat);
+    leftArm.position.set(-0.6, 1.5, 0);
+    leftArm.rotation.z = Math.PI / 8;
+    group.add(leftArm);
+
+    const rightArm = new THREE.Mesh(armGeo, skinMat);
+    rightArm.position.set(0.6, 1.5, 0);
+    rightArm.rotation.z = -Math.PI / 8;
+    group.add(rightArm);
+
+    // Legs
+    const legGeo = new THREE.CapsuleGeometry(0.15, 0.8, 4, 8);
+    const leftLeg = new THREE.Mesh(legGeo, clothMat);
+    leftLeg.position.set(-0.25, 0.4, 0);
+    group.add(leftLeg);
+
+    const rightLeg = new THREE.Mesh(legGeo, clothMat);
+    rightLeg.position.set(0.25, 0.4, 0);
+    group.add(rightLeg);
+
+    return group;
+}
+
 function spawnEnemy() {
-    const enemyGroup = new THREE.Group();
-
-    // Robot/Target mesh
-    const bodyGeo = new THREE.BoxGeometry(1.5, 3, 1);
-    const bodyMat = new THREE.MeshStandardMaterial({ color: 0xeb4d4b, emissive: 0x990000 });
-    const body = new THREE.Mesh(bodyGeo, bodyMat);
-    enemyGroup.add(body);
-
-    const headGeo = new THREE.BoxGeometry(1, 1, 1);
-    const head = new THREE.Mesh(headGeo, bodyMat);
-    head.position.y = 2;
-    enemyGroup.add(head);
-
-    enemyGroup.position.set(
-        (Math.random() - 0.5) * 100,
-        1.5,
-        (Math.random() - 0.5) * 100
+    const enemyMesh = createRealisticHuman(0xeb4d4b);
+    
+    enemyMesh.position.set(
+        (Math.random() - 0.5) * 150,
+        0,
+        (Math.random() - 0.5) * 150
     );
 
-    scene.add(enemyGroup);
+    scene.add(enemyMesh);
     enemies.push({
-        mesh: enemyGroup,
+        mesh: enemyMesh,
         hp: 150,
-        lastShotTime: 0
+        lastShotTime: 0,
+        velocity: new THREE.Vector3()
     });
 }
 
@@ -297,23 +375,59 @@ function animate() {
 
 function updateEnemies(dt) {
     enemies.forEach(enemy => {
-        // Simple AI: face player
+        // AI Movement: Walk towards player
+        const dirToPlayer = new THREE.Vector3().subVectors(camera.position, enemy.mesh.position);
+        dirToPlayer.y = 0;
+        dirToPlayer.normalize();
+        
+        const dist = enemy.mesh.position.distanceTo(camera.position);
+        if (dist > 10) {
+            enemy.mesh.position.addScaledVector(dirToPlayer, 2.0 * dt);
+        }
+
+        // AI Face player
         enemy.mesh.lookAt(camera.position.x, 0, camera.position.z);
 
-        // Attack player occasionally
-        if (Date.now() - enemy.lastShotTime > 2000) {
-            const dist = enemy.mesh.position.distanceTo(camera.position);
-            if (dist < 50) {
-                hp -= 5;
+        // Animation: Swivel arms (Human walk simulation)
+        const time = Date.now() * 0.005;
+        enemy.mesh.children.forEach((child, idx) => {
+            if (idx === 2 || idx === 3) { // Arms
+                child.rotation.x = Math.sin(time + (idx === 2 ? 0 : Math.PI)) * 0.5;
+            }
+            if (idx === 4 || idx === 5) { // Legs
+                child.rotation.x = Math.sin(time + (idx === 4 ? 0 : Math.PI)) * 0.5;
+            }
+        });
+
+        // Attack player
+        if (Date.now() - enemy.lastShotTime > 1500) {
+            if (dist < 40) {
+                hp -= 10;
                 updateHUD();
                 enemy.lastShotTime = Date.now();
+                showDamageEffect();
                 if (hp <= 0) die();
             }
         }
     });
 }
 
+function showDamageEffect() {
+    const vignette = document.createElement('div');
+    vignette.style.position = 'absolute';
+    vignette.style.top = '0';
+    vignette.style.left = '0';
+    vignette.style.width = '100%';
+    vignette.style.height = '100%';
+    vignette.style.boxShadow = 'inset 0 0 100px rgba(255,0,0,0.5)';
+    vignette.style.pointerEvents = 'none';
+    vignette.style.zIndex = '50';
+    document.body.appendChild(vignette);
+    setTimeout(() => vignette.remove(), 100);
+}
+
 function killEnemy(enemy) {
+    spawnDeathParticles(enemy.mesh.position);
     scene.remove(enemy.mesh);
     enemies = enemies.filter(e => e !== enemy);
     setTimeout(spawnEnemy, 5000); // Respawn
@@ -321,9 +435,35 @@ function killEnemy(enemy) {
     // Kill feed logic
     const feed = document.getElementById('kill-feed');
     const msg = document.createElement('div');
-    msg.textContent = "Soldier: 76 [Rifle] Training Bot";
+    msg.style.color = "#ff4444";
+    msg.innerHTML = `<span style="color:#00aeff">Soldier: 76</span> [Eliminated] Training Bot`;
     feed.appendChild(msg);
-    setTimeout(() => msg.remove(), 3000);
+    setTimeout(() => msg.remove(), 4000);
+}
+
+function spawnDeathParticles(pos) {
+    for (let i = 0; i < 20; i++) {
+        const geo = new THREE.SphereGeometry(0.1, 4, 4);
+        const mat = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+        const p = new THREE.Mesh(geo, mat);
+        p.position.copy(pos);
+        p.position.y += 1;
+        const vel = new THREE.Vector3(
+            (Math.random() - 0.5) * 0.5,
+            Math.random() * 0.5,
+            (Math.random() - 0.5) * 0.5
+        );
+        scene.add(p);
+        
+        const animateP = () => {
+            p.position.add(vel);
+            vel.y -= 0.02;
+            p.scale.multiplyScalar(0.95);
+            if (p.scale.x > 0.01) requestAnimationFrame(animateP);
+            else scene.remove(p);
+        };
+        animateP();
+    }
 }
 
 // --- UI Updates ---

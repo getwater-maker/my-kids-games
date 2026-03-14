@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Slither.io Clone - Antigravity Edition</title>
+    <meta name="description" content="A premium Slither.io clone with smooth animations and beautiful graphics.">
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body>
+    <div id="game-container">
+        <canvas id="gameCanvas"></canvas>
+        
+        <div id="ui-overlay">
+            <div id="score-board">
+                <span id="score-text">Length: 0</span>
+            </div>
+            <div id="leaderboard">
+                <h3>Leaderboard</h3>
+                <ul id="leader-list">
+                    <!-- Dynamic leaderboard -->
+                </ul>
+            </div>
+        </div>
+
+        <div id="start-screen">
+            <div class="glass-panel">
+                <h1>SLITHER.IO</h1>
+                <p>Eat dots, grow big, and don't hit other snakes!</p>
+                <input type="text" id="nickname" placeholder="Enter Nickname" maxlength="15">
+                <button id="start-btn">Play Game</button>
+            </div>
+        </div>
+
+        <div id="death-screen" class="hidden">
+            <div class="glass-panel">
+                <h1>GAME OVER</h1>
+                <p id="final-score">Your Score: 0</p>
+                <button id="restart-btn">Try Again</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+</body>
+</html>

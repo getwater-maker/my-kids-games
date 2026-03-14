@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SNIPER VS SNIPER - 초정밀 저격 대결</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="game-wrapper">
+        <div id="world">
+            <img src="assets/bg.png" id="bg-img" alt="Background">
+            <div id="enemy-container">
+                <img src="assets/enemy.png" id="enemy-img" alt="Enemy">
+                <div id="enemy-hp-bar"></div>
+            </div>
+        </div>
+
+        <!-- Scope Overlay -->
+        <div id="scope-overlay" class="hidden">
+            <div class="scope-lens">
+                <div class="crosshair">
+                    <div class="v-line"></div>
+                    <div class="h-line"></div>
+                    <div class="circles"></div>
+                </div>
+                <div class="vignette"></div>
+            </div>
+            <div class="scope-hud">
+                <div class="data-left">
+                    <div>RANGE: <span id="dist">842m</span></div>
+                    <div>WIND: <span id="wind">4m/s ↙</span></div>
+                </div>
+                <div class="data-right">
+                    <div>ZOOM: <span id="zoom-val">8x</span></div>
+                    <div>STAB: <span id="stab">98%</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main HUD -->
+        <div id="hud">
+            <div class="top-info">
+                <div class="player-hp">
+                    <div class="label">UNIT: GHOST-01</div>
+                    <div class="bar-outer"><div id="hp-bar" class="bar-fill"></div></div>
+                </div>
+                <div class="mission-timer" id="timer">00:00:00</div>
+            </div>
+            <div class="bottom-info">
+                <div class="instruction">RIGHT CLICK: SCOPE | LEFT CLICK: FIRE | MOUSE: AIM</div>
+            </div>
+        </div>
+
+        <!-- Feedback -->
+        <div id="hit-marker" class="hidden"></div>
+        <div id="flash" class="hidden"></div>
+
+        <!-- Overlays -->
+        <div id="start-screen" class="overlay">
+            <div class="glass-box">
+                <h1 class="glitch" data-text="SNIPER VS SNIPER">SNIPER VS SNIPER</h1>
+                <p>보이지 않는 곳에서 적 저격수를 먼저 찾아내 제거하십시오.</p>
+                <button id="start-btn">임무 시작</button>
+            </div>
+        </div>
+
+        <div id="game-result" class="overlay hidden">
+            <div class="glass-box">
+                <h1 id="result-title">MISSION COMPLETE</h1>
+                <p id="result-stats">Accuracy: 92% | Distance: 842m</p>
+                <button onclick="location.reload()">RE-ENGAGE</button>
+            </div>
+        </div>
+    </div>
+    <script src="js/main.js"></script>
+</body>
+</html>

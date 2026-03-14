@@ -1,0 +1,194 @@
+:root {
+    --neon-blue: #00d2ff;
+    --neon-green: #39ff14;
+    --neon-red: #ff3131;
+    --glass: rgba(0, 20, 40, 0.6);
+}
+
+* {
+    margin: 0; padding: 0; box-sizing: border-box;
+    font-family: 'Share Tech Mono', monospace;
+    user-select: none;
+}
+
+body {
+    background: #000;
+    overflow: hidden;
+    color: white;
+}
+
+#game-wrapper {
+    position: relative;
+    width: 100vw; height: 100vh;
+}
+
+/* World & Movement */
+#world {
+    position: absolute;
+    width: 200vw; height: 200vh;
+    left: -50vw; top: -50vh;
+    transition: transform 0.1s ease-out;
+}
+
+#bg-img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    filter: brightness(0.7) contrast(1.2);
+}
+
+#enemy-container {
+    position: absolute;
+    width: 80px; height: 120px;
+    left: 120vw; top: 80vh; /* Random-ish start */
+    transition: width 0.3s, height 0.3s;
+}
+
+#enemy-img {
+    width: 100%; height: 100%;
+    object-fit: contain;
+}
+
+#enemy-hp-bar {
+    width: 100%; height: 4px;
+    background: var(--neon-red);
+    margin-top: 5px;
+    box-shadow: 0 0 10px var(--neon-red);
+    transition: width 0.2s;
+}
+
+/* SCOPE SYSTEM */
+#scope-overlay {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    z-index: 50;
+    pointer-events: none;
+}
+
+.scope-lens {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80vh; height: 80vh;
+    border-radius: 50%;
+    border: 15vw solid black;
+    box-sizing: content-box;
+    box-shadow: 0 0 0 100vw black;
+    overflow: hidden;
+}
+
+.vignette {
+    position: absolute;
+    top:0; left:0; width:100%; height:100%;
+    background: radial-gradient(circle, transparent 40%, rgba(0,0,0,0.8) 100%);
+}
+
+.crosshair {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%; height: 100%;
+}
+
+.v-line {
+    position: absolute; left: 50%; top: 0; width: 2px; height: 100%;
+    background: rgba(255, 255, 255, 0.4);
+}
+
+.h-line {
+    position: absolute; left: 0; top: 50%; width: 100%; height: 2px;
+    background: rgba(255, 255, 255, 0.4);
+}
+
+.scope-hud {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 60vh; height: 40vh;
+    display: flex; justify-content: space-between; align-items: flex-end;
+    padding: 20px;
+    font-size: 1.2rem;
+    color: var(--neon-blue);
+    text-shadow: 0 0 10px var(--neon-blue);
+}
+
+/* MAIN HUD */
+#hud {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    padding: 30px;
+    display: flex; flex-direction: column; justify-content: space-between;
+    pointer-events: none;
+    z-index: 10;
+}
+
+.player-hp { width: 300px; }
+.label { font-size: 0.9rem; margin-bottom: 5px; color: var(--neon-blue); }
+.bar-outer { width: 100%; height: 10px; background: rgba(0,0,0,0.5); border: 1px solid var(--neon-blue); }
+.bar-fill { height: 100%; background: var(--neon-blue); width: 100%; box-shadow: 0 0 15px var(--neon-blue); transition: width 0.3s; }
+
+.mission-timer {
+    font-size: 2rem; color: var(--neon-blue);
+}
+
+.instruction {
+    text-align: center;
+    background: var(--glass);
+    padding: 10px 40px;
+    border-radius: 5px;
+    border: 1px solid rgba(0, 210, 255, 0.3);
+}
+
+/* FEEDBACK */
+#flash {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background: white; opacity: 0.8; z-index: 60;
+}
+
+#hit-marker {
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%, -50%) rotate(45deg);
+    width: 30px; height: 30px;
+    border: 2px solid var(--neon-red);
+    z-index: 55;
+}
+
+/* SCREENS */
+.overlay {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.8);
+    display: flex; justify-content: center; align-items: center;
+    z-index: 100;
+}
+
+.glass-box {
+    background: var(--glass);
+    backdrop-filter: blur(20px);
+    padding: 60px;
+    border-radius: 5px;
+    border: 1px solid rgba(255,255,255,0.1);
+    text-align: center;
+}
+
+h1 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 3.5rem; color: var(--neon-blue);
+    margin-bottom: 10px;
+}
+
+button {
+    margin-top: 40px;
+    padding: 15px 60px;
+    background: var(--neon-blue);
+    color: black;
+    border: none;
+    font-size: 1.2rem; font-weight: 900;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+button:hover {
+    box-shadow: 0 0 30px var(--neon-blue);
+    transform: scale(1.05);
+}
+
+.hidden { display: none !important; }

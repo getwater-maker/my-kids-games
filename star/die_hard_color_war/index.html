@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DIE HARD: COLOR WAR | Tactical Simulation</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/PointerLockControls.js"></script>
+</head>
+<body>
+    <div id="game-container">
+        <!-- Dynamic Crosshair -->
+        <div id="crosshair">
+            <div class="ch-part ch-top"></div>
+            <div class="ch-part ch-bottom"></div>
+            <div class="ch-part ch-left"></div>
+            <div class="ch-part ch-right"></div>
+            <div id="ch-center"></div>
+        </div>
+
+        <!-- HUD Layer -->
+        <div id="hud">
+            <div class="top-row">
+                <div class="team-score blue-team">
+                    <div class="team-label">BLUE SQUAD</div>
+                    <div id="blue-score">0%</div>
+                    <div class="score-bar"><div id="blue-progress"></div></div>
+                </div>
+                <div class="match-time">
+                    <div id="timer">03:00</div>
+                    <div class="phase">COMBAT PHASE</div>
+                </div>
+                <div class="team-score red-team">
+                    <div class="team-label">RED SQUAD</div>
+                    <div id="red-score">0%</div>
+                    <div class="score-bar"><div id="red-progress"></div></div>
+                </div>
+            </div>
+
+            <div class="bottom-row">
+                <div class="player-stats">
+                    <div class="hp-info">
+                        <div class="label">HEALTH</div>
+                        <div class="hp-bar-outer">
+                            <div id="hp-fill"></div>
+                        </div>
+                        <div class="hp-value"><span id="curr-hp">100</span> / 100</div>
+                    </div>
+                </div>
+
+                <div class="weapon-info">
+                    <div class="weapon-name">PAINT SMG-7</div>
+                    <div class="ammo-box">
+                        <span id="curr-ammo">30</span><span class="ammo-sep">/</span><span id="max-ammo">∞</span>
+                    </div>
+                    <div class="color-indicator" id="current-color"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Start/End Screens -->
+        <div id="overlay" class="overlay">
+            <div class="glass-panel">
+                <h1 class="glitch-text" data-text="DIE HARD">DIE HARD</h1>
+                <h2 class="sub-title">COLOR WAR: URBAN STRIKE</h2>
+                <div class="briefing">
+                    <p><b>[MISISON]</b>: 전 구역을 아군의 색깔로 물들이고 적을 섬멸하십시오.</p>
+                    <p><b>[WASD]</b>: 이동 | <b>[MOUSE]</b>: 조준 및 사격</p>
+                    <p><b>[SHIFT]</b>: 전력 질주 | <b>[SPACE]</b>: 점프</p>
+                </div>
+                <button id="start-btn">작전 개시 (DEPLOY)</button>
+            </div>
+        </div>
+
+        <div id="result-overlay" class="overlay hidden">
+            <div class="glass-panel">
+                <h1 id="winner-text">MISSION SUCCESS</h1>
+                <p id="final-stats">Color Coverage: 65%</p>
+                <button onclick="location.reload()">재시험 (REDEPLOY)</button>
+            </div>
+        </div>
+        
+        <div id="kill-feed"></div>
+    </div>
+
+    <script src="js/main.js"></script>
+</body>
+</html>

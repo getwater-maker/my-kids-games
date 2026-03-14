@@ -312,6 +312,23 @@
             box-shadow: 0 12px 25px rgba(255, 71, 87, 0.4);
         }
 
+        @keyframes tactical-pulse {
+            0% { box-shadow: 0 10px 40px rgba(46, 204, 113, 0.4); transform: scale(1); }
+            50% { box-shadow: 0 10px 50px rgba(0, 210, 255, 0.6); transform: scale(1.02); }
+            100% { box-shadow: 0 10px 40px rgba(46, 204, 113, 0.4); transform: scale(1); }
+        }
+
+        @keyframes pulse-glow {
+            0% { box-shadow: 0 10px 40px rgba(0, 210, 255, 0.4); }
+            100% { box-shadow: 0 10px 50px rgba(255, 62, 62, 0.8); }
+        }
+
+        @keyframes legion-pulse {
+            0% { box-shadow: 0 10px 40px rgba(255, 204, 0, 0.4); transform: scale(1); }
+            50% { box-shadow: 0 10px 50px rgba(183, 28, 28, 0.6); transform: scale(1.02); }
+            100% { box-shadow: 0 10px 40px rgba(255, 204, 0, 0.4); transform: scale(1); }
+        }
+
         @keyframes neon-rainbow {
             0% {
                 background-position: 0% 50%;
@@ -334,11 +351,53 @@
 <body>
     <div class="container">
         <h1>어떤 게임을 하실 건가요?</h1>
-        <div class="button-group">
-            <h2 style="color: #6a1b9a; margin-top: 0; font-family: 'Orbitron', sans-serif; letter-spacing: 2px;">🔥
-                FEATURED NEW GAMES 🔥</h2>
+        <p style="color: #6a1b9a; font-weight: 900; margin-bottom: 20px;">LAST UPDATE: 2026-03-13 21:40 (NEW: 레이디버그 vs 블랙캣 미라클러스 대전 출시 완)</p>
+            <div class="button-group">
+                <a href="sniper_vs_sniper/index.html" class="btn"
+                    style="flex: auto; max-width: 820px; margin: 0 auto; margin-bottom: 10px; background: linear-gradient(135deg, #001428, #00d2ff, #2ecc71); box-shadow: 0 10px 40px rgba(0, 210, 255, 0.4); border: 2px solid #fff; font-family: 'Orbitron', sans-serif; font-size: 22px;">🎯 SNIPER VS SNIPER (ULTRA) 🎯</a>
+                <a href="miraculous_combat/index.html" class="btn"
+                    style="flex: auto; max-width: 820px; margin: 0 auto; margin-bottom: 10px; background: linear-gradient(135deg, #ea2027, #1e272e, #2ecc71); box-shadow: 0 10px 40px rgba(234, 32, 39, 0.4); border: 2px solid #fff; font-family: 'Fredoka', sans-serif; font-size: 22px;">🐞 미라클러스: 레이디버그 & 블랙캣 🐱</a>
+                <a href="ghost_exorcist_2d/index.html" class="btn"
+                    style="flex: auto; max-width: 820px; margin: 0 auto; margin-bottom: 10px; background: linear-gradient(135deg, #0a0a0c, #ffcc00, #00f2ff); box-shadow: 0 10px 40px rgba(255, 204, 0, 0.4); border: 2px solid #fff; font-family: 'Gowun Batang', serif; font-size: 22px;">🏮 GHOST EXORCIST (2D) 🏮</a>
+                <a href="ddujjonku_tycoon/index.html" class="btn"
+                    style="flex: auto; max-width: 820px; margin: 0 auto; margin-bottom: 10px; background: linear-gradient(135deg, #93d3a2, #f1c40f, #5d4037); box-shadow: 0 10px 40px rgba(147, 211, 162, 0.4); border: 2px solid #fff; font-family: 'Fredoka', sans-serif; font-size: 22px; animation: bounce 2s infinite alternate;">🍪 DDU-JJON-KU TYCOON (NEW!) 🍪</a>
+                <a href="robot_combat/index.html" class="btn"
+                    style="flex: auto; max-width: 820px; margin: 0 auto; margin-bottom: 10px; background: linear-gradient(135deg, #1a1a2e, #00d2ff, #f1c40f); box-shadow: 0 10px 40px rgba(0, 210, 255, 0.4); border: 2px solid #fff; font-family: 'Orbitron', sans-serif; font-size: 22px; animation: tactical-pulse 2s infinite ease-in-out;">🛡️ REALISTIC ROBOT COMBAT (3D) 🛡️</a>
+                <a href="99_nights_in_the_forest_2d/index.html" class="btn"
+                    style="flex: auto; max-width: 820px; margin: 0 auto; margin-bottom: 10px; background: linear-gradient(135deg, #050510, #ff4757); box-shadow: 0 10px 40px rgba(255, 71, 87, 0.4); border: 2px solid #fff; font-family: 'Nanum Myeongjo', serif; font-size: 22px;">🌲 99 NIGHTS IN THE FOREST (2D) 🌲</a>
+                <a href="fancade/index.html" class="btn"
+                    style="flex: auto; max-width: 820px; margin: 0 auto; margin-bottom: 15px; background: linear-gradient(135deg, #54a0ff, #ff9f43); box-shadow: 0 10px 40px rgba(84, 160, 255, 0.4); border: 2px solid #fff; font-weight: 900; font-size: 22px;">🕹️ FANCADE: SIMPLE GAMES 🕹️</a>
+            </div>
+
+            <div class="button-group">
+                <h2 style="color: #6a1b9a; margin-top: 0; font-family: 'Orbitron', sans-serif; letter-spacing: 2px;">🔥 FEATURED NEW GAMES 🔥</h2>
 
             <div class="btn-row">
+                <a href="last_legion_td/index.html" class="btn"
+                    style="flex: auto; max-width: 820px; margin: 0 auto; background: linear-gradient(135deg, #ffcc00, #b71c1c, #1a1a2e); box-shadow: 0 10px 40px rgba(255, 204, 0, 0.6); border: 3px solid #fff; font-weight: 900; font-family: 'Orbitron', sans-serif; letter-spacing: 5px; font-size: 24px; animation: legion-pulse 2s infinite ease-in-out;">🛡️
+                    LAST LEGION: TOWER DEFENSE (PC & 모바일) 🛡️</a>
+            </div>
+
+
+            <div class="btn-row" style="margin-top: 10px;">
+                <a href="rainbow_six_mobile/index.html" class="btn"
+                    style="flex: auto; max-width: 820px; margin: 0 auto; background: linear-gradient(135deg, #2ecc71, #2c3e50, #00d2ff); box-shadow: 0 10px 40px rgba(46, 204, 113, 0.6); border: 3px solid #fff; font-weight: 900; font-family: 'Orbitron', sans-serif; letter-spacing: 5px; font-size: 24px; animation: tactical-pulse 2s infinite ease-in-out;">🛡️
+                    RAINBOW SIX MOBILE (PC & 모바일 지원) 🛡️</a>
+            </div>
+
+            <div class="btn-row" style="margin-top: 10px;">
+                <a href="die_hard_color_war/index.html" class="btn"
+                    style="flex: auto; max-width: 820px; margin: 0 auto; background: linear-gradient(135deg, #00d2ff, #ff3e3e, #ffcc00); box-shadow: 0 10px 40px rgba(0, 210, 255, 0.6); border: 3px solid #fff; font-weight: 900; font-family: 'Orbitron', sans-serif; letter-spacing: 5px; font-size: 24px; animation: pulse-glow 2s infinite alternate;">🔥
+                    DIE HARD: COLOR WAR (초고퀄리티) 🔥</a>
+            </div>
+
+            <div class="btn-row" style="margin-top: 10px;">
+                <a href="slither_io/index.html" class="btn"
+                    style="flex: auto; max-width: 820px; margin: 0 auto; background: linear-gradient(135deg, #00ff88, #00d2ff, #9b59b6); box-shadow: 0 10px 40px rgba(0, 255, 136, 0.6); border: 3px solid #fff; font-weight: 900; font-family: 'Outfit', sans-serif; letter-spacing: 5px; font-size: 24px;">🐍
+                    SLITHER.IO 3D: MASSIVE SNAKE ARENA 🐍</a>
+            </div>
+
+            <div class="btn-row" style="margin-top: 10px;">
                 <a href="kick_the_buddy/index.html" class="btn"
                     style="flex: auto; max-width: 820px; margin: 0 auto; background: linear-gradient(135deg, #4b2c20, #8d6e63, #e74c3c); box-shadow: 0 10px 40px rgba(75, 44, 32, 0.6); border: 3px solid #fff; font-weight: 900; font-family: 'Oswald', sans-serif; letter-spacing: 5px; font-size: 24px;">🥊
                     KICK THE BUDDY: STRESS RELIEF 😵</a>
@@ -378,6 +437,12 @@
                 <a href="scary_teacher_prank/index.html" class="btn"
                     style="flex: auto; max-width: 820px; margin: 0 auto; background: linear-gradient(135deg, #e74c3c, #2c3e50, #f1c40f); box-shadow: 0 10px 40px rgba(231, 76, 60, 0.6); border: 3px solid #fff; font-weight: 900; font-family: 'Oswald', sans-serif; letter-spacing: 5px; font-size: 24px;">👹
                     무서운 선생님 괴롭히기: 잠입 대작전 🏚️</a>
+            </div>
+
+            <div class="btn-row" style="margin-top: 10px;">
+                <a href="capybara_go/index.html" class="btn"
+                    style="flex: auto; max-width: 820px; margin: 0 auto; background: linear-gradient(135deg, #f89d31, #a8d5ba, #ffcc00); box-shadow: 0 10px 40px rgba(248, 157, 49, 0.6); border: 3px solid #fff; font-weight: 900; font-family: 'Jua', sans-serif; letter-spacing: 5px; font-size: 24px; animation: pulse-glow 2s infinite alternate;">🌿
+                    카피바라 GO!: 힐링 로그라이크 🌿</a>
             </div>
 
             <div class="btn-row" style="margin-top: 10px;">
@@ -472,8 +537,59 @@
 
             <div class="btn-row" style="margin-top: 10px;">
                 <a href="lamborghini_racing_3d/index.html" class="btn"
-                    style="flex: auto; max-width: 820px; margin: 0 auto; background: linear-gradient(135deg, #111, #f1c40f, #111); box-shadow: 0 10px 40px rgba(241, 196, 15, 0.6); border: 3px solid #f1c40f; color: #fff; font-weight: 900; font-family: 'Orbitron', sans-serif; letter-spacing: 3px;">🏎️
+                    style="flex: auto; max-width: 820px; margin: 0 auto; background: linear-gradient(135deg, #111, #f1c40f, #111); box-shadow: 0 10px 40px rgba(241, 196, 15, 0.6); border: 2px solid #f1c40f; color: #fff; font-weight: 900; font-family: 'Orbitron', sans-serif; letter-spacing: 3px;">🏎️
                     AVENTADOR X: ULTIMATE LAMBORGHINI RACING 🏎️</a>
+            </div>
+
+            <div class="btn-row" style="margin-top: 10px;">
+                <a href="realistic_fps_3d/index.html" class="btn"
+                    style="flex: auto; max-width: 400px; margin: 0 auto; background: linear-gradient(135deg, #2c3e50, #000); box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6); border: 2px solid #fff; font-weight: 900; font-family: 'Orbitron', sans-serif; font-size: 18px;">🎯 현실판 3D 총게임</a>
+                <a href="squid_game/index.html" class="btn"
+                    style="flex: auto; max-width: 200px; margin: 0 auto; background: linear-gradient(135deg, #ff4757, #2f3542); box-shadow: 0 10px 40px rgba(255, 71, 87, 0.5); border: 2px solid #fff; font-weight: 900; font-size: 18px;">🦑 오징어 게임</a>
+                <a href="squid_game_jegi/index.html" class="btn"
+                    style="flex: auto; max-width: 200px; margin: 0 auto; background: linear-gradient(135deg, #2f3542, #ff4757); box-shadow: 0 10px 40px rgba(47, 53, 66, 0.5); border: 2px solid #fff; font-weight: 900; font-size: 18px;">🎯 제기차기</a>
+            </div>
+
+            <div class="btn-row" style="margin-top: 10px;">
+                <a href="clam_pearl_hunter/index.html" class="btn"
+                    style="flex: auto; max-width: 400px; margin: 0 auto; background: linear-gradient(135deg, #70a1ff, #1e90ff); box-shadow: 0 10px 40px rgba(30, 144, 255, 0.5); border: 2px solid #fff; font-weight: 900; font-size: 18px;">🐚 진주술래잡기</a>
+                <a href="valorant/index.html" class="btn"
+                    style="flex: auto; max-width: 400px; margin: 0 auto; background: linear-gradient(135deg, #ff4b5c, #0f1923); box-shadow: 0 10px 40px rgba(255, 75, 92, 0.5); border: 2px solid #fff; font-weight: 900; font-size: 18px;">🔫 발로란트 2D</a>
+            </div>
+
+            <div class="btn-row" style="margin-top: 10px;">
+                <a href="league_of_legends/index.html" class="btn"
+                    style="flex: auto; max-width: 400px; margin: 0 auto; background: linear-gradient(135deg, #1e3799, #0c2461); box-shadow: 0 10px 40px rgba(12, 36, 97, 0.5); border: 2px solid #c8a2c8; font-weight: 900; font-size: 18px;">⚔️ 리그 오브 레전드</a>
+                <a href="cookie_run/index.html" class="btn"
+                    style="flex: auto; max-width: 400px; margin: 0 auto; background: linear-gradient(135deg, #f39c12, #d35400); box-shadow: 0 10px 40px rgba(211, 84, 0, 0.5); border: 2px solid #fff; font-weight: 900; font-size: 18px;">🍪 쿠키런 코인런</a>
+            </div>
+
+            <div class="btn-row" style="margin-top: 10px;">
+                <a href="infinite_stairs/index.html" class="btn"
+                    style="flex: auto; max-width: 400px; margin: 0 auto; background: linear-gradient(135deg, #1dd1a1, #10ac84); box-shadow: 0 10px 40px rgba(16, 172, 132, 0.5); border: 2px solid #fff; font-weight: 900; font-size: 18px;">🪜 무한의 계단</a>
+                <a href="animal_crossing/index.html" class="btn"
+                    style="flex: auto; max-width: 400px; margin: 0 auto; background: linear-gradient(135deg, #fffa65, #fff200); box-shadow: 0 10px 40px rgba(255, 242, 0, 0.4); border: 2px solid #78e08f; color: #333; font-weight: 900; font-size: 18px;">🐶 동물의 숲</a>
+            </div>
+
+            <div class="btn-row" style="margin-top: 10px;">
+                <a href="realistic_warfare/index.html" class="btn"
+                    style="flex: auto; max-width: 400px; margin: 0 auto; background: linear-gradient(135deg, #4b6584, #2d98da); box-shadow: 0 10px 40px rgba(45, 152, 218, 0.5); border: 2px solid #fff; font-weight: 900; font-size: 16px;">⚔️ REALISTIC WARFARE</a>
+                <a href="realistic_sword_3d/index.html" class="btn"
+                    style="flex: auto; max-width: 400px; margin: 0 auto; background: linear-gradient(135deg, #a55eea, #8854d0); box-shadow: 0 10px 40px rgba(136, 84, 208, 0.5); border: 2px solid #fff; font-weight: 900; font-size: 16px;">⚔️ REALISTIC SWORD 3D</a>
+            </div>
+
+            <div class="btn-row" style="margin-top: 10px;">
+                <a href="roblox_classic/index.html" class="btn"
+                    style="flex: auto; max-width: 400px; margin: 0 auto; background: linear-gradient(135deg, #fa8231, #e67e22); box-shadow: 0 10px 40px rgba(230, 126, 34, 0.5); border: 2px solid #fff; font-weight: 900; font-size: 18px;">🟥 ROBLOX CLASSIC</a>
+                <a href="last_war_survival/index.html" class="btn"
+                    style="flex: auto; max-width: 400px; margin: 0 auto; background: linear-gradient(135deg, #60a3bc, #0a3d62); box-shadow: 0 10px 40px rgba(10, 61, 98, 0.5); border: 2px solid #fff; font-weight: 900; font-size: 18px;">🎖️ LAST WAR SURVIVAL</a>
+            </div>
+
+            <div class="btn-row" style="margin-top: 10px;">
+                <a href="pokemon_go/index.html" class="btn"
+                    style="flex: auto; max-width: 400px; margin: 0 auto; background: linear-gradient(135deg, #ff9f43, #ee5253); box-shadow: 0 10px 40px rgba(238, 82, 83, 0.5); border: 2px solid #fff; font-weight: 900; font-size: 18px;">🔴 POKEMON GO 3D</a>
+                <a href="99_nights_in_the_forest/index.html" class="btn"
+                    style="flex: auto; max-width: 400px; margin: 0 auto; background: linear-gradient(135deg, #20bf6b, #079992); box-shadow: 0 10px 40px rgba(7, 153, 146, 0.5); border: 2px solid #fff; font-weight: 900; font-size: 16px;">🌲 99 NIGHTS IN FOREST</a>
             </div>
 
             <hr style="border: none; border-top: 2px dashed #ff4081; margin: 30px 0;">

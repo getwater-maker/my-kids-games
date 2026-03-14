@@ -1,0 +1,230 @@
+:root {
+    --bg: #050510;
+    --accent: #2ecc71; /* Tactical Green */
+    --accent-blue: #00d2ff;
+    --accent-red: #ff3e3e;
+    --accent-gold: #ffcc00;
+    --text: #ffffff;
+    --glass: rgba(255, 255, 255, 0.05);
+    --border: rgba(255, 255, 255, 0.1);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Rajdhani', sans-serif;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    background-color: var(--bg);
+    overflow: hidden;
+    width: 100vw;
+    height: 100vh;
+}
+
+#game-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+/* --- HUD Styling --- */
+#hud {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.hud-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.base-health {
+    width: 250px;
+    padding: 15px;
+    background: rgba(0,0,0,0.6);
+    border: 1px solid var(--border);
+    backdrop-filter: blur(10px);
+    border-radius: 5px;
+    transform: skewX(-15deg);
+    pointer-events: none;
+}
+
+.hp-label { font-size: 0.8rem; font-weight: 700; letter-spacing: 2px; color: var(--accent-red); opacity: 0.7; }
+.hp-bar-outer { width: 100%; height: 6px; background: rgba(255,255,255,0.1); margin: 5px 0; overflow: hidden; }
+#hp-bar-fill { width: 100%; height: 100%; background: linear-gradient(90deg, #fff, var(--accent-red)); transition: width 0.3s; }
+.hp-value { font-size: 1.2rem; font-weight: 900; color: white; text-align: right; }
+
+.wave-info {
+    text-align: center;
+    background: rgba(255,255,255,0.05);
+    padding: 10px 40px;
+    border-radius: 40px;
+    border: 1px solid var(--border);
+    backdrop-filter: blur(5px);
+}
+
+#wave-text { font-size: 1.5rem; font-weight: 900; font-family: 'Orbitron', sans-serif; color: var(--accent-gold); letter-spacing: 3px; }
+.timer-box { font-size: 0.8rem; font-weight: 700; opacity: 0.8; color: white; }
+
+.resource-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background: rgba(0,0,0,0.6);
+    padding: 10px 30px;
+    border: 1px solid var(--accent-gold);
+    border-radius: 40px;
+    transform: skewX(15deg);
+}
+
+.gold-icon { font-size: 1.5rem; }
+#gold-value { font-size: 2rem; font-weight: 900; font-family: 'Orbitron', sans-serif; color: var(--accent-gold); }
+
+/* --- Tower Build Dock --- */
+#tower-dock {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 15px;
+    pointer-events: auto;
+}
+
+.tower-btn {
+    width: 80px;
+    height: 100px;
+    background: rgba(20,20,30,0.8);
+    backdrop-filter: blur(10px);
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+}
+
+.tower-btn:hover, .tower-btn.active {
+    border-color: var(--accent-blue);
+    transform: translateY(-10px);
+    box-shadow: 0 0 20px var(--accent-blue);
+}
+
+.tower-btn .icon { font-size: 2rem; }
+.tower-btn .label { font-size: 0.6rem; font-weight: 900; letter-spacing: 1px; color: var(--accent-blue); }
+.tower-btn .cost { font-size: 1rem; font-weight: 900; color: var(--accent-gold); }
+
+#tower-dock[data-disabled="true"] .tower-btn {
+    filter: grayscale(1);
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+/* --- Mobile Controls --- */
+#mobile-controls {
+    position: absolute;
+    bottom: 160px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 30px;
+    pointer-events: auto;
+}
+
+.action-btn {
+    padding: 15px 40px;
+    border: none;
+    border-radius: 40px;
+    font-weight: 900;
+    font-size: 1.2rem;
+    cursor: pointer;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+    transition: all 0.2s;
+}
+
+.confirm { background: var(--accent); color: white; }
+.cancel { background: var(--accent-red); color: white; }
+.action-btn:active { transform: scale(0.9); }
+
+/* --- Overlays --- */
+.overlay {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: radial-gradient(circle, transparent 20%, rgba(0,0,0,0.9) 100%);
+    display: flex; justify-content: center; align-items: center;
+    z-index: 1000;
+}
+
+.glass-box {
+    background: rgba(20,20,30,0.9);
+    backdrop-filter: blur(20px);
+    padding: 60px;
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    text-align: center;
+    max-width: 600px;
+}
+
+.logo { font-size: 4rem; font-weight: 900; color: white; letter-spacing: 5px; font-family: 'Orbitron', sans-serif; }
+.logo .sub { color: var(--accent-blue); display: block; font-size: 2.5rem; margin-top: -10px; }
+
+#start-btn {
+    margin-top: 40px; padding: 20px 60px; background: var(--accent-blue); border: none; color: black;
+    font-size: 1.5rem; font-weight: 900; cursor: pointer; clip-path: polygon(10% 0%, 100% 0%, 90% 100%, 0% 100%);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+#start-btn:hover { transform: scale(1.1); box-shadow: 0 0 30px var(--accent-blue); }
+
+.hidden { display: none !important; }
+
+/* --- Notif Center --- */
+#notif-center {
+    position: absolute;
+    top: 120px;
+    left: 50%;
+    transform: translateX(-50%);
+    pointer-events: none;
+}
+
+.notif {
+    background: rgba(255, 62, 62, 0.8);
+    color: white;
+    padding: 10px 30px;
+    border-radius: 5px;
+    font-weight: 900;
+    margin-bottom: 5px;
+    animation: fadeInOut 2s forwards;
+}
+
+@keyframes fadeInOut {
+    0% { opacity: 0; transform: translateY(-20px); }
+    10% { opacity: 1; transform: translateY(0); }
+    90% { opacity: 1; }
+    100% { opacity: 0; transform: translateY(20px); }
+}
+
+/* --- Media Queries --- */
+@media screen and (max-width: 768px) {
+    #tower-dock { gap: 10px; width: 90%; justify-content: center; }
+    .tower-btn { width: 70px; height: 90px; }
+    .logo { font-size: 2.5rem; }
+    .logo .sub { font-size: 1.5rem; }
+    .hud-top { padding-top: 10px; }
+}

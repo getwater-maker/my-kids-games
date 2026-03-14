@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>REALISTIC ROBOT COMBAT - 현실판 로봇 전투</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body>
+    <div id="game-container">
+        <!-- HUD Overlay -->
+        <div id="hud">
+            <div class="stats-container">
+                <div class="player-stat">
+                    <div class="label">PLAYER 1 (YOU)</div>
+                    <div class="hp-bar-outer"><div id="p1-hp" class="hp-fill"></div></div>
+                    <div id="p1-status">READY</div>
+                </div>
+                <div class="vs">VS</div>
+                <div class="player-stat enemy">
+                    <div class="label">STEEL TITAN (AI)</div>
+                    <div class="hp-bar-outer"><div id="p2-hp" class="hp-fill"></div></div>
+                    <div id="p2-status">ACTIVE</div>
+                </div>
+            </div>
+            <div id="combat-log">ARENA INITIALIZED... ACTIVE ALL SYSTEMS.</div>
+            <div class="controls-hint">WASD: MOVE | LEFT CLICK: PUNCH | F: KICK | SHIFT: RUN</div>
+        </div>
+
+        <!-- Start Screen -->
+        <div id="start-screen" class="overlay">
+            <div class="tech-box">
+                <h1 class="glitch" data-text="ROBOT COMBAT">ROBOT COMBAT</h1>
+                <p class="subtitle">ULTIMATE REAL-STEEL SIMULATOR</p>
+                
+                <div class="robot-select">
+                    <div class="robot-card active">
+                        <div class="img-placeholder">TYPE-X "RAZOR"</div>
+                        <p>High mobility, fast blade attack.</p>
+                    </div>
+                </div>
+
+                <button id="start-btn">ENGAGE SYSTEMS</button>
+            </div>
+        </div>
+
+        <!-- Win/Loss Screens -->
+        <div id="end-screen" class="overlay hidden">
+            <div class="tech-box">
+                <h1 id="end-title">MISSION COMPLETED</h1>
+                <p id="end-summary">Damage inflicted: 100% | Critical hits: 14</p>
+                <button onclick="location.reload()">RETURN TO HANGAR</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Shaders for sparks/effects will be handled in JS -->
+    <script src="js/main.js"></script>
+</body>
+</html>

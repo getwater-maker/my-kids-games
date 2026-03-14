@@ -1,0 +1,141 @@
+:root {
+    --dark: #0a0a0c;
+    --spirit-blue: #00f2ff;
+    --holy-gold: #ffcc00;
+    --blood-red: #ff3b3b;
+    --paper-white: #f5f5f5;
+}
+
+* {
+    margin: 0; padding: 0; box-sizing: border-box;
+    font-family: 'Gowun Batang', serif;
+    user-select: none;
+}
+
+body {
+    background: var(--dark);
+    overflow: hidden;
+    color: var(--paper-white);
+}
+
+#game-wrapper {
+    position: relative;
+    width: 100vw; height: 100vh;
+    display: flex; justify-content: center; align-items: center;
+}
+
+canvas {
+    background: #000;
+    box-shadow: 0 0 50px rgba(0,0,0,0.5);
+}
+
+/* HUD */
+#hud {
+    position: absolute;
+    top: 30px; left: 30px; right: 30px;
+    display: flex; justify-content: space-between; align-items: flex-start;
+    pointer-events: none;
+    z-index: 10;
+}
+
+.stats {
+    display: flex; flex-direction: column; gap: 10px;
+}
+
+.stat-item {
+    display: flex; align-items: center; gap: 15px;
+}
+
+.label {
+    font-size: 1.1rem; font-weight: 700; width: 40px;
+    text-shadow: 0 0 10px rgba(255,255,255,0.5);
+}
+
+.bar-outer {
+    width: 250px; height: 14px;
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 7px; overflow: hidden;
+    backdrop-filter: blur(5px);
+}
+
+.bar-fill {
+    height: 100%; transition: width 0.3s ease-out;
+}
+
+#hp-bar { background: linear-gradient(90deg, #e74c3c, #c0392b); width: 100%; box-shadow: 0 0 15px #e74c3c; }
+#mp-bar { background: linear-gradient(90deg, var(--spirit-blue), #2980b9); width: 100%; box-shadow: 0 0 15px var(--spirit-blue); }
+
+.score-box {
+    font-family: 'Nanum Myeongjo', serif;
+    font-size: 2.5rem; font-weight: 800;
+    color: var(--holy-gold);
+    text-shadow: 0 0 20px var(--holy-gold);
+}
+
+.ability-slots {
+    position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%);
+    display: flex; gap: 20px;
+}
+
+.slot {
+    width: 100px; height: 45px;
+    background: rgba(0,0,0,0.7);
+    border: 1px solid var(--paper-white);
+    display: flex; justify-content: center; align-items: center;
+    border-radius: 5px; font-size: 0.9rem;
+    color: var(--paper-white);
+}
+
+/* OVERLAYS */
+.overlay {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background: radial-gradient(circle, rgba(16, 16, 20, 0.8) 0%, rgba(0, 0, 0, 1) 100%);
+    display: flex; justify-content: center; align-items: center;
+    z-index: 100; text-align: center;
+}
+
+.content {
+    background: rgba(20, 20, 25, 0.6);
+    padding: 60px; border: 1px solid rgba(255, 215, 0, 0.2);
+    border-radius: 10px; backdrop-filter: blur(20px);
+}
+
+.title {
+    font-family: 'Nanum Myeongjo', serif;
+    font-size: 4rem; color: var(--holy-gold);
+    margin-bottom: 10px; text-shadow: 0 0 30px var(--holy-gold);
+}
+
+.subtitle {
+    font-size: 1.2rem; color: #888; margin-bottom: 30px;
+}
+
+.controls {
+    margin-bottom: 40px; color: #aaa; line-height: 1.8;
+}
+
+#start-btn, button {
+    padding: 15px 50px;
+    background: none; border: 1px solid var(--holy-gold);
+    color: var(--holy-gold); font-size: 1.3rem; font-weight: 700;
+    cursor: pointer; transition: 0.3s;
+}
+
+#start-btn:hover {
+    background: var(--holy-gold); color: #000;
+    box-shadow: 0 0 30px var(--holy-gold);
+}
+
+.death-title {
+    color: var(--blood-red); font-size: 3.5rem; margin-bottom: 20px;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.05); opacity: 0.8; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+.hidden { display: none !important; }

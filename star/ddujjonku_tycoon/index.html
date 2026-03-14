@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>DDU-JJON-KU TYCOON - 두쫀쿠 타이쿤</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;700&family=Orbitron:wght@900&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/PointerLockControls.js"></script>
+</head>
+<body>
+    <div id="game-container">
+        <!-- HUD -->
+        <div id="hud">
+            <div class="top-row">
+                <div class="stat-box money">💰 <span id="money">1,000,000</span></div>
+                <div class="stat-box level">FLOOR: <span id="floor">1F</span></div>
+            </div>
+            <div id="status-msg">WELCOME TO DDU-JJON-KU TYCOON!</div>
+            <div class="pet-status hidden" id="pet-info">🐾 PET: DDU-JJON-KU ACTIVE</div>
+        </div>
+
+        <!-- Popups -->
+        <div id="interaction-prompt" class="hidden">E 키를 눌러 구매/상호작용</div>
+
+        <!-- Start Screen -->
+        <div id="start-screen" class="overlay">
+            <div class="glass-box">
+                <h1 class="logo">DDU-JJON-KU<br>TYCOON</h1>
+                <p>로블록스 스타일 두쫀쿠 타이쿤에 오신 것을 환영합니다!</p>
+                <div class="rewards">
+                    <span>초기 지원금: 💰 1,000k</span>
+                </div>
+                <button id="start-btn">플레이 시작</button>
+            </div>
+        </div>
+
+        <!-- Transform Overlay -->
+        <div id="transform-overlay" class="hidden">
+            <div class="flash"></div>
+            <div class="text">TRANSFORMING...</div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/main.js"></script>
+</body>
+</html>

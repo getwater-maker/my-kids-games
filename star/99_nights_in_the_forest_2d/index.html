@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>99 Nights in the Forest (2D) - 99 인더 포레스트 2D</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Nanum+Myeongjo:wght@400;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="game-wrapper">
+        <canvas id="gameCanvas"></canvas>
+
+        <!-- UI -->
+        <div id="ui">
+            <div class="stats">
+                <div class="stat-row">
+                    <span>HP</span>
+                    <div class="bar-bg"><div id="hp-fill" class="fill red"></div></div>
+                </div>
+                <div class="stat-row">
+                    <span>HUNGER</span>
+                    <div class="bar-bg"><div id="hunger-fill" class="fill orange"></div></div>
+                </div>
+                <div class="stat-row">
+                    <span>FUEL</span>
+                    <div class="bar-bg"><div id="fuel-fill" class="fill yellow"></div></div>
+                </div>
+            </div>
+
+            <div class="top-center">
+                <div id="day-info">DAY 1 - <span id="time-status">낮</span></div>
+                <div id="night-countdown"></div>
+            </div>
+
+            <div class="inventory">
+                <div class="item">🪵 <span id="wood-count">0</span></div>
+                <div class="item">🥩 <span id="food-count">0</span></div>
+            </div>
+        </div>
+
+        <!-- Overlays -->
+        <div id="start-screen" class="overlay">
+            <div class="box">
+                <h1>99 NIGHTS</h1>
+                <h2>IN THE FOREST (2D)</h2>
+                <p>99일 동안 숲에서 살아남으세요.</p>
+                <button id="start-btn">시작하기</button>
+            </div>
+        </div>
+
+        <div id="game-over" class="overlay hidden">
+            <div class="box">
+                <h1 style="color: #ff4757;">죽었습니다...</h1>
+                <p>버틴 일수: <span id="final-days">0</span>일</p>
+                <button onclick="location.reload()">처음부터 다시</button>
+            </div>
+        </div>
+    </div>
+    <script src="js/main.js"></script>
+</body>
+</html>

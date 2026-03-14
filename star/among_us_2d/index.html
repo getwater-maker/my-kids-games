@@ -17,44 +17,59 @@
         <!-- HUD Overlay -->
         <div id="hud">
             <div id="status-bar">
-                <span id="role-tag" class="imposter">IMPOSTOR</span>
-                <span id="kill-timer">KILL COOLDOWN: <span id="cooldown-val">0</span>s</span>
+                <span id="role-tag" class="crewmate">CREWMATE</span>
+                <span id="task-info">MISSIONS COMPLETED: <span id="task-completed">0</span> / <span id="total-tasks">15</span></span>
             </div>
-            <div id="task-progress">
-                CREDENTIALS STOLEN: <span id="kill-count">0</span> / <span id="target-count">6</span>
+            <div class="mission-bar-container">
+                <div id="mission-fill"></div>
             </div>
         </div>
 
-        <!-- Action Buttons (Mobile/Key indicators) -->
+        <!-- Action Buttons -->
         <div id="action-hud">
-            <button id="kill-btn" class="action-btn">🔪 KILL [Q]</button>
-            <button id="vent-btn" class="action-btn">🕳️ VENT [E]</button>
+            <button id="btn-m" class="action-btn-new m-btn">
+                <div class="red-square"></div>
+                <span>M</span>
+            </button>
+            <button id="btn-t" class="action-btn-new t-btn">
+                <div class="scary-eye">👁️</div>
+                <span>T</span>
+            </button>
         </div>
 
         <!-- Overlays -->
         <div id="overlay" class="overlay">
             <div class="menu-box">
-                <div class="character-preview">🧧</div>
+                <div class="character-preview">🎒</div>
                 <h1 class="logo-text">AMONG<span>US 2D</span></h1>
-                <p>You are the <b>IMPOSTOR</b>. Kill all crewmates without being seen!</p>
-                <div class="controls">WASD: Move | Q: Kill | E: Vent</div>
-                <button id="start-btn">S-H-H-H!</button>
+                <p>당신은 <b>시민(Crewmate)</b>입니다. <br>살인마 2명을 피해 15개의 미션을 완료하세요!</p>
+                <div class="controls">WASD: 이동 | T: 미션 수행 | M: 비상 소집 (식당에서 정지 시)</div>
+                <button id="start-btn">미션 시작!</button>
             </div>
         </div>
 
         <div id="win-screen" class="overlay hidden">
             <div class="menu-box">
                 <h1 class="win-title">VICTORY</h1>
-                <p>All crewmates eliminated. The ship is yours.</p>
-                <button id="win-restart-btn">PLAY AGAIN</button>
+                <p>모든 미션을 완수했습니다! 탈출에 성공했습니다.</p>
+                <button id="win-restart-btn">다시 하기</button>
             </div>
         </div>
 
         <div id="lose-screen" class="overlay hidden">
             <div class="menu-box">
                 <h1 class="lose-title">DEFEATED</h1>
-                <p>You were caught in the act!</p>
-                <button id="lose-restart-btn">RETRY MISSION</button>
+                <p>임포스터에게 당했습니다...</p>
+                <button id="lose-restart-btn">다시 도전</button>
+            </div>
+        </div>
+
+        <!-- Emergency Meeting Overlay -->
+        <div id="meeting-overlay" class="overlay hidden">
+            <div class="menu-box meeting-box">
+                <h1 class="meeting-title">EMERGENCY MEETING</h1>
+                <div class="meeting-speaker">🗳️</div>
+                <p id="meeting-status">투표 중...</p>
             </div>
         </div>
     </div>

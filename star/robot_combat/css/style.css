@@ -1,0 +1,219 @@
+:root {
+    --neon-blue: #00d2ff;
+    --neon-red: #ff3e3e;
+    --metal-dark: #1a1a2e;
+    --metal-light: #2c3e50;
+    --accent: #f1c40f;
+    --glass: rgba(26, 26, 46, 0.8);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Rajdhani', sans-serif;
+    user-select: none;
+}
+
+body {
+    background: #000;
+    color: white;
+    overflow: hidden;
+    width: 100vw;
+    height: 100vh;
+}
+
+#game-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+canvas {
+    display: block;
+}
+
+/* HUD */
+#hud {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    padding: 30px;
+    z-index: 10;
+    pointer-events: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+}
+
+.stats-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.player-stat {
+    width: 300px;
+    background: var(--glass);
+    border: 2px solid var(--neon-blue);
+    padding: 15px;
+    clip-path: polygon(0 0, 100% 0, 90% 100%, 0 100%);
+}
+
+.player-stat.enemy {
+    border-color: var(--neon-red);
+    clip-path: polygon(10% 0, 100% 0, 100% 100%, 0 100%);
+    text-align: right;
+}
+
+.label {
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 900;
+    font-size: 0.9rem;
+    letter-spacing: 2px;
+    margin-bottom: 10px;
+    color: var(--neon-blue);
+}
+
+.enemy .label { color: var(--neon-red); }
+
+.hp-bar-outer {
+    width: 100%;
+    height: 12px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 2px;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.2);
+}
+
+.hp-fill {
+    width: 100%;
+    height: 100%;
+    background: var(--neon-blue);
+    box-shadow: 0 0 10px var(--neon-blue);
+    transition: width 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.enemy .hp-fill { 
+    background: var(--neon-red); 
+    box-shadow: 0 0 10px var(--neon-red);
+    margin-left: auto;
+}
+
+.vs {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 3rem;
+    font-weight: 900;
+    color: white;
+    text-shadow: 0 0 20px rgba(255,255,255,0.5);
+    margin-top: 10px;
+}
+
+#combat-log {
+    align-self: center;
+    background: rgba(0,0,0,0.5);
+    padding: 5px 20px;
+    border-radius: 50px;
+    font-size: 0.9rem;
+    color: var(--accent);
+    letter-spacing: 1px;
+    border: 1px solid rgba(241, 196, 15, 0.3);
+}
+
+.controls-hint {
+    align-self: center;
+    background: var(--glass);
+    padding: 10px 30px;
+    border-radius: 10px;
+    font-size: 0.8rem;
+    opacity: 0.7;
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+/* OVERLAYS */
+.overlay {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: radial-gradient(circle, rgba(44, 62, 80, 0.4) 0%, rgba(0,0,0,0.9) 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+}
+
+.tech-box {
+    background: linear-gradient(135deg, rgba(44, 62, 80, 0.9) 0%, rgba(26, 26, 46, 0.9) 100%);
+    padding: 60px;
+    border-radius: 20px;
+    text-align: center;
+    border: 2px solid rgba(0, 210, 255, 0.3);
+    box-shadow: 0 0 50px rgba(0,0,0,0.5), inset 0 0 20px rgba(0, 210, 255, 0.1);
+    backdrop-filter: blur(10px);
+    max-width: 600px;
+    width: 90%;
+}
+
+.glitch {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 4.5rem;
+    font-weight: 900;
+    position: relative;
+    color: white;
+    text-transform: uppercase;
+}
+
+.glitch::before, .glitch::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+}
+
+.glitch::before {
+    left: 2px;
+    text-shadow: -2px 0 #ff00c1;
+    clip: rect(44px, 450px, 56px, 0);
+    animation: glitch-anim 5s infinite linear alternate-reverse;
+}
+
+.glitch::after {
+    left: -2px;
+    text-shadow: -2px 0 #00fff9, 2px 2px #ff00c1;
+    animation: glitch-anim2 1s infinite linear alternate-reverse;
+}
+
+@keyframes glitch-anim {
+    0% { clip: rect(31px, 9999px, 94px, 0); }
+    20% { clip: rect(62px, 9999px, 42px, 0); }
+    40% { clip: rect(16px, 9999px, 78px, 0); }
+}
+
+@keyframes glitch-anim2 {
+    0% { clip: rect(65px, 9999px, 100px, 0); }
+    100% { clip: rect(0, 9999px, 30px, 0); }
+}
+
+#start-btn {
+    margin-top: 40px;
+    padding: 20px 50px;
+    background: transparent;
+    border: 2px solid var(--neon-blue);
+    color: var(--neon-blue);
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+}
+
+#start-btn:hover {
+    background: var(--neon-blue);
+    color: black;
+    box-shadow: 0 0 30px var(--neon-blue);
+}
+
+.hidden { display: none !important; }
