@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>몽실몽실 모닝빵 만들기 🍞</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="morning_bread.css">
+    <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="app-container">
+        <header style="background-color: #ffdcb0; border-bottom: 4px solid #ffcc80;">
+            <h1>🍞 몽실몽실 모닝빵 만들기</h1>
+            <div class="actions">
+                <button onclick="location.href='index.html'" class="action-btn"
+                    style="background-color: #a29bfe; box-shadow: 0 4px 0 #6c5ce7;">◀ 돌아가기</button>
+                <div class="game-status">
+                    <span id="step-desc">반죽을 꾹꾹 눌러주세요!</span>
+                </div>
+                <button id="resetBtn" class="action-btn" style="background-color: #ff7675; box-shadow: 0 4px 0 #d63031;">🧹 다시 하기</button>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <section class="game-area">
+                <div class="kitchen-bg" id="kitchen">
+                    <div id="game-stage">
+                        <!-- Stage 1: Kneading -->
+                        <div id="knead-area" class="stage active">
+                            <div class="dough-wrapper" id="dough">
+                                <img src="assets/morning_bread_dough.png" alt="반죽" class="dough-img">
+                                <div class="click-hint">클릭해서 반죽하기!</div>
+                            </div>
+                            <div class="progress-container">
+                                <div id="knead-progress" class="progress-fill"></div>
+                            </div>
+                        </div>
+
+                        <!-- Stage 2: Oven -->
+                        <div id="oven-area" class="stage">
+                            <div class="oven-wrapper">
+                                <img src="assets/morning_bread_oven.png" alt="오븐" class="oven-img">
+                                <div class="oven-timer" id="timer">02:00</div>
+                                <div class="oven-inside" id="oven-content">
+                                    <img src="assets/morning_bread_dough.png" class="mini-dough">
+                                </div>
+                            </div>
+                            <button id="bake-btn" class="action-btn bake-btn">🔥 오븐에 넣기</button>
+                        </div>
+
+                        <!-- Stage 3: Decorating -->
+                        <div id="decor-area" class="stage">
+                            <div class="bread-plate" id="plate">
+                                <canvas id="decorCanvas" width="600" height="450"></canvas>
+                            </div>
+                            <div class="decor-tools">
+                                <button class="tool-btn decor-item" data-item="butter">🧈 버터</button>
+                                <button class="tool-btn decor-item" data-item="jam">🍓 딸기잼</button>
+                                <button class="tool-btn decor-item" data-item="honey">🍯 꿀</button>
+                                <button id="saveBtn" class="action-btn">📸 사진 저장</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Toast message for effects -->
+    <div id="toast" class="toast hidden"></div>
+
+    <script src="morning_bread.js"></script>
+</body>
+
+</html>

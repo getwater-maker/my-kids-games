@@ -1,0 +1,276 @@
+:root {
+    --bg-color: #81ecec;
+    /* Refreshing mint */
+    --shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    --border-radius: 20px;
+    --font-color: #2d3436;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Jua', sans-serif;
+    background-color: var(--bg-color);
+    background-image: linear-gradient(135deg, #e0f8f8 0%, #81ecec 100%);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    color: var(--font-color);
+}
+
+.app-container {
+    width: 95vw;
+    height: 95vh;
+    background-color: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border: 5px solid #00cec9;
+    position: relative;
+    user-select: none;
+}
+
+/* Header */
+.game-header {
+    background-color: #00cec9;
+    color: white;
+    padding: 15px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 4px solid #00b894;
+    z-index: 10;
+}
+
+.game-header h1 {
+    font-size: 2rem;
+    text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.2);
+}
+
+.actions {
+    display: flex;
+    gap: 15px;
+}
+
+.action-btn {
+    font-family: 'Jua', sans-serif;
+    font-size: 1.2rem;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    background-color: #f1f2f6;
+    color: #57606f;
+    box-shadow: 0 4px 0 #ced6e0;
+    transition: all 0.2s;
+}
+
+.action-btn:active {
+    transform: translateY(4px);
+    box-shadow: none;
+}
+
+.clear-btn {
+    background-color: #ff7675;
+    color: white;
+    box-shadow: 0 4px 0 #d63031;
+}
+
+.save-btn {
+    background-color: #fdcb6e;
+    color: #2d3436;
+    box-shadow: 0 4px 0 #e1b12c;
+}
+
+/* Main Layout */
+.main-content {
+    flex: 1;
+    display: flex;
+    overflow: hidden;
+    background-color: #fcfcfc;
+}
+
+/* Sidebar Tools */
+.sidebar {
+    width: 320px;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-right: 4px dashed #81ecec;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    overflow-y: auto;
+}
+
+.panel h2 {
+    color: #00cec9;
+    margin-bottom: 5px;
+    font-size: 1.4rem;
+}
+
+/* Color List */
+.color-list {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.color-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border: 3px solid transparent;
+    transition: transform 0.2s, border-color 0.2s;
+}
+
+.color-btn:hover {
+    transform: scale(1.1);
+}
+
+.color-btn.active {
+    border-color: #2d3436;
+    transform: scale(1.2);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Tools */
+.tool-list,
+.sticker-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
+.tool-btn {
+    font-family: 'Jua', sans-serif;
+    font-size: 1rem;
+    padding: 10px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    background-color: #edf2f4;
+    color: #2b2b2b;
+    box-shadow: 0 4px 0 #d2dae2;
+    transition: all 0.1s;
+}
+
+.tool-btn.active {
+    background-color: #ffeaa7;
+    box-shadow: 0 4px 0 #fdcb6e;
+    color: #b33939;
+}
+
+.tool-btn:active {
+    transform: translateY(4px);
+    box-shadow: none;
+}
+
+/* Center Stage */
+.preview-area {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    background: radial-gradient(circle at center, #ffffff 0%, #e8ffff 100%);
+}
+
+.shoe-wrapper {
+    position: relative;
+    width: 360px;
+    height: 600px;
+    display: flex;
+    justify-content: center;
+}
+
+/* Slipper CSS Art */
+.shoe-base {
+    position: relative;
+    width: 280px;
+    height: 560px;
+    margin-top: 20px;
+    /* center vertically a bit */
+}
+
+/* Sole: Base rounded pill */
+.shoe-sole {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: #ffeaa7;
+    /* default yellow */
+    border-radius: 140px;
+    /* Soft 3D lighting for the sole */
+    box-shadow:
+        10px 15px 30px rgba(0, 0, 0, 0.1),
+        inset -15px -15px 25px rgba(0, 0, 0, 0.15),
+        inset 10px 10px 20px rgba(255, 255, 255, 0.5);
+    transition: background-color 0.3s;
+}
+
+/* Wide Strap (Like a slider/croc upper) */
+.shoe-strap {
+    position: absolute;
+    top: 70px;
+    /* position over the toes */
+    left: -10px;
+    /* slightly wider than sole */
+    width: 300px;
+    height: 240px;
+    background-color: #ffeaa7;
+    border-radius: 70px 70px 40px 40px;
+    /* Heavy 3D strap effect */
+    box-shadow:
+        0 20px 20px rgba(0, 0, 0, 0.2),
+        inset 0 15px 20px rgba(255, 255, 255, 0.6),
+        inset 0 -15px 20px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s;
+
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 20px;
+    padding: 30px 40px;
+    align-items: center;
+    justify-items: center;
+}
+
+/* Holes for Jibbitz */
+.hole {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: rgba(0, 0, 0, 0.15);
+    box-shadow: inset 3px 3px 5px rgba(0, 0, 0, 0.2), inset -2px -2px 5px rgba(255, 255, 255, 0.3);
+}
+
+/* Drawing Canvas Overlays the Shoe */
+#shoeCanvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    pointer-events: auto;
+    /* catch mouse events */
+    z-index: 10;
+    cursor: crosshair;
+}
+
+/* Cursor Hint Balloon */
+.cursor-hint {
+    position: absolute;
+    pointer-events: none;
+    font-size: 50px;
+    display: none;
+    z-index: 20;
+    transform: translate(-50%, -50%);
+    filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.3));
+}

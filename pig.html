@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>아기 돼지 키우기 🐷</title>
+    <link rel="stylesheet" href="pig.css">
+    <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="app-container">
+        <header class="game-header">
+            <h1>🐷 꿀꿀 아기 돼지 키우기</h1>
+            <div class="actions">
+                <button onclick="location.href='index.html'" class="action-btn">⬅️ 뒤로가기</button>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <div class="stats-panel">
+                <div class="stat-box">
+                    <span>🍖 배부름</span>
+                    <div class="progress-bar">
+                        <div id="hungerBar" class="progress" style="width: 50%; background-color: #ff9f43;"></div>
+                    </div>
+                </div>
+                <div class="stat-box">
+                    <span>🧼 깨끗함</span>
+                    <div class="progress-bar">
+                        <div id="cleanBar" class="progress" style="width: 50%; background-color: #00cec9;"></div>
+                    </div>
+                </div>
+                <div class="stat-box">
+                    <span>💖 행복함</span>
+                    <div class="progress-bar">
+                        <div id="happyBar" class="progress" style="width: 50%; background-color: #ff7675;"></div>
+                    </div>
+                </div>
+                <div class="stat-box">
+                    <span>⚡ 에너지</span>
+                    <div class="progress-bar">
+                        <div id="energyBar" class="progress" style="width: 50%; background-color: #fca311;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <section class="pig-area">
+                <div class="pig-container" id="pigContainer">
+                    <div class="pig" id="pig">
+                        <div class="ears">
+                            <div class="ear left-ear"></div>
+                            <div class="ear right-ear"></div>
+                        </div>
+                        <div class="body">
+                            <div class="eyes" id="pigEyes">
+                                <div class="eye left-eye"></div>
+                                <div class="eye right-eye"></div>
+                            </div>
+                            <div class="snout">
+                                <div class="nostril left-nostril"></div>
+                                <div class="nostril right-nostril"></div>
+                            </div>
+                            <div class="blush left-blush"></div>
+                            <div class="blush right-blush"></div>
+                        </div>
+                        <div class="legs">
+                            <div class="leg leg-1"></div>
+                            <div class="leg leg-2"></div>
+                            <div class="leg leg-3"></div>
+                            <div class="leg leg-4"></div>
+                        </div>
+                        <div class="tail"></div>
+
+                        <!-- expressions overlay -->
+                        <div class="emotion-cloud" id="emotionCloud">💤</div>
+                    </div>
+                </div>
+
+                <!-- Interaction particles container -->
+                <div id="particles"></div>
+            </section>
+
+            <aside class="action-panel">
+                <button class="tool-btn" data-action="feed">🍎 밥 주기</button>
+                <button class="tool-btn" data-action="wash">🧽 목욕하기</button>
+                <button class="tool-btn" data-action="play">🎾 놀아주기</button>
+                <button class="tool-btn" data-action="sleep">🌙 코~ 자기</button>
+            </aside>
+        </main>
+    </div>
+
+    <!-- Sounds -->
+    <audio id="sfx-feed" src="https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3"></audio>
+    <audio id="sfx-wash" src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3"></audio>
+    <audio id="sfx-play" src="https://assets.mixkit.co/active_storage/sfx/2627/2627-preview.mp3"></audio>
+
+    <script src="pig.js"></script>
+</body>
+
+</html>

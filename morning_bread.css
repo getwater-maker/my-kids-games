@@ -1,0 +1,210 @@
+body {
+    background: #fff9f0;
+    overflow: hidden;
+    font-family: 'Jua', sans-serif;
+}
+
+.kitchen-bg {
+    width: 100%;
+    height: calc(100vh - 120px);
+    background: url('assets/morning_bread_bg.png') no-repeat center center;
+    background-size: cover;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 20px;
+    margin: 10px;
+    overflow: hidden;
+    box-shadow: inset 0 0 100px rgba(0,0,0,0.1);
+}
+
+.stage {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+}
+
+.stage.active {
+    display: flex;
+    animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+/* Kneading Stage */
+.dough-wrapper {
+    width: 300px;
+    height: 300px;
+    cursor: pointer;
+    transition: transform 0.1s;
+    position: relative;
+    user-select: none;
+}
+
+.dough-img {
+    width: 100%;
+    height: 100%;
+    filter: drop-shadow(0 10px 20px rgba(0,0,0,0.2));
+}
+
+.dough-wrapper:active {
+    transform: scale(1.1) translateY(5px);
+}
+
+.click-hint {
+    position: absolute;
+    bottom: -40px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(255,255,255,0.8);
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 1.2rem;
+    color: #e67e22;
+    animation: bounce 1s infinite;
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translate(-50%, 0); }
+    50% { transform: translate(-50%, -10px); }
+}
+
+.progress-container {
+    width: 400px;
+    height: 20px;
+    background: rgba(255,255,255,0.5);
+    border-radius: 10px;
+    margin-top: 60px;
+    overflow: hidden;
+    border: 2px solid #ffcc80;
+}
+
+.progress-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #ffcc80, #e67e22);
+    transition: width 0.3s;
+}
+
+/* Oven Stage */
+.oven-wrapper {
+    position: relative;
+    width: 450px;
+    height: 400px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.oven-img {
+    width: 100%;
+    height: auto;
+    filter: drop-shadow(0 15px 30px rgba(0,0,0,0.3));
+}
+
+.oven-timer {
+    position: absolute;
+    top: 50px;
+    right: 80px;
+    font-size: 2rem;
+    color: #ffdcb0;
+    font-weight: bold;
+    text-shadow: 0 0 10px rgba(255,255,255,0.5);
+}
+
+.oven-inside {
+    position: absolute;
+    bottom: 120px;
+    width: 200px;
+    height: 100px;
+    /* background: rgba(0,0,0,0.2); */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+}
+
+.mini-dough {
+    width: 60px;
+    transition: transform 1s, filter 1s;
+}
+
+.oven-active .oven-inside::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: radial-gradient(circle, rgba(255, 100, 0, 0.4) 0%, transparent 70%);
+    animation: glow 1.5s infinite alternate;
+}
+
+@keyframes glow {
+    from { opacity: 0.5; }
+    to { opacity: 1; }
+}
+
+.bake-btn {
+    margin-top: 30px;
+    padding: 15px 40px;
+    font-size: 1.5rem;
+    background: #ff7675;
+    box-shadow: 0 6px 0 #d63031;
+}
+
+/* Decorating Stage */
+.bread-plate {
+    background: rgba(255,255,255,0.3);
+    backdrop-filter: blur(10px);
+    border-radius: 30px;
+    border: 5px solid rgba(255,255,255,0.5);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+}
+
+#decorCanvas {
+    cursor: crosshair;
+}
+
+.decor-tools {
+    margin-top: 20px;
+    display: flex;
+    gap: 15px;
+}
+
+.decor-item {
+    font-size: 1.1rem;
+    padding: 10px 20px;
+    background: white;
+    border: 3px solid #ffcc80;
+    transition: transform 0.2s;
+}
+
+.decor-item:hover {
+    transform: translateY(-5px);
+}
+
+.decor-item.active {
+    background: #ffcc80;
+    color: white;
+}
+
+.toast {
+    position: fixed;
+    bottom: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0,0,0,0.8);
+    color: white;
+    padding: 15px 30px;
+    border-radius: 40px;
+    font-size: 1.2rem;
+    z-index: 1000;
+    transition: opacity 0.3s;
+}
+
+.hidden { display: none; opacity: 0; }

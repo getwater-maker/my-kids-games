@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>선물 상자 꾸미기 🎁</title>
+    <link rel="stylesheet" href="giftbox.css">
+    <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="app-container">
+        <header class="game-header">
+            <h1>🎁 선물 상자 꾸미기</h1>
+            <div class="actions">
+                <button onclick="location.href='index.html'" class="action-btn">⬅️ 뒤로가기</button>
+                <button id="clearBtn" class="action-btn clear-btn">🗑️ 새 상자</button>
+                <button id="saveBtn" class="action-btn save-btn">📸 사진 저장!</button>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <!-- Left Toolbar -->
+            <aside class="sidebar">
+                <div class="panel">
+                    <h2>📦 상자 색상</h2>
+                    <p class="hint-text">포장지 색깔을 골라주세요!</p>
+                    <div class="color-list">
+                        <button class="color-btn active" data-type="box" data-color="#ff9ff3"
+                            style="background-color: #ff9ff3;"></button>
+                        <button class="color-btn" data-type="box" data-color="#feca57"
+                            style="background-color: #feca57;"></button>
+                        <button class="color-btn" data-type="box" data-color="#48dbfb"
+                            style="background-color: #48dbfb;"></button>
+                        <button class="color-btn" data-type="box" data-color="#1dd1a1"
+                            style="background-color: #1dd1a1;"></button>
+                        <button class="color-btn" data-type="box" data-color="#ff6b6b"
+                            style="background-color: #ff6b6b;"></button>
+                        <button class="color-btn" data-type="box" data-color="#c8d6e5"
+                            style="background-color: #c8d6e5;"></button>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <h2>🎀 리본 묶기</h2>
+                    <p class="hint-text">마우스를 드래그해서 리본을 두르세요!</p>
+                    <div class="color-list">
+                        <button class="color-btn ribbon-btn" data-type="ribbon" data-color="#ff4757"
+                            style="background-color: #ff4757;"></button>
+                        <button class="color-btn ribbon-btn" data-type="ribbon" data-color="#1e90ff"
+                            style="background-color: #1e90ff;"></button>
+                        <button class="color-btn ribbon-btn" data-type="ribbon" data-color="#f1c40f"
+                            style="background-color: #f1c40f;"></button>
+                        <button class="color-btn ribbon-btn" data-type="ribbon" data-color="#ffffff"
+                            style="background-color: #ffffff; border: 1px solid #ccc;"></button>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <h2>✨ 스티커 붙이기</h2>
+                    <p class="hint-text">예쁜 스티커로 더 화려하게 장식해요!</p>
+                    <div class="sticker-list">
+                        <button class="tool-btn sticker-btn" data-type="sticker" data-val="🎀">🎀</button>
+                        <button class="tool-btn sticker-btn" data-type="sticker" data-val="💝">💝</button>
+                        <button class="tool-btn sticker-btn" data-type="sticker" data-val="✨">✨</button>
+                        <button class="tool-btn sticker-btn" data-type="sticker" data-val="🌸">🌸</button>
+                        <button class="tool-btn sticker-btn" data-type="sticker" data-val="🧸">🧸</button>
+                        <button class="tool-btn sticker-btn" data-type="sticker" data-val="💌">💌</button>
+                        <button class="tool-btn sticker-btn" data-type="sticker" data-val="🏷️">🏷️</button>
+                        <button class="tool-btn sticker-btn" data-type="sticker" data-val="💎">💎</button>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <h2>🖊️ 매직펜</h2>
+                    <p class="hint-text">직접 글씨나 그림을 그려봐요!</p>
+                    <div class="color-list">
+                        <button class="color-btn pen-btn" data-type="pen" data-color="#2f3640"
+                            style="background-color: #2f3640;"></button>
+                        <button class="color-btn pen-btn" data-type="pen" data-color="#e84118"
+                            style="background-color: #e84118;"></button>
+                        <button class="color-btn pen-btn" data-type="pen" data-color="#fbc531"
+                            style="background-color: #fbc531;"></button>
+                        <button class="color-btn pen-btn" data-type="pen" data-color="#f5f6fa"
+                            style="background-color: #f5f6fa; border: 1px solid #ccc;"></button>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Center Stage -->
+            <section class="preview-area">
+                <div class="box-wrapper">
+                    <!-- Drop Shadow -->
+                    <div class="box-shadow-element"></div>
+                    <!-- Canvas for custom drawing -->
+                    <canvas id="giftCanvas" width="450" height="450"></canvas>
+
+                    <!-- Mouse Cursor Hint -->
+                    <div id="cursorHint" class="cursor-hint">✨</div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Sounds -->
+    <audio id="sfx-stick" src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3"></audio>
+    <audio id="sfx-paper" src="https://assets.mixkit.co/active_storage/sfx/2573/2573-preview.mp3"></audio>
+
+    <script src="giftbox.js"></script>
+</body>
+
+</html>
