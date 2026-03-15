@@ -10,16 +10,52 @@
 </head>
 <body>
     <h1>WOOD CARVING</h1>
-    <p>나무를 깎아서 모양을 만드세요!</p>
+    <p>나무를 깎아서 모양을 만드세요! (소리 지원)</p>
     <div id="log"></div>
     <script>
         const log = document.getElementById('log');
+        
+        // Web Audio API for Carving Sound
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        
+        function playCarve() {
+            const bufferSize = audioCtx.sampleRate * 0.05; // 50ms buffer
+            const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+            const data = buffer.getChannelData(0);
+            
+            for (let i = 0; i < bufferSize; i++) {
+                data[i] = (Math.random() * 2 - 1) * 0.1; // White noise
+            }
+            
+            const noise = audioCtx.createBufferSource();
+            noise.buffer = buffer;
+            
+            const filter = audioCtx.createBiquadFilter();
+            filter.type = 'lowpass';
+            filter.frequency.setValueAtTime(1000, audioCtx.currentTime);
+            
+            const gain = audioCtx.createGain();
+            gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.05);
+            
+            noise.connect(filter);
+            filter.connect(gain);
+            gain.connect(audioCtx.destination);
+            
+            noise.start();
+        }
+
         log.onmousemove = (e) => {
             if(e.buttons === 1) {
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+                
                 let cut = document.createElement('div');
                 cut.className = 'cut';
                 cut.style.left = (e.clientX - log.offsetLeft) + 'px';
                 log.appendChild(cut);
+                
+                // Play carving sound occasionally to avoid over-stacking
+                if (Math.random() > 0.7) playCarve();
             }
         };
     </script>

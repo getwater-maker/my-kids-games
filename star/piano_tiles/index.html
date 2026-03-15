@@ -1,31 +1,105 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8"><title>RELAXING PIANO TILES 🎹</title>
+    <meta charset="UTF-8"><title>K-POP DEMON HUNTERS: PIANO TILES 🎹</title>
     <style>
-        body { margin:0; background:#000; overflow:hidden; display:flex; justify-content:center; }
-        #game { width:400px; height:100vh; background:#222; position:relative; overflow:hidden; }
-        .tile { position:absolute; width:100px; height:150px; background:#fff; cursor:pointer; }
-        .tile.pressed { background:#444; }
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&display=swap');
+        body { margin:0; background:#000; overflow:hidden; display:flex; justify-content:center; font-family: 'Orbitron', sans-serif; }
+        #game { width:400px; height:100vh; background: linear-gradient(to bottom, #1a1a2e, #16213e); position:relative; overflow:hidden; border-left: 2px solid #333; border-right: 2px solid #333; }
+        .tile { position:absolute; width:100px; height:200px; background:#fff; cursor:pointer; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding-bottom: 10px; border: 1px solid #ddd; box-sizing: border-box; transition: transform 0.1s; }
+        .tile.pressed { background:#444 !important; transform: scaleY(0.9); }
+        .char-label { font-size: 14px; font-weight: 900; color: #000; text-transform: uppercase; margin-bottom: 5px; }
+        .char-icon { font-size: 40px; margin-bottom: 10px; }
+        
+        .golden { background: linear-gradient(to bottom, #ffd700, #ff8c00); }
+        .sodapop { background: linear-gradient(to bottom, #00d2ff, #3a7bd5); }
+        
+        #ui { position: absolute; top: 20px; left: 50%; transform: translateX(-50%); color: #fff; font-size: 30px; text-shadow: 0 0 10px #00d2ff; z-index: 100; pointer-events: none; }
     </style>
 </head>
 <body>
+    <div id="ui">SCORE: 0</div>
     <div id="game"></div>
     <script>
         const game = document.getElementById('game');
+        const scoreEl = document.getElementById('ui');
+        let score = 0;
+        
+        // Web Audio API setup
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        
+        function playNote(freq) {
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            
+            oscillator.type = 'triangle';
+            oscillator.frequency.setValueAtTime(freq, audioCtx.currentTime);
+            
+            gainNode.gain.setValueAtTime(0.5, audioCtx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            
+            oscillator.start();
+            oscillator.stop(audioCtx.currentTime + 0.5);
+        }
+
+        const frequencies = [261.63, 293.66, 329.63, 349.23]; // C4, D4, E4, F4
+
         function spawn() {
-            let t = document.createElement('div'); t.className='tile';
-            t.style.left = (Math.floor(Math.random()*4)*100)+'px';
-            t.style.top = '-150px';
+            const col = Math.floor(Math.random() * 4);
+            const isGolden = Math.random() > 0.5;
+            
+            let t = document.createElement('div');
+            t.className = 'tile ' + (isGolden ? 'golden' : 'sodapop');
+            t.style.left = (col * 100) + 'px';
+            t.style.top = '-200px';
+            
+            const icon = document.createElement('div');
+            icon.className = 'char-icon';
+            icon.innerText = isGolden ? '🏆' : '🥤';
+            
+            const label = document.createElement('div');
+            label.className = 'char-label';
+            label.innerText = isGolden ? 'GOLDEN' : 'SODA';
+            
+            t.appendChild(icon);
+            t.appendChild(label);
             game.appendChild(t);
+            
             let move = setInterval(() => {
                 let top = parseInt(t.style.top);
-                t.style.top = (top + 5) + 'px';
-                if(top > window.innerHeight) { clearInterval(move); game.removeChild(t); }
+                t.style.top = (top + 6 + (score / 20)) + 'px';
+                if (top > window.innerHeight) { 
+                    clearInterval(move); 
+                    if (!t.classList.contains('pressed')) {
+                        // Game over feel
+                        score = 0;
+                        scoreEl.innerText = 'SCORE: 0';
+                    }
+                    game.removeChild(t); 
+                }
             }, 20);
-            t.onclick = () => { t.classList.add('pressed'); };
+            
+            t.onmousedown = () => {
+                if (t.classList.contains('pressed')) return;
+                t.classList.add('pressed');
+                playNote(frequencies[col]);
+                score++;
+                scoreEl.innerText = 'SCORE: ' + score;
+                if (navigator.vibrate) navigator.vibrate(20);
+            };
         }
-        setInterval(spawn, 600);
+
+        setInterval(spawn, 700);
+        
+        // Initial user interaction to enable audio
+        window.addEventListener('mousedown', () => {
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+        }, { once: true });
     </script>
 </body>
 </html>
