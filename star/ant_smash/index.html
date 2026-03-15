@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8"><title>ANT SMASHER 🐜</title>
+    <style>
+        body { margin:0; background:#d2b48c; overflow:hidden; font-family:sans-serif; }
+        .ant { position:absolute; font-size:40px; cursor:pointer; }
+    </style>
+</head>
+<body>
+    <div id="ui" style="padding:20px; font-size:24px;">Smashed: 0</div>
+    <script>
+        let score = 0;
+        function spawn() {
+            let a = document.createElement('div'); a.className='ant'; a.innerText='🐜';
+            a.style.left = Math.random()*90 + '%'; a.style.top = '-50px';
+            document.body.appendChild(a);
+            let speed = Math.random()*3 + 2;
+            let move = setInterval(() => {
+                let top = parseInt(a.style.top);
+                a.style.top = (top + speed) + 'px';
+                if(top > window.innerHeight) { clearInterval(move); document.body.removeChild(a); }
+            }, 20);
+            a.onclick = () => {
+                score++; document.getElementById('ui').innerText = 'Smashed: ' + score;
+                a.innerText = '💥'; clearInterval(move);
+                setTimeout(() => document.body.removeChild(a), 200);
+            };
+        }
+        setInterval(spawn, 600);
+    </script>
+</body>
+</html>

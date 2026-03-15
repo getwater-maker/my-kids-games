@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8"><title>BOTTLE FLIP CHALLENGE 🍾</title>
+    <style>
+        body { margin:0; background:#f0f0f0; overflow:hidden; font-family:sans-serif; text-align:center; }
+        #bottle { position:absolute; bottom:100px; left:50%; width:60px; height:150px; background:linear-gradient(to right, #add8e6, #fff); border:2px solid #000; border-radius:10px; transform-origin: center bottom; transition: 0.1s; }
+        #floor { position:absolute; bottom:0; width:100%; height:100px; background:#4CAF50; border-top:5px solid #2e7d32; }
+    </style>
+</head>
+<body>
+    <h1>BOTTLE FLIP!</h1>
+    <p>보틀을 드래그해서 던지세요! 세우면 성공!</p>
+    <div id="ui">Score: 0</div>
+    <div id="floor"></div>
+    <div id="bottle" draggable="true"></div>
+    <script>
+        const b = document.getElementById('bottle');
+        let score = 0;
+        let isFlipping = false;
+        let rotation = 0;
+
+        b.onmousedown = (e) => {
+            if(isFlipping) return;
+            let startY = e.clientY;
+            window.onmouseup = (moveE) => {
+                let dist = startY - moveE.clientY;
+                if(dist > 50) flip(dist);
+                window.onmouseup = null;
+            };
+        };
+
+        function flip(power) {
+            isFlipping = true;
+            let h = 0;
+            let vy = power/5;
+            let rotV = 15;
+            let move = setInterval(() => {
+                h += vy;
+                vy -= 0.5;
+                rotation += rotV;
+                b.style.bottom = (100 + h) + 'px';
+                b.style.transform = `translateX(-50%) rotate(${rotation}deg)`;
+                
+                if(h <= 0) {
+                    clearInterval(move);
+                    isFlipping = false;
+                    b.style.bottom = '100px';
+                    let finalRot = rotation % 360;
+                    if(finalRot < 20 || finalRot > 340) {
+                        score++;
+                        document.getElementById('ui').innerText = 'Score: ' + score;
+                        b.style.transform = 'translateX(-50%) rotate(0deg)';
+                        rotation = 0;
+                    } else {
+                        alert('Oops! Game Reset');
+                        score = 0;
+                        document.getElementById('ui').innerText = 'Score: ' + score;
+                        rotation = 0;
+                        b.style.transform = 'translateX(-50%) rotate(0deg)';
+                    }
+                }
+            }, 20);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8"><title>RELAXING PIANO TILES 🎹</title>
+    <style>
+        body { margin:0; background:#000; overflow:hidden; display:flex; justify-content:center; }
+        #game { width:400px; height:100vh; background:#222; position:relative; overflow:hidden; }
+        .tile { position:absolute; width:100px; height:150px; background:#fff; cursor:pointer; }
+        .tile.pressed { background:#444; }
+    </style>
+</head>
+<body>
+    <div id="game"></div>
+    <script>
+        const game = document.getElementById('game');
+        function spawn() {
+            let t = document.createElement('div'); t.className='tile';
+            t.style.left = (Math.floor(Math.random()*4)*100)+'px';
+            t.style.top = '-150px';
+            game.appendChild(t);
+            let move = setInterval(() => {
+                let top = parseInt(t.style.top);
+                t.style.top = (top + 5) + 'px';
+                if(top > window.innerHeight) { clearInterval(move); game.removeChild(t); }
+            }, 20);
+            t.onclick = () => { t.classList.add('pressed'); };
+        }
+        setInterval(spawn, 600);
+    </script>
+</body>
+</html>

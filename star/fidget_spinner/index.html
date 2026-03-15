@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8"><title>FIDGET SPINNER SIM 🌀</title>
+    <style>
+        body { margin:0; background:#1a1a1a; display:flex; flex-direction:column; align-items:center; justify-content:center; height:100vh; overflow:hidden; color:#fff; font-family:sans-serif;}
+        #spinner { width:200px; height:200px; background:linear-gradient(45deg, #00d2ff, #3a7bd5); border-radius:50%; position:relative; cursor:grab; }
+        #spinner::before, #spinner::after { content:''; position:absolute; width:100px; height:100px; background:inherit; border-radius:50%; }
+        #spinner::before { top:-50px; left:50px; }
+        #spinner::after { bottom:-50px; left:50px; }
+        .center { position:absolute; top:75px; left:75px; width:50px; height:50px; background:#fff; border-radius:50%; z-index:10; }
+    </style>
+</head>
+<body>
+    <h1>FIDGET SPINNER</h1>
+    <p>드래그해서 돌리세요!</p>
+    <div id="spinner"><div class="center"></div></div>
+    <script>
+        const s = document.getElementById('spinner');
+        let rot = 0; let vel = 0;
+        s.onmousedown = (e) => {
+            let startX = e.clientX;
+            window.onmousemove = (me) => { vel = (me.clientX - startX); };
+            window.onmouseup = () => { window.onmousemove = null; };
+        };
+        function loop() {
+            rot += vel; vel *= 0.98;
+            s.style.transform = `rotate(${rot}deg)`;
+            requestAnimationFrame(loop);
+        }
+        loop();
+    </script>
+</body>
+</html>

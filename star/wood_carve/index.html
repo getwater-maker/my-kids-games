@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8"><title>WOOD CARVING ASMR 🪵</title>
+    <style>
+        body { margin:0; background:#3e2723; display:flex; flex-direction:column; align-items:center; justify-content:center; height:100vh; color:#fff; font-family:sans-serif;}
+        #log { width:400px; height:100px; background:#8d6e63; border-radius:10px; position:relative; overflow:hidden; cursor:crosshair; }
+        .cut { position:absolute; height:100%; background:#3e2723; width:10px; }
+    </style>
+</head>
+<body>
+    <h1>WOOD CARVING</h1>
+    <p>나무를 깎아서 모양을 만드세요!</p>
+    <div id="log"></div>
+    <script>
+        const log = document.getElementById('log');
+        log.onmousemove = (e) => {
+            if(e.buttons === 1) {
+                let cut = document.createElement('div');
+                cut.className = 'cut';
+                cut.style.left = (e.clientX - log.offsetLeft) + 'px';
+                log.appendChild(cut);
+            }
+        };
+    </script>
+</body>
+</html>

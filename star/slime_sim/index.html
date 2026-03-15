@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8"><title>ASMR SLIME SIMULATOR 🍮</title>
+    <style>
+        body { margin:0; background:#ffeef8; display:flex; flex-direction:column; align-items:center; justify-content:center; height:100vh; overflow:hidden; font-family:sans-serif; }
+        #slime { width:400px; height:400px; background:#ff71ce; border-radius:50%; box-shadow: inset 0 0 50px rgba(0,0,0,0.2), 0 10px 30px rgba(255, 113, 206, 0.4); cursor:pointer; display:flex; align-items:center; justify-content:center; transition: 0.1s; }
+        #slime:active { transform: scale(1.1) rotate(5deg); background:#b967ff; }
+        h1 { color:#ff71ce; text-shadow:2px 2px #fff; }
+    </style>
+</head>
+<body>
+    <h1>SLIME ASMR</h1>
+    <p>슬라임을 꾹꾹 누르며 스트레스를 푸세요!</p>
+    <div id="slime"></div>
+    <script>
+        const slime = document.getElementById('slime');
+        slime.onmousedown = () => {
+            let colors = ['#ff71ce', '#01cdfe', '#05ffa1', '#b967ff', '#fffb96'];
+            slime.style.backgroundColor = colors[Math.floor(Math.random()*colors.length)];
+            // Vibration effect
+            if(navigator.vibrate) navigator.vibrate(50);
+        };
+    </script>
+</body>
+</html>

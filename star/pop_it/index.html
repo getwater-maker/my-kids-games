@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8"><title>FIDGET POP-IT 🌈</title>
+    <style>
+        body { margin:0; background:#fafafa; display:flex; flex-direction:column; align-items:center; justify-content:center; height:100vh; font-family:sans-serif;}
+        #grid { display:grid; grid-template-columns: repeat(6, 60px); gap:10px; background:#eee; padding:20px; border-radius:30px; }
+        .bubble { width:60px; height:60px; background:linear-gradient(135deg, #FF6B6B, #FF8E8E); border-radius:50%; box-shadow: 0 4px #c0392b; cursor:pointer; }
+        .bubble.popped { transform: scale(0.9); box-shadow: inset 0 2px 4px rgba(0,0,0,0.2); background:#ccc; }
+    </style>
+</head>
+<body>
+    <h1>FIDGET POP-IT!</h1>
+    <div id="grid"></div>
+    <button onclick="location.reload()" style="margin-top:20px; padding:10px 20px;">RESET</button>
+    <script>
+        const grid = document.getElementById('grid');
+        for(let i=0; i<36; i++) {
+            let b = document.createElement('div'); b.className='bubble';
+            let hues = [0, 60, 120, 180, 240, 300];
+            b.style.filter = `hue-rotate(${hues[Math.floor(i/6)]}deg)`;
+            b.onclick = () => { b.classList.add('popped'); if(navigator.vibrate) navigator.vibrate(20); };
+            grid.appendChild(b);
+        }
+    </script>
+</body>
+</html>
