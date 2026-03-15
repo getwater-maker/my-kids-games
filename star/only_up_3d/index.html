@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ONLY UP!: SKY PARKOUR ☁️</title>
+    <style>
+        body { margin: 0; background: #87ceeb; overflow: hidden; font-family: 'Arial', sans-serif; }
+        #camera { position: relative; width: 100vw; height: 100vh; overflow: hidden; }
+        #world { position: absolute; bottom: 0; left: 0; width: 100%; transition: transform 0.1s; }
+        .platform { position: absolute; background: #fff; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); border: 2px solid #ddd; }
+        #player { position: absolute; width: 30px; height: 30px; background: #ff4757; border-radius: 5px; box-shadow: 0 0 10px rgba(255,0,0,0.5); border: 2px solid #fff; z-index: 10; }
+        #ui { position: fixed; top: 20px; left: 20px; color: #fff; text-shadow: 2px 2px #000; font-size: 24px; font-weight: bold; }
+        #overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: flex; flex-direction: column; justify-content: center; align-items: center; color: #fff; text-align: center; }
+        .btn-start { padding: 15px 40px; font-size: 24px; background: #2ecc71; border: none; color: #fff; cursor: pointer; border-radius: 10px; margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <div id="ui">HEIGHT: 0m</div>
+    <div id="camera">
+        <div id="world">
+            <div id="player"></div>
+        </div>
+    </div>
+    <div id="overlay">
+        <h1>ONLY UP!</h1>
+        <p>절대로 떨어지지 마세요!<br>화살표 키로 움직이고 스페이스바로 점프하세요.<br>하늘 끝까지 올라가세요!</p>
+        <button class="btn-start" onclick="startGame()">도전 시작!</button>
+    </div>
+
+    <script>
+        const world = document.getElementById('world');
+        const playerEl = document.getElementById('player');
+        const ui = document.getElementById('ui');
+        const overlay = document.getElementById('overlay');
+
+        let player = { x: 200, y: 100, vx: 0, vy: 0, ground: false };
+        let platforms = [];
+        let gameActive = false;
+        let keys = {};
+        let height = 0;
+
+        window.addEventListener('keydown', (e) => keys[e.code] = true);
+        window.addEventListener('keyup', (e) => keys[e.code] = false);
+
+        function createPlatforms() {
+            platforms = [];
+            // Ground
+            platforms.push({ x: 0, y: 0, w: 2000, h: 50 });
+            
+            // Generate upward
+            for(let i=1; i<100; i++) {
+                platforms.push({
+                    x: Math.random() * 600 + 100,
+                    y: i * 120,
+                    w: Math.random() * 100 + 50,
+                    h: 20
+                });
+            }
+
+            platforms.forEach(p => {
+                let div = document.createElement('div');
+                div.className = 'platform';
+                div.style.left = p.x + 'px';
+                div.style.bottom = p.y + 'px';
+                div.style.width = p.w + 'px';
+                div.style.height = p.h + 'px';
+                world.appendChild(div);
+            });
+        }
+
+        function startGame() {
+            overlay.style.display = 'none';
+            player = { x: 300, y: 100, vx: 0, vy: 0, ground: false };
+            createPlatforms();
+            gameActive = true;
+            gameLoop();
+        }
+
+        function gameLoop() {
+            if(!gameActive) return;
+
+            // Physics
+            if(keys['ArrowLeft']) player.vx = -5;
+            else if(keys['ArrowRight']) player.vx = 5;
+            else player.vx *= 0.8;
+
+            if(keys['Space'] && player.ground) {
+                player.vy = 15;
+                player.ground = false;
+            }
+
+            player.vy -= 0.8; // Gravity
+            player.x += player.vx;
+            player.y += player.vy;
+
+            player.ground = false;
+            platforms.forEach(p => {
+                if(player.vx >= 0 && player.x + 30 > p.x && player.x < p.x + p.w &&
+                   player.y > p.y && player.y < p.y + p.h + 10 && player.vy < 0) {
+                    player.y = p.y + p.h;
+                    player.vy = 0;
+                    player.ground = true;
+                }
+            });
+
+            if(player.y < -500) gameOver(); // Fell off too far
+
+            // Update UI/Camera
+            height = Math.max(height, Math.floor(player.y / 10));
+            ui.innerText = "HEIGHT: " + height + "m";
+            
+            playerEl.style.left = player.x + 'px';
+            playerEl.style.bottom = player.y + 'px';
+            
+            // Camera follow
+            let targetY = -player.y + window.innerHeight/2;
+            world.style.transform = `translateY(${-targetY}px)`;
+
+            requestAnimationFrame(gameLoop);
+        }
+
+        function gameOver() {
+            gameActive = false;
+            overlay.style.display = 'flex';
+            overlay.innerHTML = '<h1 style="color:red">FELL OFF!</h1><p>추락하셨습니다...<br>기록: ' + height + 'm</p><button class="btn-start" onclick="location.reload()">다시 도전</button>';
+        }
+
+    </script>
+</body>
+</html>
