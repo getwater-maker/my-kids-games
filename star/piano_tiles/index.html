@@ -20,12 +20,44 @@
 <body>
     <div id="ui">SCORE: 0</div>
     <div id="game"></div>
+    
+    <!-- YouTube Background Music Player -->
+    <div id="player" style="display:none;"></div>
+
     <script>
         const game = document.getElementById('game');
         const scoreEl = document.getElementById('ui');
         let score = 0;
         
-        // Web Audio API setup
+        // YouTube Player setup
+        var tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+        var player;
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('player', {
+                height: '0',
+                width: '0',
+                videoId: '_uu_izpVSEc', // Saja Boys - Soda Pop (Full Audio)
+                playerVars: {
+                    'autoplay': 0,
+                    'controls': 0,
+                    'loop': 1,
+                    'playlist': '_uu_izpVSEc'
+                },
+                events: {
+                    'onReady': onPlayerReady
+                }
+            });
+        }
+
+        function onPlayerReady(event) {
+            // Player is ready
+        }
+
+        // Web Audio API setup for tile feedback
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         
         function playNote(freq) {
@@ -35,14 +67,14 @@
             oscillator.type = 'triangle';
             oscillator.frequency.setValueAtTime(freq, audioCtx.currentTime);
             
-            gainNode.gain.setValueAtTime(0.5, audioCtx.currentTime);
-            gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
+            gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
             
             oscillator.connect(gainNode);
             gainNode.connect(audioCtx.destination);
             
             oscillator.start();
-            oscillator.stop(audioCtx.currentTime + 0.5);
+            oscillator.stop(audioCtx.currentTime + 0.3);
         }
 
         const frequencies = [261.63, 293.66, 329.63, 349.23]; // C4, D4, E4, F4
@@ -74,9 +106,9 @@
                 if (top > window.innerHeight) { 
                     clearInterval(move); 
                     if (!t.classList.contains('pressed')) {
-                        // Game over feel
                         score = 0;
                         scoreEl.innerText = 'SCORE: 0';
+                        if(player) player.pauseVideo();
                     }
                     game.removeChild(t); 
                 }
@@ -85,6 +117,12 @@
             t.onmousedown = () => {
                 if (t.classList.contains('pressed')) return;
                 t.classList.add('pressed');
+                
+                // Play music on first click
+                if(player && player.getPlayerState() !== 1) {
+                    player.playVideo();
+                }
+
                 playNote(frequencies[col]);
                 score++;
                 scoreEl.innerText = 'SCORE: ' + score;
@@ -94,7 +132,6 @@
 
         setInterval(spawn, 700);
         
-        // Initial user interaction to enable audio
         window.addEventListener('mousedown', () => {
             if (audioCtx.state === 'suspended') {
                 audioCtx.resume();
