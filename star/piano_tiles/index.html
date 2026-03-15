@@ -68,12 +68,13 @@
 
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         function playNote(freq) {
+            // Reduced volume significantly (삐라뽀라뽀 소리를 아주 작게 줄임)
             const oscillator = audioCtx.createOscillator();
             const gainNode = audioCtx.createGain();
             oscillator.type = 'triangle';
             oscillator.frequency.setValueAtTime(freq, audioCtx.currentTime);
-            gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
-            gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+            gainNode.gain.setValueAtTime(0.02, audioCtx.currentTime); // 0.3 -> 0.02
+            gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.3);
             oscillator.connect(gainNode);
             gainNode.connect(audioCtx.destination);
             oscillator.start();
@@ -107,7 +108,7 @@
             let move = setInterval(() => {
                 if(!gameActive) { clearInterval(move); return; }
                 let top = parseInt(t.style.top);
-                t.style.top = (top + 6 + (score / 30)) + 'px';
+                t.style.top = (top + 6 + (score / 35)) + 'px'; // Slightly slower ramp
                 
                 if (top > window.innerHeight) { 
                     clearInterval(move); 
@@ -118,7 +119,8 @@
                 }
             }, 20);
             
-            t.onpointerdown = (e) => {
+            // Interaction support
+            const handleInteraction = (e) => {
                 e.preventDefault();
                 if (t.classList.contains('pressed') || !gameActive) return;
                 t.classList.add('pressed');
@@ -127,26 +129,47 @@
                 scoreEl.innerText = 'SCORE: ' + score;
                 if (navigator.vibrate) navigator.vibrate(20);
             };
+
+            t.onpointerdown = handleInteraction;
+            t.ontouchstart = handleInteraction;
         }
 
         function gameOver() {
             gameActive = false;
-            if(player) player.pauseVideo();
+            if(player && player.pauseVideo) player.pauseVideo();
             overlay.style.display = 'flex';
-            overlay.innerHTML = `<h1 style="color:#f00; font-size:40px;">GAME OVER</h1><p style="font-size:24px;">YOUR SCORE: ${score}</p><p style="margin-top:20px;">CLICK TO RESTART</p>`;
+            overlay.innerHTML = `<h1 style="color:#f00; font-size:40px; margin-bottom:10px;">GAME OVER</h1>
+                               <p style="font-size:32px; font-weight:900; color:#fff; margin-bottom:20px;">SCORE: ${score}</p>
+                               <div style="background:#f00; padding:15px 40px; border-radius:10px; font-size:24px; font-weight:900; cursor:pointer;">RESTART</div>`;
             score = 0;
             scoreEl.innerText = 'SCORE: 0';
-            // Clear existing tiles
             game.innerHTML = '';
         }
 
         overlay.onclick = () => {
-            overlay.style.display = 'none';
-            gameActive = true;
             if (audioCtx.state === 'suspended') audioCtx.resume();
-            if (player) {
+            
+            if (player && typeof player.playVideo === 'function') {
+                overlay.style.display = 'none';
+                gameActive = true;
+                player.setVolume(100);
                 player.seekTo(0);
                 player.playVideo();
+            } else {
+                // Wait for player to be ready if it's not yet
+                overlay.innerHTML = `<p style="font-size:24px;">LOADING SONG...</p>`;
+                setTimeout(() => {
+                    if(player && player.playVideo) {
+                        overlay.style.display = 'none';
+                        gameActive = true;
+                        player.setVolume(100);
+                        player.playVideo();
+                    } else {
+                        // Fallback start if YouTube fails
+                        overlay.style.display = 'none';
+                        gameActive = true;
+                    }
+                }, 1000);
             }
         };
 
