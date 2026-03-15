@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>조심해! 악어 덴티스트 🐊</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Jua&display=swap');
+        
+        body {
+            margin: 0;
+            background: #f0f8ff;
+            font-family: 'Jua', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        #game-container {
+            position: relative;
+            width: 400px;
+            height: 500px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .crocodile {
+            position: relative;
+            width: 350px;
+            height: 300px;
+            margin-top: 50px;
+            perspective: 1000px;
+        }
+
+        .upper-jaw {
+            position: absolute;
+            top: 0;
+            width: 100%;
+            height: 150px;
+            background: #2ecc71;
+            border-radius: 150px 150px 20px 20px;
+            border: 8px solid #27ae60;
+            z-index: 10;
+            transition: transform 0.1s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            transform-origin: top;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+        }
+
+        .upper-jaw::after {
+            content: '';
+            position: absolute;
+            bottom: 10px;
+            width: 80px;
+            height: 40px;
+            background: #fff;
+            border-radius: 50% 50% 0 0;
+            border: 4px solid #333;
+        }
+
+        .eye {
+            position: absolute;
+            top: 20px;
+            width: 40px;
+            height: 40px;
+            background: white;
+            border-radius: 50%;
+            border: 3px solid #333;
+        }
+
+        .eye::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 15px;
+            height: 15px;
+            background: black;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .eye-left { left: 80px; }
+        .eye-right { right: 80px; }
+
+        .lower-jaw {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 180px;
+            background: #27ae60;
+            border-radius: 20px 20px 150px 150px;
+            border: 8px solid #1e8449;
+            z-index: 5;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 20px;
+        }
+
+        .mouth-inside {
+            width: 85%;
+            height: 80%;
+            background: #c0392b;
+            border-radius: 20px 20px 100px 100px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-content: flex-start;
+            gap: 10px;
+            padding: 20px 10px;
+        }
+
+        .tooth {
+            width: 40px;
+            height: 50px;
+            background: white;
+            border-radius: 5px 5px 20px 20px;
+            cursor: pointer;
+            box-shadow: 0 4px #ddd;
+            transition: 0.1s;
+        }
+
+        .tooth:hover {
+            background: #f1c40f;
+        }
+
+        .tooth.pressed {
+            transform: translateY(10px);
+            box-shadow: none;
+            background: #bdc3c7;
+            pointer-events: none;
+        }
+
+        .crocodile.bitten .upper-jaw {
+            transform: rotateX(80deg);
+        }
+
+        #message {
+            margin-top: 30px;
+            font-size: 2rem;
+            color: #2c3e50;
+            text-align: center;
+            height: 1.5em;
+        }
+
+        .btn-restart {
+            margin-top: 20px;
+            padding: 15px 40px;
+            font-size: 1.5rem;
+            background: #e67e22;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            box-shadow: 0 5px #d35400;
+            display: none;
+            font-family: 'Jua', sans-serif;
+        }
+
+        .btn-restart:active {
+            transform: translateY(3px);
+            box-shadow: none;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .bite-effect {
+            position: absolute;
+            font-size: 10rem;
+            color: #e74c3c;
+            animation: pop 0.5s ease-out;
+            pointer-events: none;
+            display: none;
+            z-index: 20;
+        }
+
+        @keyframes pop {
+            0% { transform: scale(0); opacity: 0; }
+            50% { transform: scale(1.2); opacity: 1; }
+            100% { transform: scale(1); opacity: 0; }
+        }
+
+        .scared .eye::after {
+            height: 5px;
+            width: 25px;
+            border-radius: 2px;
+        }
+
+    </style>
+</head>
+<body>
+    <h1 style="color: #27ae60; font-size: 3rem; margin-bottom: 0;">🐊 악어 덴티스트</h1>
+    <p style="color: #7f8c8d; font-size: 1.2rem;">아픈 이빨을 누르면 악어가 콱! 조심하세요!</p>
+    
+    <div id="game-container">
+        <div id="crocodile" class="crocodile">
+            <div class="upper-jaw">
+                <div class="eye eye-left"></div>
+                <div class="eye eye-right"></div>
+            </div>
+            <div class="lower-jaw">
+                <div class="mouth-inside" id="mouth">
+                    <!-- Teeth will be generated here -->
+                </div>
+            </div>
+            <div id="bite-txt" class="bite-effect">콱!</div>
+        </div>
+        
+        <div id="message">이빨을 하나씩 눌러보세요!</div>
+        <button id="restart-btn" class="btn-restart" onclick="initGame()">다시 치료하기</button>
+    </div>
+
+    <script>
+        const mouth = document.getElementById('mouth');
+        const crocodile = document.getElementById('crocodile');
+        const message = document.getElementById('message');
+        const restartBtn = document.getElementById('restart-btn');
+        const biteTxt = document.getElementById('bite-txt');
+        
+        let badToothIndex = -1;
+        let isGameOver = false;
+        const totalTeeth = 10;
+
+        function initGame() {
+            mouth.innerHTML = '';
+            badToothIndex = Math.floor(Math.random() * totalTeeth);
+            isGameOver = false;
+            
+            crocodile.classList.remove('bitten');
+            crocodile.classList.remove('scared');
+            message.textContent = '이빨을 하나씩 눌러보세요!';
+            message.style.color = '#2c3e50';
+            restartBtn.style.display = 'none';
+            biteTxt.style.display = 'none';
+
+            for (let i = 0; i < totalTeeth; i++) {
+                const tooth = document.createElement('div');
+                tooth.className = 'tooth';
+                tooth.onclick = () => pressTooth(i, tooth);
+                mouth.appendChild(tooth);
+            }
+        }
+
+        function pressTooth(index, toothElement) {
+            if (isGameOver) return;
+
+            toothElement.classList.add('pressed');
+            
+            if (index === badToothIndex) {
+                gameOver();
+            } else {
+                message.textContent = '휴... 다행이에요! 다음 이빨은?';
+                message.style.color = '#27ae60';
+            }
+        }
+
+        function gameOver() {
+            isGameOver = true;
+            crocodile.classList.add('bitten');
+            crocodile.classList.add('scared');
+            
+            message.textContent = '으아악! 손을 물렸어요!! 😱';
+            message.style.color = '#e74c3c';
+            
+            biteTxt.style.display = 'block';
+            
+            // Vibration effect
+            if (navigator.vibrate) {
+                navigator.vibrate(200);
+            }
+
+            setTimeout(() => {
+                restartBtn.style.display = 'block';
+            }, 500);
+        }
+
+        // Start initial game
+        initGame();
+    </script>
+</body>
+</html>
