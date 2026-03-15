@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8"><title>CHUCKY: TOY SHOP SURVIVAL 🔪</title>
+    <style>
+        body { margin:0; background:#000; color:#fff; font-family:sans-serif; overflow:hidden;}
+        canvas { display:block; }
+        #ui { position:absolute; top:20px; left:20px; font-size:24px; color:#f00; text-shadow:2px 2px #000; pointer-events:none; }
+        #overlay { position:absolute; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); display:flex; flex-direction:column; justify-content:center; align-items:center; z-index:100; }
+        button { padding:15px 30px; font-size:20px; background:#800; color:#fff; border:none; cursor:pointer; }
+    </style>
+</head>
+<body>
+    <div id="ui">Health: 100</div>
+    <div id="overlay">
+        <h1 style="color:#f00; font-size:50px;">CHUCKY BATTLE</h1>
+        <p>처키로부터 최대한 오래 살아남으세요!</p>
+        <button onclick="start()">전투 시작</button>
+    </div>
+    <canvas id="c"></canvas>
+    <script>
+        const canvas = document.getElementById('c');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        let player = { x: canvas.width/2, y: canvas.height/2, hp: 100 };
+        let enemies = [];
+        let bullets = [];
+        let gameActive = false;
+        let score = 0;
+
+        function start() { document.getElementById('overlay').style.display='none'; gameActive=true; loop(); }
+        window.addEventListener('mousedown', e => {
+            if(!gameActive) return;
+            let ang = Math.atan2(e.clientY - player.y, e.clientX - player.x);
+            bullets.push({ x: player.x, y: player.y, vx: Math.cos(ang)*10, vy: Math.sin(ang)*10 });
+        });
+
+        function loop() {
+            if(!gameActive) return;
+            ctx.fillStyle = '#111'; ctx.fillRect(0,0,canvas.width,canvas.height);
+            
+            // Player (Blue)
+            ctx.fillStyle = '#3498db'; ctx.beginPath(); ctx.arc(player.x, player.y, 20, 0, Math.PI*2); ctx.fill();
+
+            // Spawn Chucky
+            if(Math.random() < 0.02) enemies.push({ x: Math.random()*canvas.width, y: -50, speed: 2 });
+
+            enemies.forEach((e, i) => {
+                let ang = Math.atan2(player.y - e.y, player.x - e.x);
+                e.x += Math.cos(ang) * e.speed;
+                e.y += Math.sin(ang) * e.speed;
+                ctx.fillStyle = '#f00'; ctx.fillRect(e.x-15, e.y-15, 30, 30);
+                if(Math.sqrt((e.x-player.x)**2 + (e.y-player.y)**2) < 30) { player.hp--; enemies.splice(i,1); }
+            });
+
+            bullets.forEach((b, i) => {
+                b.x += b.vx; b.y += b.vy;
+                ctx.fillStyle = '#ff0'; ctx.fillRect(b.x-2, b.y-2, 4, 4);
+                enemies.forEach((en, ei) => {
+                    if(Math.sqrt((b.x-en.x)**2 + (b.y-en.y)**2) < 20) { enemies.splice(ei,1); bullets.splice(i,1); score++; }
+                });
+            });
+
+            document.getElementById('ui').innerText = `Health: ${player.hp} | Score: ${score}`;
+            if(player.hp <= 0) { gameActive=false; alert('GAME OVER! Score: ' + score); location.reload(); }
+            requestAnimationFrame(loop);
+        }
+    </script>
+</body>
+</html>

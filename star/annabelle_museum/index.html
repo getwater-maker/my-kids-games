@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8"><title>ANNABELLE: THE CURSED DOLL 🎀</title>
+    <style>
+        body { margin:0; background:#1a1a1a; color:#fff; font-family:serif; overflow:hidden; }
+        #flashlight { position:absolute; top:0; left:0; width:100%; height:100%; background:radial-gradient(circle at center, transparent 70px, #000 250px); pointer-events:none; }
+        #ui { position:absolute; top:20px; width:100%; text-align:center; font-size:24px; color:#f00; }
+        .doll { position:absolute; width:50px; height:80px; background:#fff; border-radius:10px; cursor:pointer; filter: brightness(0.2); transition: 0.1s; }
+        .doll:hover { filter: brightness(1); }
+    </style>
+</head>
+<body>
+    <div id="ui">박물관 어딘가에 숨겨진 애나벨 인형을 터치하세요! (찾은 수: <span id="cnt">0</span>/3)</div>
+    <div id="flashlight"></div>
+    <div id="game"></div>
+    <script>
+        let found = 0;
+        const game = document.getElementById('game');
+        function spawn() {
+            let d = document.createElement('div'); d.className='doll';
+            d.style.left = Math.random()*(window.innerWidth-50)+'px';
+            d.style.top = Math.random()*(window.innerHeight-100)+50+'px';
+            d.onclick = () => {
+                found++; document.getElementById('cnt').innerText=found;
+                game.removeChild(d);
+                if(found < 3) spawn();
+                else { alert('그녀가 깨어났습니다...'); location.reload(); }
+            };
+            game.appendChild(d);
+        }
+        window.addEventListener('mousemove', e => {
+            document.getElementById('flashlight').style.background = `radial-gradient(circle at ${e.clientX}px ${e.clientY}px, transparent 70px, #000 250px)`;
+        });
+        spawn();
+    </script>
+</body>
+</html>

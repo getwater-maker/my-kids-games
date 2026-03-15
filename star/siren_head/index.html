@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8"><title>SIREN HEAD: DARK FOREST 🔊</title>
+    <style>
+        body { margin:0; background:#000; overflow:hidden; font-family:sans-serif; }
+        canvas { display:block; filter: grayscale(1) brightness(0.6); }
+        #flashlight { position:absolute; top:0; left:0; width:100%; height:100%; background:radial-gradient(circle at center, transparent 50px, #000 200px); pointer-events:none; }
+        #ui { position:absolute; top:20px; left:20px; color:#fff; font-size:24px; text-shadow:0 0 10px #fff; }
+    </style>
+</head>
+<body>
+    <div id="ui">이동하여 소음기를 찾으세요...</div>
+    <div id="flashlight"></div>
+    <canvas id="c"></canvas>
+    <script>
+        const canvas = document.getElementById('c');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+        let player = { x: 2000, y: 2000 };
+        let mouse = { x: 0, y: 0 };
+        let siren = { x: 1800, y: 1800 };
+        let items = [{x: 1000, y: 1000}, {x: 3000, y: 3000}, {x: 1000, y: 3000}];
+        
+        window.addEventListener('mousemove', e => {
+            mouse.x = e.clientX; mouse.y = e.clientY;
+            document.getElementById('flashlight').style.background = `radial-gradient(circle at ${e.clientX}px ${e.clientY}px, transparent 50px, #000 200px)`;
+        });
+
+        function loop() {
+            ctx.fillStyle = '#050505'; ctx.fillRect(0,0,canvas.width,canvas.height);
+            ctx.save(); ctx.translate(canvas.width/2 - player.x, canvas.height/2 - player.y);
+            
+            // Movement
+            let dx = mouse.x - canvas.width/2; let dy = mouse.y - canvas.height/2;
+            let dist = Math.sqrt(dx*dx+dy*dy);
+            if(dist > 5) { player.x += (dx/dist)*3; player.y += (dy/dist)*3; }
+
+            // Trees
+            ctx.fillStyle = '#0a0a0a';
+            for(let i=0; i<4000; i+=200) for(let j=0; j<4000; j+=200) ctx.fillRect(i,j,20,100);
+
+            // Siren Head (Tall)
+            ctx.fillStyle = '#222'; ctx.fillRect(siren.x-10, siren.y-200, 20, 200);
+            ctx.fillStyle = '#444'; ctx.fillRect(siren.x-20, siren.y-180, 40, 20); // Sirens
+
+            let sdx = player.x - siren.x; let sdy = player.y - siren.y;
+            let sdist = Math.sqrt(sdx*sdx+sdy*sdy);
+            if(sdist < 400) { siren.x += (sdx/sdist)*2; siren.y += (sdy/sdist)*2; }
+            if(sdist < 50) { alert('SIREN HEAD CAUGHT YOU!'); location.reload(); return; }
+
+            ctx.restore();
+            requestAnimationFrame(loop);
+        }
+        loop();
+    </script>
+</body>
+</html>
