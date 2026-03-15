@@ -21,13 +21,22 @@
     <div id="ui">SCORE: 0</div>
     <div id="game"></div>
     
+    <!-- Start Overlay -->
+    <div id="overlay" style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); display:flex; flex-direction:column; align-items:center; justify-content:center; z-index:1000; color:#fff; cursor:pointer;">
+        <h1 style="font-family:'Nosifer', cursive; color:#f00; font-size:50px;">SODA POP</h1>
+        <p style="font-size:24px;">CLICK TO START</p>
+        <p style="font-size:16px; color:#aaa;">골든 & 소다팝과 함께 노래를 연주하세요!</p>
+    </div>
+
     <!-- YouTube Background Music Player -->
     <div id="player" style="display:none;"></div>
 
     <script>
         const game = document.getElementById('game');
         const scoreEl = document.getElementById('ui');
+        const overlay = document.getElementById('overlay');
         let score = 0;
+        let gameActive = false;
         
         // YouTube Player setup
         var tag = document.createElement('script');
@@ -40,12 +49,12 @@
             player = new YT.Player('player', {
                 height: '0',
                 width: '0',
-                videoId: '_uu_izpVSEc', // Saja Boys - Soda Pop (Full Audio)
+                videoId: '983bBbJx0Mk', // Saja Boys - Soda Pop (Official)
                 playerVars: {
                     'autoplay': 0,
                     'controls': 0,
                     'loop': 1,
-                    'playlist': '_uu_izpVSEc'
+                    'playlist': '983bBbJx0Mk'
                 },
                 events: {
                     'onReady': onPlayerReady
@@ -54,32 +63,27 @@
         }
 
         function onPlayerReady(event) {
-            // Player is ready
+            console.log("YouTube Player Loaded");
         }
 
-        // Web Audio API setup for tile feedback
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        
         function playNote(freq) {
             const oscillator = audioCtx.createOscillator();
             const gainNode = audioCtx.createGain();
-            
             oscillator.type = 'triangle';
             oscillator.frequency.setValueAtTime(freq, audioCtx.currentTime);
-            
             gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
             gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
-            
             oscillator.connect(gainNode);
             gainNode.connect(audioCtx.destination);
-            
             oscillator.start();
             oscillator.stop(audioCtx.currentTime + 0.3);
         }
 
-        const frequencies = [261.63, 293.66, 329.63, 349.23]; // C4, D4, E4, F4
+        const frequencies = [261.63, 293.66, 329.63, 349.23];
 
         function spawn() {
+            if(!gameActive) return;
             const col = Math.floor(Math.random() * 4);
             const isGolden = Math.random() > 0.5;
             
@@ -101,28 +105,23 @@
             game.appendChild(t);
             
             let move = setInterval(() => {
+                if(!gameActive) { clearInterval(move); return; }
                 let top = parseInt(t.style.top);
-                t.style.top = (top + 6 + (score / 20)) + 'px';
+                t.style.top = (top + 6 + (score / 30)) + 'px';
+                
                 if (top > window.innerHeight) { 
                     clearInterval(move); 
                     if (!t.classList.contains('pressed')) {
-                        score = 0;
-                        scoreEl.innerText = 'SCORE: 0';
-                        if(player) player.pauseVideo();
+                        gameOver();
                     }
-                    game.removeChild(t); 
+                    if(t.parentNode) game.removeChild(t); 
                 }
             }, 20);
             
-            t.onmousedown = () => {
-                if (t.classList.contains('pressed')) return;
+            t.onpointerdown = (e) => {
+                e.preventDefault();
+                if (t.classList.contains('pressed') || !gameActive) return;
                 t.classList.add('pressed');
-                
-                // Play music on first click
-                if(player && player.getPlayerState() !== 1) {
-                    player.playVideo();
-                }
-
                 playNote(frequencies[col]);
                 score++;
                 scoreEl.innerText = 'SCORE: ' + score;
@@ -130,13 +129,28 @@
             };
         }
 
-        setInterval(spawn, 700);
-        
-        window.addEventListener('mousedown', () => {
-            if (audioCtx.state === 'suspended') {
-                audioCtx.resume();
+        function gameOver() {
+            gameActive = false;
+            if(player) player.pauseVideo();
+            overlay.style.display = 'flex';
+            overlay.innerHTML = `<h1 style="color:#f00; font-size:40px;">GAME OVER</h1><p style="font-size:24px;">YOUR SCORE: ${score}</p><p style="margin-top:20px;">CLICK TO RESTART</p>`;
+            score = 0;
+            scoreEl.innerText = 'SCORE: 0';
+            // Clear existing tiles
+            game.innerHTML = '';
+        }
+
+        overlay.onclick = () => {
+            overlay.style.display = 'none';
+            gameActive = true;
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            if (player) {
+                player.seekTo(0);
+                player.playVideo();
             }
-        }, { once: true });
+        };
+
+        setInterval(spawn, 700);
     </script>
 </body>
 </html>
