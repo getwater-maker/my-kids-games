@@ -39,6 +39,7 @@
             height: 100%;
             pointer-events: none;
             background: radial-gradient(circle at 50% 50%, transparent 100px, rgba(0, 0, 0, 0.98) 250px);
+            z-index: 200;
         }
 
         #ui {
@@ -50,6 +51,7 @@
             font-family: 'Creepster', cursive;
             font-size: 24px;
             color: #ff3333;
+            z-index: 100;
         }
 
         #jumpscare {
@@ -189,10 +191,23 @@
         let heartBeat = 0;
 
         window.addEventListener('mousemove', (e) => {
-            mouse.x = e.clientX;
-            mouse.y = e.clientY;
-            flashlight.style.background = `radial-gradient(circle at ${e.clientX}px ${e.clientY}px, transparent 100px, rgba(0, 0, 0, 0.99) 250px)`;
+            updateFlashlight(e.clientX, e.clientY);
         });
+
+        window.addEventListener('touchmove', (e) => {
+            if (e.touches[0]) {
+                updateFlashlight(e.touches[0].clientX, e.touches[0].clientY);
+            }
+        }, { passive: false });
+
+        function updateFlashlight(x, y) {
+            mouse.x = x;
+            mouse.y = y;
+            flashlight.style.background = `radial-gradient(circle at ${x}px ${y}px, transparent 100px, rgba(0, 0, 0, 0.95) 280px)`;
+        }
+
+        // Initialize flashlight at center
+        updateFlashlight(canvas.width/2, canvas.height/2);
 
         function spawnSoul() {
             souls.push({
