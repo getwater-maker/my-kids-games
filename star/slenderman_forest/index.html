@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SLENDERMAN: THE 8 PAGES 🌲</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Creepster&display=swap');
+        body { margin: 0; background: #000; overflow: hidden; font-family: 'Creepster', cursive; cursor: none; }
+        #game-container { position: relative; width: 100vw; height: 100vh; }
+        canvas { display: block; filter: contrast(120%) brightness(80%); }
+        #flashlight {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            background: radial-gradient(circle at center, transparent 80px, rgba(0,0,0,0.98) 250px);
+            z-index: 10;
+        }
+        #ui {
+            position: absolute;
+            top: 20px; left: 20px;
+            color: #fff; font-size: 24px; text-shadow: 0 0 10px #f00;
+            z-index: 20;
+        }
+        #static {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: url('https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHpwaGZqZndqZndqZndqZndqZndqZndqZndqZndqZndqZndqZndqJmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1n/oEI9uWUicH9RK/giphy.gif');
+            opacity: 0; pointer-events: none; z-index: 100;
+        }
+        #jumpscare {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #000; display: none; z-index: 1000;
+            justify-content: center; align-items: center;
+        }
+        #jumpscare img { width: 100%; height: 100%; object-fit: cover; animation: shake 0.05s infinite; }
+        @keyframes shake {
+            0% { transform: translate(5px, 5px); }
+            50% { transform: translate(-5px, -5px); }
+            100% { transform: translate(5px, -5px); }
+        }
+        #overlay {
+            position: absolute; top:0; left:0; width:100%; height:100%;
+            background: rgba(0,0,0,0.9); display: flex; flex-direction: column;
+            justify-content: center; align-items: center; z-index: 500;
+            text-align: center; color: #fff;
+        }
+        .btn { padding: 15px 40px; font-size: 2rem; background: #333; color: #fff; border: 2px solid #fff; cursor: pointer; font-family: 'Creepster'; margin-top:20px;}
+        .btn:hover { background: #600; }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <canvas id="gameCanvas"></canvas>
+        <div id="flashlight"></div>
+        <div id="static"></div>
+        <div id="ui">PAGES: 0 / 8</div>
+        <div id="jumpscare">
+            <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHpwaGZqZndqZndqZndqZndqZndqZndqZndqZndqZndqZndqZndqJmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1n/6ozwFj8tPyJfW/giphy.gif" alt="SLENDER">
+        </div>
+        <div id="overlay">
+            <h1 style="font-size: 5rem; color: #f00; margin: 0;">SLENDERMAN</h1>
+            <p>숲속에 숨겨진 8장의 쪽지를 찾으세요.<br>절대 그를 쳐다보지 마세요.</p>
+            <button class="btn" onclick="startGame()">진입하기</button>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const flashlight = document.getElementById('flashlight');
+        const staticOverlay = document.getElementById('static');
+        const ui = document.getElementById('ui');
+        const jumpscare = document.getElementById('jumpscare');
+        const overlay = document.getElementById('overlay');
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        let player = { x: 0, y: 0, worldX: 2000, worldY: 2000, speed: 3 };
+        let mouse = { x: canvas.width/2, y: canvas.height/2 };
+        let slenderman = { x: 0, y: 0, active: false, opacity: 0 };
+        let pages = [];
+        let trees = [];
+        let gameActive = false;
+        let pageCount = 0;
+
+        function initLevel() {
+            trees = [];
+            for (let i = 0; i < 200; i++) {
+                trees.push({ x: Math.random() * 4000, y: Math.random() * 4000, size: Math.random() * 20 + 10 });
+            }
+            pages = [];
+            for (let i = 0; i < 8; i++) {
+                pages.push({ x: Math.random() * 3800 + 100, y: Math.random() * 3800 + 100, caught: false });
+            }
+        }
+
+        function startGame() {
+            overlay.style.display = 'none';
+            initLevel();
+            pageCount = 0;
+            ui.innerText = `PAGES: 0 / 8`;
+            gameActive = true;
+            requestAnimationFrame(update);
+        }
+
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+            flashlight.style.background = `radial-gradient(circle at ${e.clientX}px ${e.clientY}px, transparent 80px, rgba(0,0,0,0.98) 250px)`;
+        });
+
+        function update() {
+            if (!gameActive) return;
+
+            // Movement
+            let dx = mouse.x - canvas.width/2;
+            let dy = mouse.y - canvas.height/2;
+            let dist = Math.sqrt(dx*dx + dy*dy);
+            if (dist > 5) {
+                player.worldX += (dx/dist) * player.speed;
+                player.worldY += (dy/dist) * player.speed;
+            }
+
+            // Slenderman Logic
+            if (pageCount > 0) {
+                if (!slenderman.active) {
+                    slenderman.active = true;
+                    slenderman.x = player.worldX + (Math.random() > 0.5 ? 400 : -400);
+                    slenderman.y = player.worldY + (Math.random() > 0.5 ? 400 : -400);
+                }
+                
+                let sdx = slenderman.x - player.worldX;
+                let sdy = slenderman.y - player.worldY;
+                let sdist = Math.sqrt(sdx*sdx + sdy*sdy);
+                
+                // Static Noise
+                let noise = Math.max(0, 1 - (sdist / 600));
+                staticOverlay.style.opacity = noise * 0.8;
+
+                if (sdist < 50) gameOver();
+                
+                // Move slenderman occasionally when not in view
+                if (sdist > 500 && Math.random() < 0.01) {
+                    slenderman.x = player.worldX + (Math.random() * 600 - 300);
+                    slenderman.y = player.worldY + (Math.random() * 600 - 300);
+                }
+            }
+
+            // Collect Pages
+            pages.forEach((p, i) => {
+                if (!p.caught) {
+                    let pdx = p.x - player.worldX;
+                    let pdy = p.y - player.worldY;
+                    let pdist = Math.sqrt(pdx*pdx + pdy*pdy);
+                    if (pdist < 40) {
+                        p.caught = true;
+                        pageCount++;
+                        ui.innerText = `PAGES: ${pageCount} / 8`;
+                        if (pageCount === 8) win();
+                    }
+                }
+            });
+
+            draw();
+            requestAnimationFrame(update);
+        }
+
+        function draw() {
+            ctx.fillStyle = '#050a05';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.save();
+            ctx.translate(canvas.width/2 - player.worldX, canvas.height/2 - player.worldY);
+
+            // Trees
+            ctx.fillStyle = '#0a1d0a';
+            trees.forEach(t => {
+                ctx.beginPath();
+                ctx.arc(t.x, t.y, t.size, 0, Math.PI*2);
+                ctx.fill();
+            });
+
+            // Pages
+            ctx.fillStyle = '#fff';
+            pages.forEach(p => {
+                if (!p.caught) {
+                    ctx.fillRect(p.x - 5, p.y - 7, 10, 14);
+                    ctx.shadowBlur = 10; ctx.shadowColor = '#fff';
+                }
+            });
+
+            // Slenderman
+            if (slenderman.active) {
+                ctx.fillStyle = '#fff';
+                ctx.fillRect(slenderman.x - 5, slenderman.y - 60, 10, 20); // face
+                ctx.fillStyle = '#000';
+                ctx.fillRect(slenderman.x - 8, slenderman.y - 40, 16, 100); // body
+            }
+
+            ctx.restore();
+        }
+
+        function gameOver() {
+            gameActive = false;
+            staticOverlay.style.opacity = 0;
+            jumpscare.style.display = 'flex';
+            setTimeout(() => {
+                jumpscare.style.display = 'none';
+                overlay.style.display = 'flex';
+                overlay.innerHTML = `<h1 style="color:#f00">HE CAUGHT YOU</h1><button class="btn" onclick="location.reload()">다시 시도</button>`;
+            }, 3000);
+        }
+
+        function win() {
+            gameActive = false;
+            overlay.style.display = 'flex';
+            overlay.innerHTML = `<h1 style="color:#fff">YOU SURVIVED</h1><p>모든 쪽지를 찾았습니다.</p><button class="btn" onclick="location.reload()">한 번 더</button>`;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EVIL NUN: SCHOOL ESCAPE ⛪</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Creepster&display=swap');
+        body { margin: 0; background: #111; overflow: hidden; font-family: 'Creepster', cursive; }
+        #game-container { position: relative; width: 100vw; height: 100vh; }
+        canvas { display: block; background: #0a0a0a; }
+        #flashlight {
+            position: absolute; top:0; left:0; width:100%; height:100%;
+            background: radial-gradient(circle at center, transparent 60px, rgba(0,0,0,0.99) 200px);
+            pointer-events: none; z-index: 10;
+        }
+        #ui { position: absolute; top:20px; left:20px; color:#f00; font-size: 24px; z-index:20; }
+        #jumpscare {
+            position: fixed; top:0; left:0; width:100%; height:100%;
+            background: #000; display:none; z-index:1000; justify-content: center; align-items: center;
+        }
+        #jumpscare img { width: 100%; height: 100%; object-fit: contain; animation: shake 0.1s infinite; }
+        @keyframes shake { 0% { transform: scale(1.1); } 50% { transform: scale(1); } 100% { transform: scale(1.2); } }
+        #overlay {
+            position: absolute; top:0; left:0; width:100%; height:100%;
+            background: rgba(0,0,0,0.9); display: flex; flex-direction: column;
+            justify-content: center; align-items: center; z-index: 500;
+            text-align: center; color: #fff;
+        }
+        .btn { padding: 15px 40px; font-size: 2rem; background: #400; color: #fff; border: 2px solid #fff; cursor: pointer; font-family: 'Creepster'; margin-top:20px;}
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <canvas id="gameCanvas"></canvas>
+        <div id="flashlight"></div>
+        <div id="ui">KEY FOUND: 0 / 1</div>
+        <div id="jumpscare">
+            <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHpwaGZqZndqZndqZndqZndqZndqZndqZndqZndqZndqZndqZndqJmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1n/6W8kIDH3f858uByAIs/giphy.gif" alt="EVIL NUN">
+        </div>
+        <div id="overlay">
+            <h1 style="font-size: 5rem; color: #f00;">EVIL NUN</h1>
+            <p>학교의 황금 열쇠를 찾아 정문으로 탈출하세요.<br>수녀님의 눈을 피해야 합니다.</p>
+            <button class="btn" onclick="startGame()">학교 진입</button>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const flashlight = document.getElementById('flashlight');
+        const jumpscare = document.getElementById('jumpscare');
+        const overlay = document.getElementById('overlay');
+        const ui = document.getElementById('ui');
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        let player = { x: 100, y: 100, size: 20, speed: 4 };
+        let nun = { x: 500, y: 500, size: 25, speed: 2.5, state: 'idle' };
+        let key = { x: 0, y: 0, found: false };
+        let exit = { x: 0, y: 0 };
+        let walls = [];
+        let gameActive = false;
+
+        function initMap() {
+            walls = [
+                {x: 0, y: 0, w: canvas.width, h: 20},
+                {x: 0, y: canvas.height-20, w: canvas.width, h: 20},
+                {x: 0, y: 0, w: 20, h: canvas.height},
+                {x: canvas.width-20, y: 0, w: 20, h: canvas.height},
+                // Interior walls
+                {x: 200, y: 0, w: 20, h: 400},
+                {x: 400, y: 200, w: 20, h: 400},
+                {x: 600, y: 0, w: 20, h: 300},
+                {x: 200, y: 500, w: 600, h: 20}
+            ];
+            key.x = canvas.width - 100;
+            key.y = canvas.height - 100;
+            exit.x = 50;
+            exit.y = 50;
+        }
+
+        window.addEventListener('mousemove', (e) => {
+            flashlight.style.background = `radial-gradient(circle at ${e.clientX}px ${e.clientY}px, transparent 60px, rgba(0,0,0,0.99) 200px)`;
+        });
+
+        const keys = {};
+        window.addEventListener('keydown', e => keys[e.code] = true);
+        window.addEventListener('keyup', e => keys[e.code] = false);
+
+        function startGame() {
+            overlay.style.display = 'none';
+            initMap();
+            gameActive = true;
+            loop();
+        }
+
+        function loop() {
+            if(!gameActive) return;
+
+            // Player movement
+            let nextX = player.x;
+            let nextY = player.y;
+            if(keys['ArrowUp'] || keys['KeyW']) nextY -= player.speed;
+            if(keys['ArrowDown'] || keys['KeyS']) nextY += player.speed;
+            if(keys['ArrowLeft'] || keys['KeyA']) nextX -= player.speed;
+            if(keys['ArrowRight'] || keys['KeyD']) nextX += player.speed;
+
+            // Simple collision
+            let hit = walls.some(w => nextX+player.size > w.x && nextX-player.size < w.x+w.w && nextY+player.size > w.y && nextY-player.size < w.y+w.h);
+            if(!hit) {
+                player.x = nextX;
+                player.y = nextY;
+            }
+
+            // Nun movement
+            let dx = player.x - nun.x;
+            let dy = player.y - nun.y;
+            let dist = Math.sqrt(dx*dx + dy*dy);
+            if(dist < 400) { // Seek player
+                nun.x += (dx/dist) * nun.speed;
+                nun.y += (dy/dist) * nun.speed;
+            }
+
+            if(dist < 30) doJumpscare();
+
+            // Key
+            if(!key.found && Math.sqrt((player.x-key.x)**2 + (player.y-key.y)**2) < 30) {
+                key.found = true;
+                ui.innerText = "KEY FOUND: 1 / 1! ESCAPE NOW!";
+                ui.style.color = "#0f0";
+            }
+
+            // Win
+            if(key.found && Math.sqrt((player.x-exit.x)**2 + (player.y-exit.y)**2) < 40) {
+                win();
+            }
+
+            draw();
+            requestAnimationFrame(loop);
+        }
+
+        function draw() {
+            ctx.fillStyle = '#0a0a0a';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Walls
+            ctx.fillStyle = '#222';
+            walls.forEach(w => ctx.fillRect(w.x, w.y, w.w, w.h));
+
+            // Key
+            if(!key.found) {
+                ctx.fillStyle = '#ff0';
+                ctx.beginPath(); ctx.arc(key.x, key.y, 8, 0, Math.PI*2); ctx.fill();
+            }
+
+            // Exit
+            ctx.fillStyle = key.found ? '#0f0' : '#444';
+            ctx.fillRect(exit.x-20, exit.y-20, 40, 40);
+
+            // Player
+            ctx.fillStyle = '#3498db';
+            ctx.beginPath(); ctx.arc(player.x, player.y, player.size, 0, Math.PI*2); ctx.fill();
+
+            // Nun
+            ctx.fillStyle = '#fff';
+            ctx.beginPath(); ctx.arc(nun.x, nun.y, nun.size, 0, Math.PI*2); ctx.fill();
+            ctx.fillStyle = '#000';
+            ctx.fillRect(nun.x-5, nun.y-5, 10, 10); // eye hint
+        }
+
+        function doJumpscare() {
+            gameActive = false;
+            jumpscare.style.display = 'flex';
+            setTimeout(() => { jumpscare.style.display = 'none'; location.reload(); }, 2000);
+        }
+
+        function win() {
+            gameActive = false;
+            overlay.style.display = 'flex';
+            overlay.innerHTML = `<h1 style="color:#0f0">ESCAPED!</h1><button class="btn" onclick="location.reload()">한 번 더 가기</button>`;
+        }
+    </script>
+</body>
+</html>
