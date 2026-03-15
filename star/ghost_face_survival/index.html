@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GHOST FACE: DARK HOUSE 🌑</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Creepster&family=Nosifer&display=swap');
+
+        body {
+            margin: 0;
+            background: #000;
+            color: #fff;
+            font-family: 'Arial', sans-serif;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        #game-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            background: #050505;
+            cursor: none;
+        }
+
+        canvas {
+            display: block;
+        }
+
+        #flashlight-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            background: radial-gradient(circle at 50% 50%, transparent 100px, rgba(0, 0, 0, 0.98) 250px);
+        }
+
+        #ui {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            pointer-events: none;
+            text-shadow: 0 0 10px #f00;
+            font-family: 'Creepster', cursive;
+            font-size: 24px;
+            color: #ff3333;
+        }
+
+        #jumpscare {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            display: none;
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #jumpscare img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            animation: shake 0.05s infinite;
+        }
+
+        @keyframes shake {
+            0% { transform: translate(0, 0) scale(1); filter: contrast(200%); }
+            25% { transform: translate(20px, -20px) scale(1.1); filter: hue-rotate(90deg); }
+            50% { transform: translate(-20px, 20px) scale(1.2); filter: invert(1); }
+            75% { transform: translate(20px, 20px) scale(1.1); }
+            100% { transform: translate(-20px, -20px) scale(1); }
+        }
+
+        #overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            z-index: 500;
+        }
+
+        h1 {
+            font-family: 'Nosifer', cursive;
+            font-size: 4rem;
+            color: #ff0000;
+            margin-bottom: 20px;
+            text-shadow: 0 0 20px #ff0000;
+        }
+
+        .btn-start {
+            padding: 20px 60px;
+            font-size: 2rem;
+            background: #aa0000;
+            border: 4px solid #fff;
+            color: #fff;
+            cursor: pointer;
+            font-family: 'Creepster', cursive;
+            transition: 0.3s;
+            box-shadow: 0 0 30px rgba(255, 0, 0, 0.5);
+        }
+
+        .btn-start:hover {
+            background: #ff0000;
+            transform: scale(1.1);
+        }
+
+        #blood-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            box-shadow: inset 0 0 100px rgba(255, 0, 0, 0);
+            transition: box-shadow 0.1s;
+        }
+
+        .glitch {
+            animation: glitch-anim 0.2s infinite;
+            display: none;
+        }
+
+        @keyframes glitch-anim {
+            0% { opacity: 0.1; transform: skewX(10deg); }
+            50% { opacity: 0.3; transform: skewX(-10deg); }
+            100% { opacity: 0.1; transform: skewX(0deg); }
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <canvas id="gameCanvas"></canvas>
+        <div id="flashlight-overlay"></div>
+        <div id="blood-screen"></div>
+        <div id="ui">이정표: <span id="milestone">0</span>/5 수집</div>
+        
+        <div id="jumpscare">
+            <!-- 무서운 귀신 얼굴 GIF (사용자 경험 극대화) -->
+            <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHpwaGZqZndqZndqZndqZndqZndqZndqZndqZndqZndqZndqZndqJmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1n/6ozwFj8tPyJfW/giphy.gif" alt="GHOST">
+        </div>
+
+        <div id="overlay">
+            <h1>GHOST FACE</h1>
+            <p style="color: #ccc; font-size: 1.5rem; max-width: 600px;">
+                어두운 저택에 갇혔습니다.<br>
+                5개의 영혼 조각을 찾아 탈출하세요.<br>
+                손전등이 비추지 않는 곳을 조심하세요.<br>
+                뒤를 돌아보지 마세요... 귀신이 당신을 보고 있습니다.
+            </p>
+            <button class="btn-start" onclick="startGame()">진입하기</button>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const flashlight = document.getElementById('flashlight-overlay');
+        const jumpscare = document.getElementById('jumpscare');
+        const overlay = document.getElementById('overlay');
+        const MilestoneEl = document.getElementById('milestone');
+        const bloodScreen = document.getElementById('blood-screen');
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        let player = { x: canvas.width/2, y: canvas.height/2, speed: 4 };
+        let mouse = { x: canvas.width/2, y: canvas.height/2 };
+        let souls = [];
+        let score = 0;
+        let gameActive = false;
+        let ghost = { x: -100, y: -100, speed: 2, active: false, timer: 0 };
+        let sanity = 100;
+        let heartBeat = 0;
+
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+            flashlight.style.background = `radial-gradient(circle at ${e.clientX}px ${e.clientY}px, transparent 100px, rgba(0, 0, 0, 0.99) 250px)`;
+        });
+
+        function spawnSoul() {
+            souls.push({
+                x: Math.random() * (canvas.width - 100) + 50,
+                y: Math.random() * (canvas.height - 100) + 50,
+                pulse: 0
+            });
+        }
+
+        function startGame() {
+            overlay.style.display = 'none';
+            score = 0;
+            MilestoneEl.innerText = score;
+            souls = [];
+            for(let i=0; i<3; i++) spawnSoul();
+            gameActive = true;
+            ghost.active = false;
+            ghost.timer = 0;
+            sanity = 100;
+            gameLoop();
+        }
+
+        function gameLoop() {
+            if(!gameActive) return;
+
+            // Player moves towards mouse but slower to create tension
+            let dx = mouse.x - player.x;
+            let dy = mouse.y - player.y;
+            let dist = Math.sqrt(dx*dx + dy*dy);
+            if(dist > player.speed) {
+                player.x += (dx/dist) * player.speed;
+                player.y += (dy/dist) * player.speed;
+            }
+
+            // Ghost AI
+            ghost.timer++;
+            if(!ghost.active && ghost.timer > 300) { // Spawn ghost after some time
+                ghost.active = true;
+                // Spawn ghost randomly outside player view
+                ghost.x = Math.random() > 0.5 ? -100 : canvas.width + 100;
+                ghost.y = Math.random() * canvas.height;
+                ghost.speed = 1.5 + (score * 0.5);
+            }
+
+            if(ghost.active) {
+                let gdx = player.x - ghost.x;
+                let gdy = player.y - ghost.y;
+                let gdist = Math.sqrt(gdx*gdx + gdy*gdy);
+                
+                // Ghost moves towards player
+                ghost.x += (gdx/gdist) * ghost.speed;
+                ghost.y += (gdy/gdist) * ghost.speed;
+
+                // If player shines light on ghost, ghost retreats and speeds up
+                let lightDx = mouse.x - ghost.x;
+                let lightDy = mouse.y - ghost.y;
+                let lightDist = Math.sqrt(lightDx*lightDx + lightDy*lightDy);
+                
+                if(lightDist < 120) {
+                    ghost.x -= (gdx/gdist) * 5;
+                    ghost.y -= (gdy/gdist) * 5;
+                    sanity -= 0.1;
+                }
+
+                // Heartbeat effect based on distance
+                heartBeat = Math.max(0, 255 - (gdist / 3));
+                bloodScreen.style.boxShadow = `inset 0 0 ${heartBeat/2}px rgba(255, 0, 0, ${heartBeat/255})`;
+
+                if(gdist < 40) doJumpscare();
+            }
+
+            // Collect souls
+            souls.forEach((soul, index) => {
+                let sdx = player.x - soul.x;
+                let sdy = player.y - soul.y;
+                let sdist = Math.sqrt(sdx*sdx + sdy*sdy);
+                if(sdist < 30) {
+                    souls.splice(index, 1);
+                    score++;
+                    MilestoneEl.innerText = score;
+                    if(score >= 5) winGame();
+                    else spawnSoul();
+                }
+            });
+
+            draw();
+            requestAnimationFrame(gameLoop);
+        }
+
+        function draw() {
+            ctx.fillStyle = '#050505';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Draw Souls
+            souls.forEach(soul => {
+                soul.pulse += 0.1;
+                let s = Math.sin(soul.pulse) * 5;
+                ctx.fillStyle = 'rgba(200, 255, 255, 0.6)';
+                ctx.beginPath();
+                ctx.arc(soul.x, soul.y, 8 + s, 0, Math.PI*2);
+                ctx.fill();
+                ctx.shadowBlur = 15;
+                ctx.shadowColor = '#0ff';
+            });
+
+            // Draw Ghost hint (extremely faint)
+            if(ghost.active) {
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.03)';
+                ctx.beginPath();
+                ctx.arc(ghost.x, ghost.y, 20, 0, Math.PI*2);
+                ctx.fill();
+            }
+
+            ctx.shadowBlur = 0;
+        }
+
+        function doJumpscare() {
+            gameActive = false;
+            jumpscare.style.display = 'flex';
+            // Play sound would go here
+            setTimeout(() => {
+                jumpscare.style.display = 'none';
+                overlay.style.display = 'flex';
+                overlay.innerHTML = '<h1 style="color:red">YOU DIED</h1><p style="font-size: 20px;">귀신이 당신의 영혼을 가져갔습니다.</p><button class="btn-start" onclick="startGame()">다시 진입하기</button>';
+            }, 3000);
+        }
+
+        function winGame() {
+            gameActive = false;
+            overlay.style.display = 'flex';
+            overlay.innerHTML = '<h1 style="color:#00ff00">ESCAPED</h1><p style="font-size: 20px;">무사히 저택을 탈출했습니다!</p><button class="btn-start" onclick="startGame()">한 번 더 도전</button>';
+        }
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+
+    </script>
+</body>
+</html>
