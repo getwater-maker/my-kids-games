@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>냥코 대전쟁 - Antigravity Edition</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="game-container">
+        <canvas id="gameCanvas"></canvas>
+        
+        <div id="ui-layer">
+            <div class="top-bar">
+                <div class="money-display">
+                    <span id="money-amount">100</span> / <span id="money-cap">500</span> 
+                    <span class="currency">円</span>
+                </div>
+                <div class="cannon-container">
+                    <button id="btn-cannon" class="cannon-btn">
+                        <span>CANNON</span>
+                        <div class="charge-bar"><div id="cannon-fill"></div></div>
+                    </button>
+                </div>
+                <div class="base-healths">
+                    <div class="health-bar-container player-base-hp">
+                        <div class="health-label">MY BASE</div>
+                        <div class="bar"><div id="player-hp-fill" class="fill"></div></div>
+                    </div>
+                    <div class="health-bar-container enemy-base-hp">
+                        <div class="health-label">ENEMY BASE</div>
+                        <div class="bar"><div id="enemy-hp-fill" class="fill"></div></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bottom-bar">
+                <div class="control-panel">
+                    <button class="upgrade-btn" id="btn-upgrade">
+                        <div class="label">UPGRADE</div>
+                        <div class="lvl">Lv.<span id="upgrade-lvl">1</span></div>
+                        <div class="cost">Cost: <span id="upgrade-cost">200</span></div>
+                    </button>
+                    <div id="unit-buttons">
+                        <button class="unit-btn" data-unit="cat" id="btn-cat">
+                            <div class="icon">🐱</div>
+                            <div class="cost">50</div>
+                            <div class="cooldown"></div>
+                        </button>
+                        <button class="unit-btn" data-unit="tank" id="btn-tank">
+                            <div class="icon">🛡️</div>
+                            <div class="cost">150</div>
+                            <div class="cooldown"></div>
+                        </button>
+                        <button class="unit-btn" data-unit="ninja" id="btn-ninja">
+                            <div class="icon">🥷</div>
+                            <div class="cost">300</div>
+                            <div class="cooldown"></div>
+                        </button>
+                        <button class="unit-btn" data-unit="bird" id="btn-bird">
+                            <div class="icon">🕊️</div>
+                            <div class="cost">500</div>
+                            <div class="cooldown"></div>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="game-over" class="hidden">
+            <div class="message-box">
+                <h1 id="result-title">VICTORY!</h1>
+                <button onclick="location.reload()">다시 시작</button>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
