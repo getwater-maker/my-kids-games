@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>인생네컷 포토부스 📸</title>
+    <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="photobooth.css">
+</head>
+<body>
+    <div class="game-container">
+        <header>
+            <button class="back-btn" onclick="location.href='index.html'">◀ 뒤로가기</button>
+            <h1>📸 우리들의 인생네컷</h1>
+        </header>
+
+        <main>
+            <div class="booth-area">
+                <!-- 촬영 화면 -->
+                <div class="camera-view" id="cameraView">
+                    <video id="video" autoplay playsinline></video>
+                    <canvas id="captureCanvas" style="display:none;"></canvas>
+                    <div class="countdown" id="countdown">3</div>
+                    <div class="flash" id="flash"></div>
+                </div>
+
+                <!-- 결과물 (네컷 프레임) -->
+                <div class="frame-container" id="finalResult">
+                    <div class="frame" id="photoFrame">
+                        <div class="photo-slots">
+                            <div class="slot" id="slot1"></div>
+                            <div class="slot" id="slot2"></div>
+                            <div class="slot" id="slot3"></div>
+                            <div class="slot" id="slot4"></div>
+                        </div>
+                        <div class="frame-footer">
+                            <span class="date" id="currentDate">2026.03.28</span>
+                            <span class="logo">KIDS PHOTO</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="controls">
+                <div class="panel frame-selectors">
+                    <h3>🎨 프레임 색상</h3>
+                    <div class="options">
+                        <button class="color-opt" style="background:#000;" onclick="changeFrameColor('#000')"></button>
+                        <button class="color-opt" style="background:#fff; border:1px solid #ddd;" onclick="changeFrameColor('#fff')"></button>
+                        <button class="color-opt" style="background:#ff9ff3;" onclick="changeFrameColor('#ff9ff3')"></button>
+                        <button class="color-opt" style="background:#feca57;" onclick="changeFrameColor('#feca57')"></button>
+                        <button class="color-opt" style="background:#48dbfb;" onclick="changeFrameColor('#48dbfb')"></button>
+                    </div>
+                </div>
+
+                <div class="panel main-actions">
+                    <button id="startBtn" class="btn primary-btn">📸 촬영 시작!</button>
+                    <button id="saveBtn" class="btn secondary-btn" style="display:none;">💾 사진 저장</button>
+                    <button id="resetBtn" class="btn reset-btn" style="display:none;">🔄 다시 찍기</button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast"></div>
+
+    <script src="photobooth.js"></script>
+</body>
+</html>
