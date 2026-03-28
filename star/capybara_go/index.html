@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>카피바라 GO! - Capybara Adventure</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Jua&family=Orbitron:wght@400;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="game-wrapper">
+        <!-- Main Game Canvas -->
+        <canvas id="game-canvas"></canvas>
+
+        <!-- UI Overlay -->
+        <div id="ui-layer">
+            <!-- Top Bar: Stats & Progress -->
+            <div class="top-bar">
+                <div class="player-stats">
+                    <div class="stat-item">
+                        <span class="stat-icon">❤️</span>
+                        <div class="bar-bg"><div id="hp-bar" class="bar-fill hp"></div></div>
+                        <span id="hp-text">100/100</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-icon">💰</span>
+                        <span id="gold-text">0</span>
+                    </div>
+                </div>
+                <div class="stage-info">
+                    <div id="stage-text">STAGE 1-1</div>
+                    <div id="day-text">DAY 1</div>
+                </div>
+            </div>
+
+            <!-- Event Log (Center-Top) -->
+            <div id="event-log">무료한 하루가 시작되었습니다...</div>
+
+            <!-- Bottom Dock: Actions & Upgrades -->
+            <div class="bottom-dock">
+                <div class="skills-container">
+                    <div class="skill-slot" id="skill-1">?</div>
+                    <div class="skill-slot" id="skill-2">?</div>
+                    <div class="skill-slot" id="skill-3">?</div>
+                </div>
+                <button id="go-btn">탐험하기 (GO!)</button>
+            </div>
+        </div>
+
+        <!-- Popups & Modals -->
+        <div id="choice-modal" class="modal hidden">
+            <div class="modal-content">
+                <h2 id="modal-title">보급품 발견!</h2>
+                <p id="modal-desc">무엇을 선택하시겠습니까?</p>
+                <div class="choice-group">
+                    <div class="choice-btn" data-id="1">선택지 1</div>
+                    <div class="choice-btn" data-id="2">선택지 2</div>
+                    <div class="choice-btn" data-id="3">선택지 3</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Start/Game Over Screens -->
+        <div id="start-screen" class="screen">
+            <div class="intro-box">
+                <h1 class="game-title">CAPYBARA<br><span>GO!</span></h1>
+                <p>귀여운 카피바라와 함께 세상을 탐험하세요!</p>
+                <button id="start-btn">모험 시작</button>
+            </div>
+        </div>
+
+        <div id="game-over-screen" class="screen hidden">
+            <div class="modal-content">
+                <h1>낮잠 잘 시간...</h1>
+                <p>카피바라가 지쳐서 더 이상 걸을 수 없습니다.</p>
+                <div id="result-stats"></div>
+                <button onclick="location.reload()">다시 도전</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+</body>
+</html>

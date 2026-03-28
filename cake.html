@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>달콤한 케이크 꾸미기 🎂</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="cake.css">
+    <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="app-container">
+        <header style="background-color: #ffb8b8; border-bottom: 4px solid #ff9999;">
+            <h1>🎂 달콤한 케이크 꾸미기</h1>
+            <div class="actions">
+                <button onclick="location.href='index.html'" class="action-btn"
+                    style="background-color: #a29bfe; box-shadow: 0 4px 0 #6c5ce7;">◀ 색칠공부</button>
+                <button onclick="location.href='tanghulu.html'" class="action-btn"
+                    style="background-color: #ff9f43; box-shadow: 0 4px 0 #cc8e35;">🍡 탕후루</button>
+                <button id="clearBtn" class="action-btn">🗑️ 다 지우기</button>
+                <button id="saveBtn" class="action-btn">💾 사진 저장하기</button>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <aside class="sidebar">
+                <div class="panel">
+                    <h2 style="background: #e84393; text-shadow: 1px 1px 0px #d63031;">토핑 올리기 (스티커)</h2>
+                    <button id="spinBtn" class="action-btn"
+                        style="width:100%; margin-bottom: 10px; background-color: #f368e0; box-shadow: 0 4px 0 #b33939; font-size:1.1rem;">🔄
+                        회전판 켜기</button>
+                    <div class="tool-list">
+                        <!-- 스티커 도구들 -->
+                        <button class="tool-btn active" data-tool="stamp_strawberry" title="딸기 토핑">🍓 콕! 딸기</button>
+                        <button class="tool-btn" data-tool="stamp_cherry" title="체리 토핑">🍒 콕! 체리</button>
+                        <button class="tool-btn" data-tool="stamp_star" title="별 토핑">⭐ 콕! 반짝별</button>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <h2>색칠하기 도구</h2>
+                    <div class="tool-list">
+                        <button class="tool-btn" data-tool="pipe" title="짤주머니">🎂 짤주머니</button>
+                        <button class="tool-btn" data-tool="fill" title="물감 붓기">🪣 크림 바르기</button>
+                        <button class="tool-btn" data-tool="brush" title="직접 그리기">🖍️ 시럽 짜기</button>
+                        <button class="tool-btn" data-tool="eraser" title="지우개">🧽 지우개</button>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <h2>크림 색깔들</h2>
+                    <div class="color-palette" id="colorPalette">
+                        <!-- 자바스크립트가 여기에 물감을 준비해줄 거야! -->
+                    </div>
+                </div>
+            </aside>
+
+            <section class="canvas-area">
+                <div class="canvas-wrapper">
+                    <!-- 진짜 스케치북 역할을 하는 캔버스! -->
+                    <canvas id="coloringCanvas" width="800" height="600"></canvas>
+                </div>
+            </section>
+        </main>
+    </div>
+    <!-- 자바스크립트 요정 부르기 -->
+    <script src="cake.js"></script>
+</body>
+
+</html>

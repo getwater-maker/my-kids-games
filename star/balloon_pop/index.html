@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8"><title>BALLOON POP! 🎈</title>
+    <style>
+        body { margin:0; background:#87CEEB; font-family:sans-serif; overflow:hidden; }
+        .balloon { position:absolute; width:60px; height:80px; border-radius:50%; cursor:pointer; animation: rise 5s linear infinite; }
+        @keyframes rise { from { bottom:-100px; } to { bottom:100vh; } }
+    </style>
+</head>
+<body>
+    <div id="ui" style="position:absolute; top:20px; left:20px; font-size:24px; color:#fff;">Pops: 0</div>
+    <script>
+        let score = 0;
+        function spawn() {
+            let b = document.createElement('div'); b.className='balloon';
+            let colors = ['#f00', '#0f0', '#00f', '#ff0', '#f0f'];
+            b.style.background = colors[Math.floor(Math.random()*colors.length)];
+            b.style.left = Math.random()*90 + '%';
+            b.onclick = () => {
+                score++; document.getElementById('ui').innerText = 'Pops: ' + score;
+                document.body.removeChild(b);
+            };
+            document.body.appendChild(b);
+        }
+        setInterval(spawn, 800);
+    </script>
+</body>
+</html>

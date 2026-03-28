@@ -1,0 +1,221 @@
+:root {
+    --bg-color: #74b9ff;
+    /* Sky blue */
+    --shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+    --border-radius: 20px;
+}
+
+body {
+    font-family: 'Jua', sans-serif;
+    background-color: #a29bfe;
+    background-image: linear-gradient(135deg, #a29bfe 0%, #74b9ff 100%);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    overflow: hidden;
+}
+
+.app-container {
+    width: 95vw;
+    height: 95vh;
+    background-color: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border: 5px solid #0984e3;
+    user-select: none;
+}
+
+.game-header {
+    background-color: #0984e3;
+    color: white;
+    padding: 15px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.game-header h1 {
+    font-size: 2rem;
+    margin: 0;
+    text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.3);
+}
+
+.actions {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.action-btn {
+    font-family: 'Jua', sans-serif;
+    font-size: 1.2rem;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    background-color: #f1f2f6;
+    color: #2d3436;
+    box-shadow: 0 4px 0 #ced6e0;
+}
+
+.action-btn:active {
+    transform: translateY(4px);
+    box-shadow: none;
+}
+
+.level-indicator {
+    font-size: 1.5rem;
+    font-weight: bold;
+    background: #ffeaa7;
+    color: #d63031;
+    padding: 5px 15px;
+    border-radius: 12px;
+    box-shadow: 0 4px 0 #fdcb6e;
+}
+
+.main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background-color: #81ecec;
+    position: relative;
+}
+
+.game-wrapper {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(to bottom, #74b9ff 0%, #81ecec 100%);
+}
+
+canvas {
+    max-width: 100%;
+    max-height: 100%;
+    box-shadow: inset 0 0 50px rgba(255, 255, 255, 0.5);
+    /* 캔버스 렌더링 최적화 */
+    image-rendering: -moz-crisp-edges;
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+    image-rendering: pixelated;
+}
+
+/* 터치 / 모바일 컨트롤러 */
+.mobile-controls {
+    height: 120px;
+    background: #dfe6e9;
+    border-top: 4px solid #b2bec3;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 30px;
+}
+
+.d-pad {
+    display: flex;
+    gap: 15px;
+}
+
+.action-pad {
+    display: flex;
+}
+
+.control-btn {
+    width: 80px;
+    height: 80px;
+    font-size: 2rem;
+    border-radius: 50%;
+    border: none;
+    background: #0984e3;
+    color: white;
+    box-shadow: 0 8px 0 #005a9e;
+    font-family: 'Jua', sans-serif;
+    cursor: pointer;
+}
+
+.control-btn:active,
+.control-btn.active {
+    transform: translateY(8px);
+    box-shadow: none;
+    background: #74b9ff;
+}
+
+.jump-btn {
+    width: 150px;
+    border-radius: 40px;
+    font-size: 1.8rem;
+    background: #e84393;
+    box-shadow: 0 8px 0 #b8326b;
+}
+
+.jump-btn:active,
+.jump-btn.active {
+    background: #fd79a8;
+    box-shadow: none;
+}
+
+/* 게임 오버 / 클리어 화면 오버레이 */
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    z-index: 100;
+}
+
+.overlay.hidden {
+    display: none;
+}
+
+.overlay h2 {
+    font-size: 5rem;
+    color: white;
+    margin: 0;
+    text-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+}
+
+.overlay p {
+    font-size: 2rem;
+    color: #ffeaa7;
+    margin: 10px 0 30px 0;
+}
+
+.big-btn {
+    font-family: 'Jua', sans-serif;
+    font-size: 2rem;
+    padding: 15px 40px;
+    border: none;
+    border-radius: 20px;
+    background: #55efc4;
+    color: #2d3436;
+    box-shadow: 0 8px 0 #00b894;
+    cursor: pointer;
+    transition: transform 0.1s;
+}
+
+.big-btn:active {
+    transform: translateY(8px);
+    box-shadow: none;
+}
+
+/* 랩탑 이상 큰화면일때 컨트롤러를 숨기려면 아래 코드를 사용합니다 */
+@media (min-width: 1024px) {
+    .mobile-controls {
+        display: none;
+        /* 화면이 클 때는 키보드(방향키, 스페이스바)로 조작하세요! */
+    }
+}

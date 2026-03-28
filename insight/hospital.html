@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🏥 반짝반짝 어린이 병원</title>
+    <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="hospital.css">
+</head>
+<body>
+    <div class="game-container">
+        <!-- 상단 바 -->
+        <header class="game-header">
+            <button class="back-btn" onclick="location.href='index.html'">◀ 뒤로가기</button>
+            <h1 id="game-title">🏥 반짝반짝 어린이 병원</h1>
+        </header>
+
+        <!-- 게임 영역 -->
+        <main class="game-main">
+            <!-- 도구 패널 (왼쪽) -->
+            <aside class="tool-panel">
+                <h2>의료 도구</h2>
+                <div class="tools">
+                    <button class="tool-btn" data-tool="thermometer" title="체온계">🌡️ 체온계</button>
+                    <button class="tool-btn" data-tool="stethoscope" title="청진기">🩺 청진기</button>
+                    <button class="tool-btn" data-tool="bandage" title="밴드">🩹 밴드</button>
+                    <button class="tool-btn" data-tool="icepack" title="얼음찜질">🧊 얼음찜질</button>
+                    <button class="tool-btn" data-tool="medicine" title="물약">🧪 달콤물약</button>
+                </div>
+            </aside>
+
+            <!-- 진료 영역 (중앙) -->
+            <section class="examination-room">
+                <div id="status-bubble" class="hidden">아파요... 😢</div>
+                <div id="patient-area">
+                    <div id="patient-sprite" class="patient-select-mode">
+                        <!-- 환자 선택 버튼들 -->
+                        <div class="patient-selector">
+                            <div class="patient-choice" data-id="bear">🐻<br><span>곰돌이</span></div>
+                            <div class="patient-choice" data-id="rabbit">🐰<br><span>토끼</span></div>
+                            <div class="patient-choice" data-id="fox">🦊<br><span>여우</span></div>
+                        </div>
+                    </div>
+                </div>
+                <div id="treatment-effect" class="hidden">✨</div>
+            </section>
+
+            <!-- 진찰 기록 (오른쪽) -->
+            <aside class="status-panel">
+                <h2>진찰 기록</h2>
+                <div id="report-card">
+                    <p class="empty-msg">환자를 선택해주세요!</p>
+                </div>
+                <button id="cure-btn" class="hidden">치료 완료! ✨</button>
+            </aside>
+        </main>
+
+        <!-- 알림 메시지 -->
+        <div id="toast" class="hidden">환자가 다 나았어요!</div>
+    </div>
+
+    <!-- 스크립트 파일 -->
+    <script src="hospital.js"></script>
+</body>
+</html>

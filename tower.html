@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>레서판다 타워 쌓기 🗼</title>
+    <link rel="stylesheet" href="tower.css">
+    <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="app-container">
+        <header class="game-header">
+            <h1>🗼 레서판다 타워 쌓기</h1>
+            <div class="actions">
+                <button onclick="location.href='index.html'" class="action-btn">⬅️ 뒤로가기</button>
+                <button id="restartBtn" class="action-btn restart-btn">🔄 처음부터</button>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <!-- Left Toolbar -->
+            <aside class="sidebar">
+                <div class="panel">
+                    <h2>🦝 레서판다의 도전!</h2>
+                    <p class="hint-text">타이밍에 맞춰 클릭해<br>최대한 높이 타워를 쌓아보세요!<br>어디까지 올라갈 수 있을까요?</p>
+                    <div class="score-board">
+                        <div class="score-title">현재 층수</div>
+                        <div class="score-value" id="scoreDisplay">0</div>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <h2>🌟 최고 기록</h2>
+                    <div class="best-score" id="bestScoreDisplay">0</div>
+                </div>
+            </aside>
+
+            <!-- Center Stage -->
+            <section class="game-area">
+                <div id="gameWrapper">
+                    <canvas id="gameCanvas" width="500" height="700"></canvas>
+                    <div id="startScreen" class="overlay-screen">
+                        <div class="cloud">🦝</div>
+                        <h2>레서판다 타워</h2>
+                        <p>화면을 클릭하면 블록이 내려옵니다!</p>
+                        <button id="startBtn" class="action-btn play-btn">시작하기</button>
+                    </div>
+                    <div id="gameOverScreen" class="overlay-screen hidden">
+                        <h2>앗, 떨어졌어요! 💦</h2>
+                        <p>최종 층수: <strong id="finalScore">0</strong>층</p>
+                        <button id="retryBtn" class="action-btn play-btn">다시 도전!</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Sounds -->
+    <audio id="sfx-drop" src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3"></audio>
+    <audio id="sfx-perfect" src="https://assets.mixkit.co/active_storage/sfx/1435/1435-preview.mp3"></audio>
+    <audio id="sfx-fall" src="https://assets.mixkit.co/active_storage/sfx/270/270-preview.mp3"></audio>
+
+    <script src="tower.js"></script>
+</body>
+
+</html>

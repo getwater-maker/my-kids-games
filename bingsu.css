@@ -1,0 +1,238 @@
+:root {
+    --bg-color: #7efff5;
+    /* Icy cool mint */
+    --shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    --border-radius: 20px;
+    --font-color: #2d3436;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Jua', sans-serif;
+    background-color: var(--bg-color);
+    background-image: linear-gradient(135deg, #e0ffff 0%, #7efff5 100%);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    color: var(--font-color);
+}
+
+.app-container {
+    width: 95vw;
+    height: 95vh;
+    background-color: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border: 5px solid #18dcff;
+    position: relative;
+    user-select: none;
+}
+
+/* Header */
+.game-header {
+    background-color: #17c0eb;
+    color: white;
+    padding: 15px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 4px solid #0984e3;
+    z-index: 10;
+}
+
+.game-header h1 {
+    font-size: 2rem;
+    text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.2);
+}
+
+.actions {
+    display: flex;
+    gap: 15px;
+}
+
+.action-btn {
+    font-family: 'Jua', sans-serif;
+    font-size: 1.2rem;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    background-color: #f1f2f6;
+    color: #57606f;
+    box-shadow: 0 4px 0 #ced6e0;
+    transition: all 0.2s;
+}
+
+.action-btn:active {
+    transform: translateY(4px);
+    box-shadow: none;
+}
+
+.clear-btn {
+    background-color: #ff7675;
+    color: white;
+    box-shadow: 0 4px 0 #d63031;
+}
+
+.save-btn {
+    background-color: #55efc4;
+    color: #2d3436;
+    box-shadow: 0 4px 0 #00b894;
+}
+
+/* Main Layout */
+.main-content {
+    flex: 1;
+    display: flex;
+    overflow: hidden;
+    background-color: #f5f6fa;
+}
+
+/* Sidebar Tools */
+.sidebar {
+    width: 330px;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-right: 4px dashed #74b9ff;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    overflow-y: auto;
+}
+
+.panel h2 {
+    color: #0984e3;
+    margin-bottom: 5px;
+    font-size: 1.4rem;
+}
+
+.tool-list,
+.sticker-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
+.tool-btn {
+    font-family: 'Jua', sans-serif;
+    font-size: 1.1rem;
+    padding: 10px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    background-color: #edf2f4;
+    color: #2b2b2b;
+    box-shadow: 0 4px 0 #d2dae2;
+    transition: all 0.1s;
+}
+
+.tool-btn.active {
+    background-color: #81ecec;
+    box-shadow: 0 4px 0 #00cec9;
+    color: #2d3436;
+}
+
+.tool-btn:active {
+    transform: translateY(4px);
+    box-shadow: none;
+}
+
+/* Center Stage */
+.preview-area {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    background: radial-gradient(circle at center, #ffffff 0%, #dff9fb 100%);
+}
+
+.bingsu-wrapper {
+    position: relative;
+    width: 500px;
+    height: 600px;
+    /* center horizontally and pushing down a bit */
+    margin-top: 50px;
+}
+
+#bingsuCanvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    pointer-events: auto;
+    /* catch mouse events */
+    cursor: crosshair;
+    z-index: 5;
+}
+
+/* Glass Bowl Styling */
+.glass-bowl-back {
+    position: absolute;
+    bottom: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 350px;
+    height: 180px;
+    background: rgba(135, 206, 235, 0.2);
+    border-bottom-left-radius: 175px;
+    border-bottom-right-radius: 175px;
+    box-shadow: inset 0 -10px 20px rgba(0, 0, 0, 0.1);
+    z-index: 1;
+    /* Behind ice */
+}
+
+/* A thicker elegant bottom stand for the bowl */
+.glass-bowl-back::after {
+    content: '';
+    position: absolute;
+    bottom: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 150px;
+    height: 30px;
+    background: rgba(135, 206, 235, 0.4);
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.7);
+}
+
+/* The front lip of the glass bowl, covering the ice slightly for 3D effect */
+.glass-bowl-front {
+    position: absolute;
+    bottom: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 350px;
+    height: 180px;
+    border-bottom-left-radius: 175px;
+    border-bottom-right-radius: 175px;
+    /* Make the glass shiny and reflective */
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0) 40%, rgba(255, 255, 255, 0.2) 100%);
+    border: 3px solid rgba(255, 255, 255, 0.8);
+    border-top: 5px solid rgba(255, 255, 255, 0.9);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+    pointer-events: none;
+    /* Crucial! Let mouse pass through to canvas! */
+    z-index: 10;
+    /* In front of ice */
+}
+
+/* Cursor Hint Bubble */
+.cursor-hint {
+    position: absolute;
+    pointer-events: none;
+    font-size: 50px;
+    display: none;
+    z-index: 20;
+    transform: translate(-50%, -50%);
+    filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.3));
+}

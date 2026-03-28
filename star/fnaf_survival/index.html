@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FNAF: SURVIVAL NIGHT 🐻</title>
+    <style>
+        body { margin: 0; background: #000; color: #f00; font-family: 'Courier New', Courier, monospace; overflow: hidden; display: flex; justify-content: center; align-items: center; height: 100vh; }
+        #game-container { position: relative; width: 800px; height: 600px; background: #111; border: 5px solid #333; overflow: hidden; box-shadow: 0 0 50px rgba(255, 0, 0, 0.2); }
+        #static { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; opacity: 0.1; background: url('https://www.transparenttextures.com/patterns/carbon-fibre.png'); animation: static-anim 0.1s infinite; }
+        @keyframes static-anim { 0% { transform: translate(0,0); } 100% { transform: translate(5px,5px); } }
+        canvas { display: block; filter: contrast(120%) brightness(80%) sepia(20%); }
+        #ui { position: absolute; bottom: 20px; left: 20px; pointer-events: none; }
+        .door-btn { position: absolute; bottom: 100px; width: 80px; height: 120px; background: #444; border: 2px solid #666; cursor: pointer; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: bold; pointer-events: all; }
+        #left-door { left: 50px; }
+        #right-door { right: 50px; }
+        #power-label { font-size: 24px; text-shadow: 0 0 10px #f00; }
+        #time-label { position: absolute; top: 20px; right: 20px; font-size: 32px; color: #fff; }
+        #jumpscare { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #000; display: none; z-index: 100; justify-content: center; align-items: center; }
+        #jumpscare img { width: 100%; height: 100%; object-fit: cover; animation: shake 0.1s infinite; }
+        @keyframes shake { 0% { transform: translate(0,0); } 25% { transform: translate(10px,-10px); } 50% { transform: translate(-10px,10px); } 75% { transform: translate(10px,10px); } 100% { transform: translate(-10px,-10px); } }
+        #overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; color: #fff; z-index: 50; }
+        .btn-start { padding: 15px 40px; font-size: 24px; background: #f00; border: none; color: #fff; cursor: pointer; border-radius: 5px; margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <div id="static"></div>
+        <canvas id="gameCanvas" width="800" height="600"></canvas>
+        <div id="ui">
+            <div id="power-label">POWER: 100%</div>
+        </div>
+        <div id="time-label">12 AM</div>
+        <div id="left-door" class="door-btn">LEFT DOOR</div>
+        <div id="right-door" class="door-btn">RIGHT DOOR</div>
+        <div id="jumpscare"><img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExMnhscG9qZndqZndqZndqZndqZndqZndqZndqZndqZndqZndqZndqJmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1n/3o7TKuw6r9NnLgYvC0/giphy.gif" alt="BOO!"></div>
+        <div id="overlay">
+            <h1>FNAF: SURVIVAL NIGHT</h1>
+            <p>보안 대기실에서 살아남으세요.<br>양쪽 문을 닫아 귀신을 막으세요.<br>전력이 0%가 되면 끝장입니다!</p>
+            <button class="btn-start" onclick="startGame()">START NIGHT</button>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const powerLabel = document.getElementById('power-label');
+        const timeLabel = document.getElementById('time-label');
+        const jumpscare = document.getElementById('jumpscare');
+        const overlay = document.getElementById('overlay');
+
+        let power = 100;
+        let time = 0; // 0 = 12AM, 6 = 6AM
+        let leftDoorClosed = false;
+        let rightDoorClosed = false;
+        let gameOver = false;
+        let gameActive = false;
+        let enemyPos = [0, 0]; // 0=Home, 1=Near, 2=At Door
+        let enemySide = 0; // 0=Left, 1=Right
+
+        document.getElementById('left-door').onclick = () => { if(gameActive) leftDoorClosed = !leftDoorClosed; updateButtons(); };
+        document.getElementById('right-door').onclick = () => { if(gameActive) rightDoorClosed = !rightDoorClosed; updateButtons(); };
+
+        function updateButtons() {
+            document.getElementById('left-door').style.background = leftDoorClosed ? '#f00' : '#444';
+            document.getElementById('right-door').style.background = rightDoorClosed ? '#f00' : '#444';
+        }
+
+        function startGame() {
+            overlay.style.display = 'none';
+            power = 100;
+            time = 0;
+            leftDoorClosed = false;
+            rightDoorClosed = false;
+            gameOver = false;
+            gameActive = true;
+            enemyPos = [0, 0];
+            updateButtons();
+            gameLoop();
+            
+            // Time interval (each hour is 30 seconds)
+            const timeInterval = setInterval(() => {
+                if(!gameActive) { clearInterval(timeInterval); return; }
+                time++;
+                if(time >= 6) {
+                    timeLabel.innerText = "6 AM";
+                    winGame();
+                    clearInterval(timeInterval);
+                } else {
+                    timeLabel.innerText = (time) + " AM";
+                }
+            }, 30000);
+
+            // Enemy movement interval
+            const enemyInterval = setInterval(() => {
+                if(!gameActive) { clearInterval(enemyInterval); return; }
+                moveEnemy();
+            }, 5000);
+        }
+
+        function moveEnemy() {
+            if(enemyPos[0] < 2) {
+                enemyPos[0]++;
+                if(enemyPos[0] === 2) enemySide = Math.random() > 0.5 ? 0 : 1;
+            } else {
+                // At door, check if closed
+                if((enemySide === 0 && leftDoorClosed) || (enemySide === 1 && rightDoorClosed)) {
+                    enemyPos[0] = 0; // Go back
+                } else {
+                    loseGame();
+                }
+            }
+        }
+
+        function loseGame() {
+            gameActive = false;
+            jumpscare.style.display = 'flex';
+            setTimeout(() => {
+                jumpscare.style.display = 'none';
+                overlay.style.display = 'flex';
+                overlay.innerHTML = '<h1>GAME OVER</h1><p>귀신에게 잡혔습니다!</p><button class="btn-start" onclick="location.reload()">RETRY</button>';
+            }, 2000);
+        }
+
+        function winGame() {
+            gameActive = false;
+            overlay.style.display = 'flex';
+            overlay.innerHTML = '<h1>CONGRATULATIONS!</h1><p>당신은 살아남았습니다! 6 AM!</p><button class="btn-start" onclick="location.reload()">PLAY AGAIN</button>';
+        }
+
+        function gameLoop() {
+            if(!gameActive) return;
+
+            // Power consumption
+            let consumption = 0.05;
+            if(leftDoorClosed) consumption += 0.2;
+            if(rightDoorClosed) consumption += 0.2;
+            power -= consumption;
+            
+            if(power <= 0) {
+                power = 0;
+                leftDoorClosed = false;
+                rightDoorClosed = false;
+                updateButtons();
+                // Special lose if power runs out
+                setTimeout(loseGame, 3000);
+            }
+
+            powerLabel.innerText = "POWER: " + Math.floor(power) + "%";
+
+            // Draw
+            ctx.fillStyle = '#0a0a0a';
+            ctx.fillRect(0,0,800,600);
+            
+            // Draw Office
+            ctx.strokeStyle = '#222';
+            ctx.lineWidth = 2;
+            for(let i=0; i<10; i++) {
+                ctx.strokeRect(50 - i*5, 50 - i*5, 700 + i*10, 500 + i*10);
+            }
+
+            // Draw Enemy indicator (shadows)
+            if(enemyPos[0] > 0) {
+                ctx.fillStyle = enemyPos[0] === 2 ? 'rgba(255,0,0,0.1)' : 'rgba(255,255,255,0.05)';
+                if(enemySide === 0) {
+                    ctx.fillRect(0, 0, 400, 600);
+                } else {
+                    ctx.fillRect(400, 0, 400, 600);
+                }
+            }
+
+            // Draw scan lines
+            ctx.fillStyle = 'rgba(255,255,255,0.02)';
+            for(let y=0; y<600; y+=4) {
+                ctx.fillRect(0, y, 800, 1);
+            }
+
+            requestAnimationFrame(gameLoop);
+        }
+
+        // Initial draw
+        ctx.fillStyle = '#111';
+        ctx.fillRect(0,0,800,600);
+        ctx.fillStyle = '#333';
+        ctx.font = '20px Arial';
+        ctx.fillText("WAITING...", 350, 300);
+
+    </script>
+</body>
+</html>

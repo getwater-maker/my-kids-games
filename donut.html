@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>도넛 만들기 🍩</title>
+    <link rel="stylesheet" href="donut.css">
+    <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="app-container">
+        <header class="game-header">
+            <h1>🍩 달콤 도넛 공방</h1>
+            <div class="actions">
+                <button onclick="location.href='index.html'" class="action-btn">⬅️ 뒤로가기</button>
+                <button id="clearBtn" class="action-btn clear-btn">🔥 새 도넛 굽기</button>
+                <button id="saveBtn" class="action-btn save-btn">📸 사진 저장!</button>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <aside class="sidebar">
+                <div class="panel">
+                    <h2>🍩 초코/시럽 바르기</h2>
+                    <p style="font-size: 0.9rem; color: #666; margin-bottom: 10px;">마우스로 스윽~ 발라보세요!</p>
+                    <div class="tool-list">
+                        <button class="tool-btn active" data-tool="icing" data-color="#ff7979">🍓 딸기 시럽</button>
+                        <button class="tool-btn" data-tool="icing" data-color="#5c3a21">🍫 초코 시럽</button>
+                        <button class="tool-btn" data-tool="icing" data-color="#badc58">🍵 말차 시럽</button>
+                        <button class="tool-btn" data-tool="icing" data-color="#f5f6fa">🥛 화이트 글레이즈</button>
+                        <button class="tool-btn" data-tool="icing" data-color="#feca57">🍌 바나나 시럽</button>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <h2>🌈 스프링클 뿌리기</h2>
+                    <p style="font-size: 0.9rem; color: #666; margin-bottom: 10px;">누르고 움직여서 솔솔~</p>
+                    <div class="tool-list">
+                        <button class="tool-btn" data-tool="sprinkle" data-color="rainbow">✨ 무지개 스프링클</button>
+                        <button class="tool-btn" data-tool="sprinkle" data-color="chocolate">🍫 초코칩</button>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <h2>🎀 예쁜 토핑 올리기</h2>
+                    <p style="font-size: 0.9rem; color: #666; margin-bottom: 10px;">원하는 곳에 콕콕!</p>
+                    <div class="sticker-list">
+                        <button class="tool-btn sticker-btn" data-tool="topping" data-val="🍒">🍒 체리</button>
+                        <button class="tool-btn sticker-btn" data-tool="topping" data-val="🍓">🍓 생딸기</button>
+                        <button class="tool-btn sticker-btn" data-tool="topping" data-val="🍪">🍪 쿠키</button>
+                        <button class="tool-btn sticker-btn" data-tool="topping" data-val="🍬">🍬 캔디</button>
+                        <button class="tool-btn sticker-btn" data-tool="topping" data-val="🐻">🐻 젤리베어</button>
+                        <button class="tool-btn sticker-btn" data-tool="topping" data-val="✨">✨ 반짝이</button>
+                    </div>
+                </div>
+            </aside>
+
+            <section class="preview-area">
+                <div class="donut-wrapper">
+                    <!-- The magical canvas that will hold our donut -->
+                    <canvas id="donutCanvas" width="600" height="600"></canvas>
+                    <div id="cursorHint" class="cursor-hint">🍓</div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Sounds -->
+    <audio id="sfx-cream" src="https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3" loop></audio>
+    <audio id="sfx-pop" src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3"></audio>
+    <audio id="sfx-sprinkle" src="https://assets.mixkit.co/active_storage/sfx/2627/2627-preview.mp3" loop></audio>
+    <!-- New sprinkle sound effect if needed -->
+
+    <script src="donut.js"></script>
+</body>
+
+</html>

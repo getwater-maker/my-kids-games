@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>FANCADE: SIMPLE GAMES - 팬케이드</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;700&family=Oswald:wght@700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body>
+    <div id="game-container">
+        <!-- HUD -->
+        <div id="hud">
+            <div class="top-info">
+                <div class="score-box">SCORE: <span id="score">0</span></div>
+                <div class="title-box">FANCADE: DRIVE & JUMP</div>
+            </div>
+            <div id="instruction">HOLD TO CHARGE JUMP / 정지 시 충전 후 점프!</div>
+        </div>
+
+        <!-- Start Screen -->
+        <div id="start-screen" class="overlay">
+            <div class="glass-box">
+                <h1 class="logo">FANCADE</h1>
+                <p>SIMPLIFIED VOXEL MINI-GAMES</p>
+                <div class="mini-game-list">
+                    <div class="game-btn active" onclick="selectGame('drive')">
+                        <span class="icon">🚗</span>
+                        <div class="info">
+                            <strong>VOXEL DRIVE</strong>
+                            <p>Avoid obstacles & Jump</p>
+                        </div>
+                    </div>
+                </div>
+                <button id="start-btn">PLAY NOW</button>
+            </div>
+        </div>
+
+        <!-- Game Over -->
+        <div id="game-over" class="overlay hidden">
+            <div class="glass-box">
+                <h1 style="color: #ff4757;">CRASHED!</h1>
+                <p>Score: <span id="final-score">0</span></p>
+                <button onclick="location.reload()">RETRY</button>
+            </div>
+        </div>
+    </div>
+    <script src="js/main.js"></script>
+</body>
+</html>

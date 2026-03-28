@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>구름 점프맵 게임 ☁️</title>
+    <link rel="stylesheet" href="jump.css">
+    <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="app-container">
+        <header class="game-header">
+            <h1>☁️ 두근두근 구름 점프맵!</h1>
+            <div class="actions">
+                <button onclick="location.href='index.html'" class="action-btn">⬅️ 뒤로가기</button>
+                <div class="level-indicator">단계: <span id="levelText">1</span></div>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <div class="game-wrapper">
+                <canvas id="gameCanvas" width="800" height="600"></canvas>
+
+                <!-- 게임 오버 / 클리어 화면 -->
+                <div id="overlay" class="overlay hidden">
+                    <h2 id="overlayTitle">우와 성공! 🎉</h2>
+                    <p id="overlayDesc">다음 단계로 가볼까요?</p>
+                    <button id="overlayBtn" class="big-btn">다음 단계 고고!</button>
+                </div>
+            </div>
+
+            <!-- 모바일 컨트롤러 -->
+            <div class="mobile-controls">
+                <div class="d-pad">
+                    <button id="btnLeft" class="control-btn">⬅️</button>
+                    <button id="btnRight" class="control-btn">➡️</button>
+                </div>
+                <div class="action-pad">
+                    <button id="btnJump" class="control-btn jump-btn">⬆️ 점프!</button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- 배경음악과 효과음 -->
+    <audio id="sfx-jump" src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3"></audio>
+    <audio id="sfx-win" src="https://assets.mixkit.co/active_storage/sfx/1435/1435-preview.mp3"></audio>
+    <audio id="sfx-fall" src="https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3"></audio>
+
+    <script src="jump.js"></script>
+</body>
+
+</html>

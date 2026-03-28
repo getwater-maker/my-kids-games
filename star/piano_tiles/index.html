@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8"><title>K-POP DEMON HUNTERS: PIANO TILES 🎹</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&display=swap');
+        body { margin:0; background:#000; overflow:hidden; display:flex; justify-content:center; font-family: 'Orbitron', sans-serif; }
+        #game { width:400px; height:100vh; background: linear-gradient(to bottom, #1a1a2e, #16213e); position:relative; overflow:hidden; border-left: 2px solid #333; border-right: 2px solid #333; }
+        .tile { position:absolute; width:100px; height:200px; background:#fff; cursor:pointer; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding-bottom: 10px; border: 1px solid #ddd; box-sizing: border-box; transition: transform 0.1s; }
+        .tile.pressed { background:#444 !important; transform: scaleY(0.9); }
+        .char-label { font-size: 14px; font-weight: 900; color: #000; text-transform: uppercase; margin-bottom: 5px; }
+        .char-icon { font-size: 40px; margin-bottom: 10px; }
+        
+        .golden { background: linear-gradient(to bottom, #ffd700, #ff8c00); }
+        .sodapop { background: linear-gradient(to bottom, #00d2ff, #3a7bd5); }
+        
+        #ui { position: absolute; top: 20px; left: 50%; transform: translateX(-50%); color: #fff; font-size: 30px; text-shadow: 0 0 10px #00d2ff; z-index: 100; pointer-events: none; }
+    </style>
+</head>
+<body>
+    <div id="ui">SCORE: 0</div>
+    <div id="game"></div>
+    
+    <!-- Start Overlay -->
+    <div id="overlay" style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); display:flex; flex-direction:column; align-items:center; justify-content:center; z-index:1000; color:#fff; cursor:pointer;">
+        <h1 style="font-family:'Nosifer', cursive; color:#f00; font-size:50px;">SODA POP</h1>
+        <p style="font-size:24px;">CLICK TO START</p>
+        <p style="font-size:16px; color:#aaa;">골든 & 소다팝과 함께 노래를 연주하세요!</p>
+    </div>
+
+    <!-- YouTube Background Music Player -->
+    <div id="player" style="display:none;"></div>
+
+    <script>
+        const game = document.getElementById('game');
+        const scoreEl = document.getElementById('ui');
+        const overlay = document.getElementById('overlay');
+        let score = 0;
+        let gameActive = false;
+        
+        // YouTube Player setup
+        var tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+        var player;
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('player', {
+                height: '0',
+                width: '0',
+                videoId: '983bBbJx0Mk', // Saja Boys - Soda Pop (Official)
+                playerVars: {
+                    'autoplay': 0,
+                    'controls': 0,
+                    'loop': 1,
+                    'playlist': '983bBbJx0Mk'
+                },
+                events: {
+                    'onReady': onPlayerReady
+                }
+            });
+        }
+
+        function onPlayerReady(event) {
+            console.log("YouTube Player Loaded");
+        }
+
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        function playNote(freq) {
+            // Reduced volume significantly (삐라뽀라뽀 소리를 아주 작게 줄임)
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            oscillator.type = 'triangle';
+            oscillator.frequency.setValueAtTime(freq, audioCtx.currentTime);
+            gainNode.gain.setValueAtTime(0.02, audioCtx.currentTime); // 0.3 -> 0.02
+            gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.3);
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            oscillator.start();
+            oscillator.stop(audioCtx.currentTime + 0.3);
+        }
+
+        const frequencies = [261.63, 293.66, 329.63, 349.23];
+
+        function spawn() {
+            if(!gameActive) return;
+            const col = Math.floor(Math.random() * 4);
+            const isGolden = Math.random() > 0.5;
+            
+            let t = document.createElement('div');
+            t.className = 'tile ' + (isGolden ? 'golden' : 'sodapop');
+            t.style.left = (col * 100) + 'px';
+            t.style.top = '-200px';
+            
+            const icon = document.createElement('div');
+            icon.className = 'char-icon';
+            icon.innerText = isGolden ? '🏆' : '🥤';
+            
+            const label = document.createElement('div');
+            label.className = 'char-label';
+            label.innerText = isGolden ? 'GOLDEN' : 'SODA';
+            
+            t.appendChild(icon);
+            t.appendChild(label);
+            game.appendChild(t);
+            
+            let move = setInterval(() => {
+                if(!gameActive) { clearInterval(move); return; }
+                let top = parseInt(t.style.top);
+                t.style.top = (top + 6 + (score / 35)) + 'px'; // Slightly slower ramp
+                
+                if (top > window.innerHeight) { 
+                    clearInterval(move); 
+                    if (!t.classList.contains('pressed')) {
+                        gameOver();
+                    }
+                    if(t.parentNode) game.removeChild(t); 
+                }
+            }, 20);
+            
+            // Interaction support
+            const handleInteraction = (e) => {
+                e.preventDefault();
+                if (t.classList.contains('pressed') || !gameActive) return;
+                t.classList.add('pressed');
+                playNote(frequencies[col]);
+                score++;
+                scoreEl.innerText = 'SCORE: ' + score;
+                if (navigator.vibrate) navigator.vibrate(20);
+            };
+
+            t.onpointerdown = handleInteraction;
+            t.ontouchstart = handleInteraction;
+        }
+
+        function gameOver() {
+            gameActive = false;
+            if(player && player.pauseVideo) player.pauseVideo();
+            overlay.style.display = 'flex';
+            overlay.innerHTML = `<h1 style="color:#f00; font-size:40px; margin-bottom:10px;">GAME OVER</h1>
+                               <p style="font-size:32px; font-weight:900; color:#fff; margin-bottom:20px;">SCORE: ${score}</p>
+                               <div style="background:#f00; padding:15px 40px; border-radius:10px; font-size:24px; font-weight:900; cursor:pointer;">RESTART</div>`;
+            score = 0;
+            scoreEl.innerText = 'SCORE: 0';
+            game.innerHTML = '';
+        }
+
+        overlay.onclick = () => {
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            
+            if (player && typeof player.playVideo === 'function') {
+                overlay.style.display = 'none';
+                gameActive = true;
+                player.setVolume(100);
+                player.seekTo(0);
+                player.playVideo();
+            } else {
+                // Wait for player to be ready if it's not yet
+                overlay.innerHTML = `<p style="font-size:24px;">LOADING SONG...</p>`;
+                setTimeout(() => {
+                    if(player && player.playVideo) {
+                        overlay.style.display = 'none';
+                        gameActive = true;
+                        player.setVolume(100);
+                        player.playVideo();
+                    } else {
+                        // Fallback start if YouTube fails
+                        overlay.style.display = 'none';
+                        gameActive = true;
+                    }
+                }, 1000);
+            }
+        };
+
+        setInterval(spawn, 700);
+    </script>
+</body>
+</html>

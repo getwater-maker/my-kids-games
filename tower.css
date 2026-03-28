@@ -1,0 +1,240 @@
+:root {
+    --bg-color: #fca311;
+    --shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    --border-radius: 20px;
+    --font-color: #2d3436;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Jua', sans-serif;
+    background-color: #0b2242;
+    /* Deep space blue */
+    background-image: linear-gradient(135deg, #0b2242 0%, #1e3c72 100%);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    color: var(--font-color);
+}
+
+.app-container {
+    width: 95vw;
+    height: 95vh;
+    background-color: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border: 5px solid #fca311;
+    position: relative;
+    user-select: none;
+}
+
+/* Header */
+.game-header {
+    background-color: #fca311;
+    color: white;
+    padding: 15px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 4px solid #e5e5e5;
+    z-index: 10;
+}
+
+.game-header h1 {
+    font-size: 2rem;
+    text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.2);
+}
+
+.actions {
+    display: flex;
+    gap: 15px;
+}
+
+.action-btn {
+    font-family: 'Jua', sans-serif;
+    font-size: 1.2rem;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    background-color: #ffffff;
+    color: #fca311;
+    box-shadow: 0 4px 0 #fad390;
+    transition: all 0.2s;
+}
+
+.action-btn:active {
+    transform: translateY(4px);
+    box-shadow: none;
+}
+
+.restart-btn {
+    background-color: #e63946;
+    color: white;
+    box-shadow: 0 4px 0 #b32d37;
+}
+
+.play-btn {
+    background-color: #2a9d8f;
+    color: white;
+    box-shadow: 0 4px 0 #21867a;
+    font-size: 1.5rem;
+    margin-top: 20px;
+}
+
+/* Main Layout */
+.main-content {
+    flex: 1;
+    display: flex;
+    overflow: hidden;
+    background-color: #f1f2f6;
+    background-image: linear-gradient(0deg, #eccc68 1px, transparent 1px),
+        linear-gradient(90deg, #eccc68 1px, transparent 1px);
+    background-size: 40px 40px;
+}
+
+/* Sidebar Tools */
+.sidebar {
+    width: 320px;
+    background-color: #fffaf0;
+    border-right: 4px dashed #fca311;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    overflow-y: auto;
+    box-shadow: 5px 0 15px rgba(0, 0, 0, 0.05);
+}
+
+.panel h2 {
+    color: #e63946;
+    margin-bottom: 10px;
+    font-size: 1.5rem;
+}
+
+.hint-text {
+    font-size: 1rem;
+    color: #747d8c;
+    margin-bottom: 20px;
+    line-height: 1.6;
+}
+
+.score-board {
+    background: #fca311;
+    border-radius: 15px;
+    padding: 20px;
+    text-align: center;
+    color: white;
+    box-shadow: 0 4px 0 #d98a0d;
+}
+
+.score-title {
+    font-size: 1.2rem;
+    margin-bottom: 5px;
+}
+
+.score-value {
+    font-size: 3.5rem;
+    font-weight: bold;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.best-score {
+    font-size: 3rem;
+    color: #e63946;
+    text-align: center;
+    font-weight: bold;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Center Stage */
+.game-area {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    background-color: #fff;
+    overflow: hidden;
+}
+
+#gameWrapper {
+    position: relative;
+    width: 500px;
+    height: 700px;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    /* Make the canvas background black so we can draw the sky with gradient inside canvas! */
+    background: #000;
+}
+
+#gameCanvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+}
+
+/* Overlays */
+.overlay-screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(11, 34, 66, 0.85);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    z-index: 10;
+    text-align: center;
+}
+
+.overlay-screen h2 {
+    font-size: 3.5rem;
+    margin-bottom: 15px;
+    color: #fca311;
+    text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.5);
+}
+
+.overlay-screen p {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+}
+
+.cloud {
+    font-size: 70px;
+    margin-bottom: -10px;
+    animation: float 2s ease-in-out infinite;
+}
+
+@keyframes float {
+    0% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+
+    100% {
+        transform: translateY(0);
+    }
+}
+
+.hidden {
+    display: none !important;
+}

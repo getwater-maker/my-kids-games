@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8"><title>MOMO: CREEPY CHAT 💬</title>
+    <style>
+        body { margin:0; background:#000; color:#0f0; font-family:'Courier New', monospace; display:flex; flex-direction:column; height:100vh; }
+        #chat { flex:1; padding:20px; overflow-y:auto; }
+        #input-area { padding:20px; background:#111; display:flex; }
+        input { flex:1; background:#000; color:#0f0; border:1px solid #0f0; padding:10px; }
+        #momo-img { position:fixed; top:0; left:0; width:100%; height:100%; object-fit:cover; display:none; z-index:1000; animation: shake 0.1s infinite; }
+        @keyframes shake { 0%{transform:scale(1);} 50%{transform:scale(1.1);} 100%{transform:scale(1.2);} }
+    </style>
+</head>
+<body>
+    <div id="chat"></div>
+    <div id="input-area"><input type="text" id="msg" placeholder="Type a message..." onkeydown="if(e.key==='Enter') send()"></div>
+    <img id="momo-img" src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHpwaGZqZndqZndqZndqZndqZndqZndqZndqZndqZndqZndqZndqJmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1n/6ozwFj8tPyJfW/giphy.gif">
+    <script>
+        const chat = document.getElementById('chat');
+        const input = document.getElementById('msg');
+        let stage = 0;
+
+        function addMsg(txt, who) {
+            let div = document.createElement('div');
+            div.innerText = `${who}: ${txt}`;
+            chat.appendChild(div);
+            chat.scrollTop = chat.scrollHeight;
+        }
+
+        function send() {
+            let val = input.value; if(!val) return;
+            addMsg(val, 'YOU'); input.value='';
+            setTimeout(momoReply, 1000);
+        }
+
+        function momoReply() {
+            stage++;
+            if(stage === 1) addMsg('안녕? 나랑 놀래?', 'MOMO');
+            else if(stage === 2) addMsg('너 어디 살아? 내가 찾아갈게...', 'MOMO');
+            else if(stage === 3) addMsg('뒤를 봐...', 'MOMO');
+            else { document.getElementById('momo-img').style.display='block'; setTimeout(()=>location.reload(), 2000); }
+        }
+    </script>
+</body>
+</html>

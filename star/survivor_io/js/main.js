@@ -17,6 +17,7 @@ const CONFIG = {
 
 const SKILLS = [
     { id: 'kunai', name: 'Kunai', icon: '🗡️', desc: 'Fast projectile to nearest enemy', level: 1 },
+    { id: 'karambit', name: 'Knife', icon: '🔪', desc: 'Reach Lv.10 to EVOLVE into Karambit!', level: 0 },
     { id: 'brick', name: 'Brick', icon: '🧱', desc: 'Falls from above to crush enemies', level: 0 },
     { id: 'fire', name: 'Fire Ring', icon: '🔥', desc: 'Circles around you dealing damage', level: 0 },
     { id: 'speed', name: 'Fitness', icon: '👟', desc: 'Increase movement speed', level: 0 },
@@ -36,6 +37,7 @@ let player = {
     speed: CONFIG.playerSpeed,
     radius: 15,
     lastKunai: 0,
+    lastKarambit: 0,
     lastBrick: 0,
     lastFire: 0
 };
@@ -48,6 +50,14 @@ let keys = {};
 let kills = 0;
 let startTime = 0;
 let gameState = 'START'; // START, PLAYING, LEVEL_UP, OVER
+
+// --- SPRITES ---
+const SPRITES = {
+    player: new Image(),
+    zombie: new Image()
+};
+SPRITES.player.src = 'assets/player.jpg';
+SPRITES.zombie.src = 'assets/zombie.jpg';
 
 // --- Initialization ---
 function init() {
@@ -126,6 +136,12 @@ function handleCombat() {
         player.lastKunai = now;
     }
 
+    // Karambit (Melee Swipe)
+    if (getSkillLevel('karambit') > 0 && now - player.lastKarambit > 800) {
+        fireKarambit();
+        player.lastKarambit = now;
+    }
+
     // Fire Ring
     if (getSkillLevel('fire') > 0) {
         // Handled in drawing/collision, it's permanent
@@ -160,8 +176,43 @@ function fireKunai() {
     }
 }
 
+function fireKarambit() {
+    const level = getSkillLevel('karambit');
+    const isLegendary = level >= 10;
+    const damage = isLegendary ? 9999 : 20 + level * 10;
+    const radius = isLegendary ? 150 : 80;
+
+    // Melee arc in front of player
+    particles.push({
+        x: player.x,
+        y: player.y,
+        type: isLegendary ? 'karambit_swipe' : 'knife_swipe',
+        radius: radius,
+        damage: damage,
+        alpha: 1,
+        life: 5
+    });
+    
+    // Check hit immediately
+    for (let i = enemies.length - 1; i >= 0; i--) {
+        const e = enemies[i];
+        const d = Math.hypot(e.x - player.x, e.y - player.y);
+        if (d < radius + e.radius) {
+            e.hp -= damage;
+            if (e.hp <= 0) killEnemy(i, e.x, e.y);
+        }
+    }
+
+    // Dynamic Skill Update
+    if (level >= 10) {
+        const s = SKILLS.find(s => s.id === 'karambit');
+        s.name = "Legendary Karambit";
+        s.desc = "TRUE ONE-SHOT! The ultimate weapon.";
+    }
+}
+
 function handleSpawning() {
-    if (Math.random() < 0.05) { // Adjusted frequency
+    if (Math.random() < 0.02) { // Reduced from 0.05 to 0.02 for fewer zombies
         spawnEnemy();
     }
 }
@@ -199,9 +250,14 @@ function updateEntities() {
 
     // Particles fade
     particles = particles.filter(p => {
-        p.alpha -= 0.02;
-        p.x += p.vx;
-        p.y += p.vy;
+        p.alpha -= 0.04; // Faster decay for better feel
+        if (p.vx !== undefined) p.x += p.vx;
+        if (p.vy !== undefined) p.y += p.vy;
+        // Keep swipe following player
+        if (p.type === 'karambit_swipe') {
+            p.x = player.x;
+            p.y = player.y;
+        }
         return p.alpha > 0;
     });
 }
@@ -280,7 +336,7 @@ function collectGem(index) {
 function levelUp() {
     player.exp -= player.expToNext;
     player.level++;
-    player.expToNext = Math.floor(player.expToNext * 1.2);
+    // player.expToNext = Math.floor(player.expToNext * 1.2); // Removed scaling
 
     gameState = 'LEVEL_UP';
     showLevelUpScreen();
@@ -355,26 +411,38 @@ function draw() {
 
     // Particles
     particles.forEach(p => {
-        ctx.globalAlpha = p.alpha;
-        ctx.fillStyle = p.color;
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-        ctx.fill();
+        if (p.type === 'karambit_swipe') {
+            ctx.strokeStyle = `rgba(0, 210, 255, ${p.alpha})`;
+            ctx.lineWidth = 8; // Thicker for legend
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+            ctx.stroke();
+            // Inner neon
+            ctx.strokeStyle = `rgba(255, 255, 255, ${p.alpha * 0.8})`;
+            ctx.lineWidth = 3;
+            ctx.stroke();
+        } else if (p.type === 'knife_swipe') {
+            ctx.strokeStyle = `rgba(200, 200, 200, ${p.alpha})`;
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.radius, -0.5, 0.5); // Smaller arc for knife
+            ctx.stroke();
+        } else {
+            ctx.globalAlpha = p.alpha;
+            ctx.fillStyle = p.color;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+            ctx.fill();
+        }
     });
     ctx.globalAlpha = 1.0;
 
     // Enemies
     enemies.forEach(e => {
-        ctx.fillStyle = '#1e272e';
-        ctx.beginPath();
-        ctx.arc(e.x, e.y, e.radius, 0, Math.PI * 2);
-        ctx.fill();
-        // Red Eyes
-        ctx.fillStyle = '#ff3131';
-        ctx.beginPath();
-        ctx.arc(e.x - 4, e.y - 2, 2, 0, Math.PI * 2);
-        ctx.arc(e.x + 4, e.y - 2, 2, 0, Math.PI * 2);
-        ctx.fill();
+        const size = e.radius * 2.5;
+        // Bounce effect
+        const bounce = Math.sin(Date.now() / 200 + e.x) * 2;
+        ctx.drawImage(SPRITES.zombie, e.x - size/2, e.y - size/2 + bounce, size, size);
     });
 
     // Bullets
@@ -404,13 +472,10 @@ function draw() {
     }
 
     // Player
-    ctx.fillStyle = '#fff';
-    ctx.beginPath();
-    ctx.arc(player.x, player.y, player.radius, 0, Math.PI * 2);
-    ctx.fill();
-    // Scarf/Detail
-    ctx.fillStyle = '#eb4d4b';
-    ctx.fillRect(player.x - 10, player.y + 5, 20, 10);
+    const pSize = player.radius * 3.5;
+    // Slight breathing animation
+    const breathing = Math.sin(Date.now() / 300) * 2;
+    ctx.drawImage(SPRITES.player, player.x - pSize/2, player.y - pSize/2 + breathing, pSize, pSize);
 }
 
 function drawGrid() {

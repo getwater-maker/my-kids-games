@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>계란 까기 챌린지 🐣💦</title>
+    <link rel="stylesheet" href="peel_egg.css">
+    <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="app-container">
+        <header class="game-header">
+            <h1>🐣💦 계란 까기 챌린지</h1>
+            <div class="actions">
+                <button onclick="location.href='index.html'" class="action-btn">⬅️ 뒤로가기</button>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <aside class="sidebar">
+                <div class="panel">
+                    <h2>⏱️ 남은 시간</h2>
+                    <div class="time-text" id="timeText">15.0초</div>
+                </div>
+
+                <div class="panel">
+                    <h2>🎮 게임 방법</h2>
+                    <p class="hint-text" id="instructionText">
+                        1. 시작 버튼을 누르세요.<br>
+                        2. 계란을 광클해서 금이 가게 만드세요!<br>
+                        3. 그 다음 열심히 문질러서 껍질을 까주세요!
+                    </p>
+                    <button id="startBtn" class="action-btn play-btn">도전 시작!</button>
+                </div>
+            </aside>
+
+            <section class="game-area">
+                <div class="game-wrapper">
+                    <div id="eggBoard" class="egg-board">
+                        <div class="egg-shadow"></div>
+                        <!-- 삶은 흰 계란 (바닥) -->
+                        <div class="egg-shape naked-egg" id="nakedEgg">
+                            <!-- 귀여운 눈코입 -->
+                            <div class="face hidden" id="eggFace">
+                                <div class="eyes">
+                                    <span class="eye"></span>
+                                    <span class="eye"></span>
+                                </div>
+                                <div class="mouth"></div>
+                            </div>
+                        </div>
+                        <!-- 계란 껍질 캔버스 (위) -->
+                        <canvas id="shellCanvas" width="200" height="280" class="egg-shape shell-canvas"></canvas>
+
+                        <div id="clickHint" class="hint-overlay hidden">톡! 톡! 🔨</div>
+                        <div id="peelHint" class="hint-overlay hidden">문질러요! 🖐️</div>
+                    </div>
+
+                    <div id="resultScreen" class="overlay-screen hidden">
+                        <h2 id="resultTitle">결과</h2>
+                        <p id="resultDesc">설명</p>
+                        <button id="retryBtn" class="action-btn play-btn">다시 도전</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Sounds -->
+    <audio id="sfx-crack" src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3"></audio>
+    <audio id="sfx-shatter" src="https://assets.mixkit.co/active_storage/sfx/2573/2573-preview.mp3"></audio>
+    <audio id="sfx-win" src="https://assets.mixkit.co/active_storage/sfx/1435/1435-preview.mp3"></audio>
+    <audio id="sfx-lose" src="https://assets.mixkit.co/active_storage/sfx/270/270-preview.mp3"></audio>
+
+    <script src="peel_egg.js"></script>
+</body>
+
+</html>

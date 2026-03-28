@@ -1,0 +1,416 @@
+:root {
+    --bg-color: #7bed9f;
+    --shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    --border-radius: 20px;
+    --font-color: #2f3542;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Jua', sans-serif;
+    background-color: #2ed573;
+    background-image: linear-gradient(135deg, #7bed9f 0%, #2ed573 100%);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    color: var(--font-color);
+}
+
+.app-container {
+    width: 95vw;
+    height: 95vh;
+    background-color: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border: 5px solid #2ed573;
+    position: relative;
+    user-select: none;
+}
+
+/* Header */
+.game-header {
+    background-color: #2ed573;
+    color: white;
+    padding: 15px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 4px solid #f1f2f6;
+    z-index: 10;
+}
+
+.game-header h1 {
+    font-size: 2rem;
+    text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.2);
+}
+
+.actions {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.action-btn {
+    font-family: 'Jua', sans-serif;
+    font-size: 1.2rem;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    background-color: #ffffff;
+    color: #2ed573;
+    box-shadow: 0 4px 0 #7bed9f;
+    transition: all 0.2s;
+}
+
+.action-btn:active {
+    transform: translateY(4px);
+    box-shadow: none;
+}
+
+.money-display {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #ffb142;
+    background: white;
+    padding: 5px 15px;
+    border-radius: 15px;
+    border: 2px solid #ffb142;
+    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Main Layout */
+.main-content {
+    flex: 1;
+    display: flex;
+    overflow: hidden;
+    background-color: #f1f2f6;
+    background-image: linear-gradient(0deg, #dcdde1 1px, transparent 1px),
+        linear-gradient(90deg, #dcdde1 1px, transparent 1px);
+    background-size: 40px 40px;
+}
+
+/* Sidebar Tools */
+.sidebar {
+    width: 320px;
+    background-color: #fffaf0;
+    border-right: 4px dashed #2ed573;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    overflow-y: auto;
+    box-shadow: 5px 0 15px rgba(0, 0, 0, 0.05);
+}
+
+.panel h2 {
+    color: #2ed573;
+    margin-bottom: 5px;
+    font-size: 1.3rem;
+}
+
+.hint-text {
+    font-size: 0.9rem;
+    color: #a4b0be;
+    margin-bottom: 10px;
+}
+
+.tool-list,
+.seed-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
+.tool-list .tool-btn {
+    grid-column: span 1;
+}
+
+/* First tool button full width */
+.tool-list .tool-btn:first-child {
+    grid-column: span 2;
+}
+
+.tool-btn {
+    font-family: 'Jua', sans-serif;
+    font-size: 1rem;
+    padding: 10px 5px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    background-color: #f8efba;
+    color: #2f3542;
+    box-shadow: 0 4px 0 #f6e58d;
+    transition: all 0.1s;
+    text-align: center;
+    line-height: 1.2;
+}
+
+.tool-btn small {
+    font-size: 0.8rem;
+    color: #57606f;
+}
+
+.tool-btn.active {
+    background-color: #2ed573;
+    box-shadow: 0 4px 0 #20bf6b;
+    color: white;
+}
+
+.tool-btn.active small {
+    color: #f1f2f6;
+}
+
+.tool-btn:active {
+    transform: translateY(4px);
+    box-shadow: none;
+}
+
+.info-panel {
+    background: #eccc68;
+    border-radius: 15px;
+    padding: 15px;
+    color: #2f3542;
+    margin-top: auto;
+}
+
+.info-panel h3 {
+    margin-bottom: 5px;
+    border-bottom: 2px dashed rgba(255, 255, 255, 0.5);
+    padding-bottom: 5px;
+}
+
+/* Farm Area Container */
+.farm-area {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    background-color: #d1d8e0;
+    overflow: hidden;
+}
+
+/* 4x4 Farm Grid */
+.farm-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 100px);
+    grid-template-rows: repeat(4, 100px);
+    gap: 15px;
+    padding: 30px;
+    background-color: #57606f;
+    /* Grid container background */
+    border-radius: 20px;
+    box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5), 0 20px 40px rgba(0, 0, 0, 0.2);
+    /* Perspective for 3D effect */
+    transform: rotateX(20deg) rotateZ(0deg);
+}
+
+/* Individual Land Plot */
+.plot {
+    width: 100px;
+    height: 100px;
+    background-color: #8B5A2B;
+    /* dirt color */
+    border-radius: 10px;
+    position: relative;
+    transition: background-color 0.3s;
+    transform-style: preserve-3d;
+    box-shadow: inset 0 5px 10px rgba(0, 0, 0, 0.3);
+    border-top: 5px solid #6c4b2b;
+    /* depth */
+    border-left: 5px solid #6c4b2b;
+}
+
+/* Different land states */
+.plot:hover {
+    background-color: #A06B36;
+    /* lighter dirt on hover */
+    cursor: pointer;
+}
+
+.plot.watered {
+    background-color: #5c3a21;
+    /* dark wet dirt */
+}
+
+.plot.watered:hover {
+    background-color: #6d472c;
+}
+
+/* Plant Emoji Positioning inside plot */
+.plant-emoji {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 40px;
+    pointer-events: none;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    transition: transform 0.2s, font-size 0.3s;
+    z-index: 2;
+}
+
+/* Needs Water Indicator */
+.water-req {
+    position: absolute;
+    top: -20px;
+    right: -10px;
+    font-size: 25px;
+    background: white;
+    border-radius: 50%;
+    padding: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    animation: bounce 1s infinite;
+    z-index: 5;
+    display: none;
+}
+
+/* Fully Grown Sparkle */
+.harvest-ready {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    font-size: 20px;
+    animation: pulse 1s infinite alternate;
+    z-index: 3;
+    display: none;
+}
+
+/* Progress bar placeholder (soil dry out) */
+.progress-bar {
+    position: absolute;
+    bottom: -15px;
+    left: 10%;
+    width: 80%;
+    height: 6px;
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 3px;
+    overflow: hidden;
+    display: none;
+}
+
+.progress-fill {
+    height: 100%;
+    width: 0%;
+    background-color: #3498db;
+    transition: width 1s linear;
+}
+
+/* Cursor Hint Balloon */
+.cursor-hint {
+    position: absolute;
+    pointer-events: none;
+    font-size: 40px;
+    display: none;
+    z-index: 20;
+    transform: translate(-50%, -50%);
+    filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+/* Animations */
+@keyframes bounce {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        opacity: 0.7;
+    }
+
+    100% {
+        transform: scale(1.3);
+        opacity: 1;
+    }
+}
+
+@keyframes pop {
+    0% {
+        transform: translateX(-50%) scale(0.5);
+    }
+
+    50% {
+        transform: translateX(-50%) scale(1.2);
+    }
+
+    100% {
+        transform: translateX(-50%) scale(1);
+    }
+}
+
+.pop-anim {
+    animation: pop 0.4s ease-out;
+}
+
+/* Guide Overlay */
+.overlay-screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(45, 52, 54, 0.85);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 50;
+}
+
+.guide-box {
+    background: white;
+    padding: 40px;
+    border-radius: 20px;
+    max-width: 500px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    border: 5px solid #2ed573;
+}
+
+.guide-box h2 {
+    color: #2ed573;
+    margin-bottom: 20px;
+    font-size: 2rem;
+    text-align: center;
+}
+
+.guide-list {
+    list-style: none;
+    margin-bottom: 30px;
+}
+
+.guide-list li {
+    font-size: 1.2rem;
+    margin-bottom: 15px;
+    line-height: 1.5;
+    color: #2f3542;
+}
+
+.play-btn {
+    background-color: #ffa502;
+    color: white;
+    box-shadow: 0 4px 0 #eaaa00;
+    font-size: 1.5rem;
+    width: 100%;
+}
+
+.hidden {
+    display: none !important;
+}

@@ -1,87 +1,95 @@
 :root {
-    --ow-blue: #00a2ff;
-    --ow-yellow: #f1c40f;
-    --ow-orange: #ff9f1a;
-    --ow-red: #ff3838;
+    --ow-blue: #00aeff;
+    --ow-gold: #ffcc00;
+    --ow-white: #ffffff;
     --bg-trans: rgba(0, 0, 0, 0.4);
-    --ow-font: 'Rajdhani', sans-serif;
+    --glass: rgba(255, 255, 255, 0.1);
 }
 
-body,
-html {
+* {
     margin: 0;
     padding: 0;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    background-color: #000;
-    font-family: var(--ow-font);
+    box-sizing: border-box;
+    font-family: 'Rajdhani', sans-serif;
     user-select: none;
+}
+
+body {
+    background-color: #000;
+    overflow: hidden;
 }
 
 #game-container {
     position: relative;
-    width: 100%;
-    height: 100%;
+    width: 100vw;
+    height: 100vh;
 }
 
-canvas {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 1;
-}
-
-/* Crosshair */
+/* --- Premium Crosshair --- */
 #crosshair {
     position: absolute;
     top: 50%;
     left: 50%;
-    width: 20px;
-    height: 20px;
+    width: 30px;
+    height: 30px;
     transform: translate(-50%, -50%);
     pointer-events: none;
+    z-index: 10;
 }
 
-#crosshair::before,
-#crosshair::after {
+#crosshair::before, #crosshair::after {
     content: '';
     position: absolute;
-    background-color: rgba(255, 255, 255, 0.8);
+    background: var(--ow-blue);
+    box-shadow: 0 0 5px var(--ow-blue);
 }
 
+/* Horizontal lines */
 #crosshair::before {
     top: 50%;
     left: 0;
     width: 100%;
     height: 2px;
+    transform: translateY(-50%);
+    background: linear-gradient(90deg, transparent, var(--ow-blue) 40%, var(--ow-blue) 60%, transparent);
 }
 
+/* Vertical lines */
 #crosshair::after {
     left: 50%;
     top: 0;
     width: 2px;
     height: 100%;
+    transform: translateX(-50%);
+    background: linear-gradient(0deg, transparent, var(--ow-blue) 40%, var(--ow-blue) 60%, transparent);
 }
 
-/* HUD Common */
+#crosshair-dot {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 4px;
+    height: 4px;
+    background: white;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 8px white;
+}
+
+/* --- HUD Styling --- */
 #hud {
     position: absolute;
-    bottom: 0;
+    top: 0;
     left: 0;
     width: 100%;
-    height: 200px;
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    padding: 40px;
+    height: 100%;
     pointer-events: none;
-    z-index: 10;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
-/* Left: Health */
 #player-status {
     display: flex;
     align-items: flex-end;
@@ -91,68 +99,66 @@ canvas {
 .portrait-box {
     width: 80px;
     height: 80px;
-    background: var(--bg-trans);
-    border: 3px solid #fff;
-    border-radius: 10px;
+    background: linear-gradient(135deg, #333, #111);
+    border: 3px solid var(--ow-blue);
     display: flex;
-    align-items: center;
     justify-content: center;
+    align-items: center;
     font-size: 40px;
+    border-radius: 5px;
     transform: skewX(-10deg);
 }
 
 .health-box {
-    width: 300px;
     transform: skewX(-10deg);
 }
 
 .hp-label {
-    font-weight: 900;
-    color: #fff;
     font-size: 1.2rem;
-    margin-bottom: 5px;
+    font-weight: 900;
+    color: white;
     letter-spacing: 2px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
 }
 
 .hp-bar-container {
-    width: 100%;
+    width: 300px;
     height: 25px;
-    background: rgba(255, 255, 255, 0.2);
-    border: 2px solid #fff;
-    position: relative;
+    background: rgba(255,255,255,0.1);
+    border: 2px solid rgba(255,255,255,0.3);
+    margin: 5px 0;
     overflow: hidden;
 }
 
 #hp-bar-fill {
     width: 100%;
     height: 100%;
-    background: #fff;
-    transition: width 0.1s ease-out;
+    background: linear-gradient(90deg, #fff, var(--ow-blue));
+    transition: width 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 .hp-values {
     font-size: 1.5rem;
     font-weight: 900;
-    color: #fff;
+    color: white;
     text-align: right;
-    margin-top: 5px;
 }
 
-/* Center: Ultimate */
+/* Ultimate Style */
 #ultimate-container {
     position: absolute;
-    bottom: 30px;
+    bottom: 40px;
     left: 50%;
     transform: translateX(-50%);
     width: 120px;
     height: 120px;
     display: flex;
     flex-direction: column;
-    align-items: center;
     justify-content: center;
+    align-items: center;
 }
 
-svg {
+#ultimate-container svg {
     position: absolute;
     width: 100%;
     height: 100%;

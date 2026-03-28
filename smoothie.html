@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>스무디 만들기 🍹</title>
+    <link rel="stylesheet" href="smoothie.css">
+    <!-- 글씨체를 귀엽게 만들어주는 마법 지팡이! -->
+    <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="app-container">
+        <header class="game-header">
+            <h1>🍹 생과일 스무디 카페</h1>
+            <div class="actions">
+                <button onclick="location.href='index.html'" class="action-btn">⬅️ 뒤로가기</button>
+                <button id="clearBtn" class="action-btn clear-btn">🗑️ 빈 컵 가져오기</button>
+                <button id="saveBtn" class="action-btn save-btn">📸 사진 저장!</button>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <!-- Left Toolbar -->
+            <aside class="sidebar">
+                <div class="panel">
+                    <h2>🍹 스무디 붓기</h2>
+                    <p class="hint-text">유리컵 안을 마우스로 부드럽게 채워봐!</p>
+                    <div class="tool-list">
+                        <button class="tool-btn active" data-tool="liquid" data-color="rgba(255, 118, 117, 0.4)">🍓 딸기
+                            스무디</button>
+                        <button class="tool-btn" data-tool="liquid" data-color="rgba(253, 203, 110, 0.4)">🥭 망고
+                            스무디</button>
+                        <button class="tool-btn" data-tool="liquid" data-color="rgba(85, 239, 196, 0.4)">🥝 키위
+                            스무디</button>
+                        <button class="tool-btn" data-tool="liquid" data-color="rgba(162, 155, 254, 0.4)">🫐
+                            블루베리</button>
+                        <button class="tool-btn" data-tool="liquid" data-color="rgba(245, 246, 250, 0.6)">🥛 순수
+                            요거트</button>
+                        <button class="tool-btn" data-tool="liquid" data-color="rgba(45, 52, 54, 0.8)">⚫ 흑당 / 펄</button>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <h2>🍦 생크림 듬뿍 (토핑)</h2>
+                    <p class="hint-text">컵 위로 예쁘게 짜 올려봐!</p>
+                    <div class="tool-list">
+                        <button class="tool-btn" data-tool="cream" data-color="#ffffff">🤍 하얀휘핑</button>
+                        <button class="tool-btn" data-tool="cream" data-color="#ffb8b8">💖 딸기휘핑</button>
+                        <button class="tool-btn" data-tool="cream" data-color="#ffeaa7">💛 치즈폼</button>
+                        <button class="tool-btn" data-tool="cream" data-color="#6ab04c">💚 말차폼</button>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <h2>🍒 달콤한 데코레이션</h2>
+                    <p class="hint-text">여름 느낌 나게 꾸며봐!</p>
+                    <div class="sticker-list">
+                        <button class="tool-btn sticker-btn" data-tool="topping" data-val="🍒">🍒 체리</button>
+                        <button class="tool-btn sticker-btn" data-tool="topping" data-val="🍓">🍓 딸기</button>
+                        <button class="tool-btn sticker-btn" data-tool="topping" data-val="🍋">🍋 레몬</button>
+                        <button class="tool-btn sticker-btn" data-tool="topping" data-val="🌿">🌿 민트 잎</button>
+                        <button class="tool-btn sticker-btn" data-tool="topping" data-val="🧊">🧊 각얼음</button>
+                        <button class="tool-btn sticker-btn" data-tool="topping" data-val="☂️">☂️ 칵테일우산</button>
+                        <button class="tool-btn sticker-btn" data-tool="topping" data-val="🍪">🍪 쿠키 조각</button>
+                        <button class="tool-btn sticker-btn" data-tool="topping" data-val="🍫">🍫 초코스틱</button>
+                        <button class="tool-btn sticker-btn" data-tool="topping" data-val="✨">✨ 별가루</button>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Center Stage -->
+            <section class="preview-area">
+                <div class="smoothie-wrapper" id="smoothieWrapper">
+
+                    <!-- Background shadows/decor of the cup could go here if needed -->
+
+                    <!-- Masked Liquid Layer -->
+                    <div class="cup-mask" id="cupMask">
+                        <canvas id="liquidCanvas" width="300" height="420"></canvas>
+                    </div>
+
+                    <!-- Front Glass Effect covering the liquid -->
+                    <div class="glass-front"></div>
+
+                    <!-- Toppings and Whipped Cream (Unmasked, goes outside the cup!) -->
+                    <canvas id="toppingCanvas" width="600" height="700"></canvas>
+
+                    <!-- Cursor Hint Balloon -->
+                    <div id="cursorHint" class="cursor-hint">🍓</div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Sounds! -->
+    <audio id="sfx-pour" src="https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3" loop></audio>
+    <audio id="sfx-pop" src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3"></audio>
+
+    <script src="smoothie.js"></script>
+</body>
+
+</html>

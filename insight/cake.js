@@ -136,12 +136,12 @@ function renderLoop() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     ctx.save();
-    // 중심축으로 이동해서 회전!
+    // Y축 기준 회전 (케이크 돌아가는 효과)
     ctx.translate(canvas.width / 2, canvas.height / 2);
     if (isSpinning) {
         rotationAngle += 0.01; // 천천히 돌아라!
     }
-    ctx.rotate(rotationAngle);
+    ctx.scale(Math.cos(rotationAngle), 1);
     ctx.translate(-canvas.width / 2, -canvas.height / 2);
 
     // 진짜 그려진 스케치북 도화지 복사해서 보여주기
@@ -192,19 +192,18 @@ function getMousePos(evt) {
 
     mousePos = { appX: appX, appY: appY };
 
-    // 회전된 만큼 거꾸로 돌려서 진짜 캔버스 안의 위치 계산!
+    // Y축 회전 역변환으로 진짜 캔버스 위치 계산!
     let cx = canvas.width / 2;
-    let cy = canvas.height / 2;
     let dx = appX - cx;
-    let dy = appY - cy;
-    let angle = -rotationAngle; // 거꾸로!
+    let cosA = Math.cos(rotationAngle);
 
-    let rotatedX = dx * Math.cos(angle) - dy * Math.sin(angle);
-    let rotatedY = dx * Math.sin(angle) + dy * Math.cos(angle);
+    // cos가 0에 가까우면 (옆면 보일 때) 그리기 불가
+    let realX = Math.abs(cosA) > 0.01 ? dx / cosA + cx : cx;
+    let realY = appY; // Y축은 그대로
 
     return {
-        x: rotatedX + cx,
-        y: rotatedY + cy
+        x: realX,
+        y: realY
     };
 }
 

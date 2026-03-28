@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🐼 탕후루의 달인</title>
+    <link rel="stylesheet" href="tanghulu.css">
+    <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Top Menu & Money -->
+        <header class="game-header">
+            <div class="mascot">
+                <img src="assets/tanghulu/red_panda.png" alt="래서판다 유튜버" id="pandaMascot">
+                <div class="speech-bubble" id="pandaSpeech">안녕! 먹방 유튜버 래서판다야! 탕후루 먹방하자!</div>
+            </div>
+
+            <div class="nav-tabs">
+                <button class="tab-btn active" data-target="farm-view">🌳 과일 농장</button>
+                <button class="tab-btn" data-target="kitchen-view">🍳 주방 (탕후루 꽂기)</button>
+                <button class="tab-btn" data-target="shop-view">🛒 마법 상점</button>
+                <button class="tab-btn" id="phoneAppBtn"
+                    style="background-color: #ff7675; color: white; box-shadow: 0 4px 0 #d63031;">📱 음식 배달앱</button>
+            </div>
+
+            <div class="money-display">
+                💰 <span id="coinCount">0</span>
+            </div>
+        </header>
+
+        <main class="game-content">
+            <!-- 1. Farm View -->
+            <section id="farm-view" class="view-section active">
+                <div class="farm-bg">
+                    <!-- Trees/Plants will be added here via JS -->
+                    <div class="plant" id="strawberry-plant">
+                        <div class="branch"></div>
+                        <div class="hitbox" data-fruit="strawberry" id="plant-1"></div>
+                        <div class="growth-bar">
+                            <div class="fill" id="grow-fill-1"></div>
+                        </div>
+                        <p class="plant-label">딸기 나무</p>
+                    </div>
+
+                    <div class="plant locked" id="grape-plant">
+                        <div class="branch"></div>
+                        <div class="hitbox" data-fruit="grape" id="plant-2"></div>
+                        <div class="growth-bar">
+                            <div class="fill" id="grow-fill-2"></div>
+                        </div>
+                        <p class="plant-label">포도 넝쿨 (상점 구매)</p>
+                    </div>
+
+                    <div class="plant locked" id="purple-grape-plant">
+                        <div class="branch"></div>
+                        <div class="hitbox" data-fruit="purple_grape" id="plant-3"></div>
+                        <div class="growth-bar">
+                            <div class="fill" id="grow-fill-3"></div>
+                        </div>
+                        <p class="plant-label">보라 포도나무 (상점)</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2. Kitchen View -->
+            <section id="kitchen-view" class="view-section">
+                <div class="kitchen-bg">
+
+                    <!-- Inventory -->
+                    <div class="inventory">
+                        <h2>바구니 🧺</h2>
+                        <div class="inv-slot" data-type="strawberry">
+                            <img src="assets/tanghulu/strawberry.png" alt="딸기">
+                            <span class="count" id="inv-strawberry">0</span>
+                        </div>
+                        <div class="inv-slot locked" data-type="grape" id="inv-grape-box">
+                            <img src="assets/tanghulu/grape.png" alt="청포도">
+                            <span class="count" id="inv-grape">0</span>
+                        </div>
+                        <div class="inv-slot locked" data-type="purple_grape" id="inv-purple-grape-box">
+                            <img src="assets/tanghulu/purple_grape.png" alt="보라 포도">
+                            <span class="count" id="inv-purple_grape">0</span>
+                        </div>
+                        <p style="font-size: 0.9rem; margin-top: 10px; color: #666;">과일을 눌러 꼬치에 꽂아봐!</p>
+                    </div>
+
+                    <!-- Cooking Area -->
+                    <div class="cooking-area">
+                        <div class="skewer-container">
+                            <img src="assets/tanghulu/skewer.png" alt="꼬치" class="skewer-stick">
+                            <!-- Fruits on skewer -->
+                            <div class="skewer-fruits" id="skewerFruits">
+                                <!-- JS will insert fruits here -->
+                            </div>
+                            <!-- Syrup Overlay applied later -->
+                            <div class="syrup-coating" id="syrupCoating"></div>
+                        </div>
+
+                        <div class="kitchen-actions">
+                            <button id="syrupBtn" class="action-btn syrup-btn" disabled>🍯 달콤 시럽 코팅하기</button>
+                            <button id="sellBtn" class="action-btn sell-btn" style="display:none;">▶️ 유튜브에 올리기!</button>
+                            <button id="trashBtn" class="action-btn trash-btn">🗑️ 다 빼기</button>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- 3. Shop View -->
+            <section id="shop-view" class="view-section">
+                <div class="shop-bg">
+                    <h2>🛒 판다의 마법 상점</h2>
+                    <p class="shop-desc">번 돈으로 새로운 과일 씨앗을 사서 농장에 심어봐!</p>
+
+                    <div class="shop-items">
+                        <div class="shop-item" id="buy-grape">
+                            <img src="assets/tanghulu/grape.png" alt="청포도 씨앗">
+                            <div class="item-info">
+                                <h3>상큼 청포도 씨앗</h3>
+                                <p>가격: 💰 50</p>
+                                <button class="buy-btn" data-item="grape" data-price="50">구매하기</button>
+                            </div>
+                        </div>
+                        <div class="shop-item" id="buy-purple-grape">
+                            <img src="assets/tanghulu/purple_grape.png" alt="달콤 보라 포도 씨앗">
+                            <div class="item-info">
+                                <h3>달콤 보라 포도 씨앗</h3>
+                                <p>가격: 💰 150</p>
+                                <button class="buy-btn" data-item="purple_grape" data-price="150">구매하기</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+        <button onclick="location.href='index.html'" class="back-btn">⬅️ 다른 게임 하러가기</button>
+    </div>
+
+    <!-- Delivery App Modal -->
+    <div id="deliveryModal" class="modal-overlay">
+        <div class="phone-app">
+            <div class="phone-header">
+                <h2>배달의 요정 앱 🛵</h2>
+                <button id="closePhoneBtn" class="close-btn">❌</button>
+            </div>
+            <div class="phone-content">
+                <p>먹방에 어울리는 맛있는 음식을 시켜보자! (다음 탕후루 유튭 조회수 팍팍!)</p>
+                <div class="menu-list">
+                    <div class="menu-item">
+                        <div class="menu-icon">🥘</div>
+                        <div class="menu-text">
+                            <h3>마라탕 🌶️</h3>
+                            <p>단짠 맵단 국룰! (조회수 3배)</p>
+                        </div>
+                        <button class="order-food-btn" data-food="마라탕" data-icon="🥘" data-price="100" data-buff="3">💰
+                            100</button>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-icon">🍜</div>
+                        <div class="menu-text">
+                            <h3>매콤 떡볶이 ♨️</h3>
+                            <p>국민 매콤 분식 (조회수 2배)</p>
+                        </div>
+                        <button class="order-food-btn" data-food="떡볶이" data-icon="🍜" data-price="60" data-buff="2">💰
+                            60</button>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-icon">🍗</div>
+                        <div class="menu-text">
+                            <h3>바삭 통닭 🍗</h3>
+                            <p>겉바속촉 진리! (조회수 2.5배)</p>
+                        </div>
+                        <button class="order-food-btn" data-food="통닭" data-icon="🍗" data-price="80" data-buff="2.5">💰
+                            80</button>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-icon">🍕</div>
+                        <div class="menu-text">
+                            <h3>치즈 피자 🍕</h3>
+                            <p>치즈 쭉쭉! (조회수 2배)</p>
+                        </div>
+                        <button class="order-food-btn" data-food="피자" data-icon="🍕" data-price="70" data-buff="2">💰
+                            70</button>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-icon">🍝</div>
+                        <div class="menu-text">
+                            <h3>불닭볶음면 🔥</h3>
+                            <p>매운맛 챌린지! (조회수 3.5배)</p>
+                        </div>
+                        <button class="order-food-btn" data-food="불닭볶음면" data-icon="🍝" data-price="120"
+                            data-buff="3.5">💰 120</button>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-icon">🍔</div>
+                        <div class="menu-text">
+                            <h3>수제 버거 🍔</h3>
+                            <p>육즙 팡팡! (조회수 1.8배)</p>
+                        </div>
+                        <button class="order-food-btn" data-food="햄버거" data-icon="🍔" data-price="50" data-buff="1.8">💰
+                            50</button>
+                    </div>
+                    <!-- User wanted snack at the bottom -->
+                    <div class="menu-item" style="margin-top:auto;">
+                        <div class="menu-icon">🍩</div>
+                        <div class="menu-text">
+                            <h3>달콤 간식 세트 🥐</h3>
+                            <p>맛있는 미니 마카롱 (조회수 1.5배)</p>
+                        </div>
+                        <button class="order-food-btn" data-food="간식세트" data-icon="🍩" data-price="30"
+                            data-buff="1.5">💰 30</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Eating Animation Overlay -->
+    <div id="eatOverlay" class="modal-overlay">
+        <div class="eat-emoji" id="eatEmoji">🥘</div>
+    </div>
+
+    <!-- Sound effects -->
+    <audio id="pop-sound" src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3"></audio>
+    <audio id="coin-sound" src="https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3"></audio>
+    <audio id="syrup-sound" src="https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3"></audio>
+
+    <script src="tanghulu.js"></script>
+</body>
+
+</html>

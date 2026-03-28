@@ -9,15 +9,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;700&family=Oswald:wght@500;700&display=swap"
         rel="stylesheet">
-    <script async src="https://unpkg.com/es-module-shims@1.6.3/dist/es-module-shims.js"></script>
-    <script type="importmap">
-    {
-        "imports": {
-            "three": "https://unpkg.com/three@0.154.0/build/three.module.js",
-            "three/addons/": "https://unpkg.com/three@0.154.0/examples/jsm/"
-        }
-    }
-    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
 
 <body>
@@ -25,16 +17,25 @@
         <!-- HUD -->
         <div id="hud">
             <div id="status-bar">
-                <div class="prank-count">COMPLETED PRANK: <span id="prank-val">0</span> / 3</div>
+                <div class="prank-count">성공한 장난: <span id="prank-val">0</span> / 3</div>
                 <div id="detection-meter">
-                    DETECTION: <div class="meter-bg">
+                    들킴 지수: <div class="meter-bg">
                         <div id="meter-fill"></div>
                     </div>
                 </div>
             </div>
-            <div id="inventory-box">
-                ITEM: <span id="current-item">NONE</span>
+            
+            <!-- MISSION BOARD -->
+            <div id="mission-board">
+                <div class="mission-label">현재 미션</div>
+                <div id="mission-text">아이템을 찾아 선생님을 골탕 먹이세요!</div>
             </div>
+
+            <div id="inventory-box">
+                보유 아이템: <span id="current-item">없음</span>
+            </div>
+            <!-- MISSION COMPLETE POPUP -->
+            <div id="mission-status" class="hidden">미션 완료! 선생님이 당하고 있어요! 😈</div>
         </div>
 
         <!-- Overlays -->
@@ -42,29 +43,38 @@
             <div class="menu-box">
                 <div class="logo-emoji">👹🏚️</div>
                 <h1 class="logo-text">SCARY<span>TEACHER</span></h1>
-                <p>Avoid the scary teacher's vision and set up traps to prank her!</p>
-                <div class="controls-guide">WASD: MOVE | E: PICK UP / PRANK | SPACE: HIDE</div>
-                <button id="start-btn">PRANK START</button>
+                <p>무서운 선생님의 시선을 피해 함정을 설치하세요!</p>
+                <div class="controls-guide">WASD: 이동 | E: 상호작용 (아이템 줍기/장난치기) | SPACE: 숨기</div>
+                <button id="start-btn">장난 시작!</button>
             </div>
         </div>
 
         <div id="caught-overlay" class="overlay hidden">
             <div class="menu-box">
-                <h1 class="scary-title">CAUGHT!</h1>
-                <p>The teacher found you. Detention for a month!</p>
-                <button id="retry-btn">TRY AGAIN</button>
+                <h1 class="scary-title">들켰다!</h1>
+                <p>선생님한테 잡히고 말았습니다. 한 달 동안 나머지 공부!</p>
+                <button id="retry-btn">다시 도전</button>
             </div>
         </div>
 
         <div id="win-overlay" class="overlay hidden">
             <div class="menu-box">
-                <h1 class="win-title">SUCCESS!</h1>
-                <p>You pranked the scary teacher perfectly. Mission accomplished!</p>
-                <button id="win-retry-btn">PLAY AGAIN</button>
+                <h1 class="win-title">대성공!</h1>
+                <p>무서운 선생님을 완벽하게 골탕 먹였습니다. 미션 클리어!</p>
+                <button id="win-retry-btn">다시 하기</button>
             </div>
         </div>
+
+        <!-- PRANK CUTSCENE OVERLAY -->
+        <div id="prank-cutscene" class="overlay hidden" style="background: rgba(0,0,0,0.7); flex-direction: column; pointer-events: none;">
+            <div class="cutscene-frame" style="border: 10px solid #e74c3c; border-radius: 20px; width: 85%; height: 75%; position: relative; background: transparent; box-shadow: 0 0 0 1000px rgba(0,0,0,0.8); z-index: 100;">
+                <div style="position: absolute; top: 20px; left: 20px; color: #ff3e3e; font-family: 'Oswald'; font-size: 1.5rem; text-shadow: 0 0 10px red;">● REC - HIDING VIEW</div>
+                <div id="reaction-text" style="position: absolute; bottom: 40px; width: 100%; text-align: center; color: white; font-size: 2.5rem; font-weight: 900; background: rgba(0,0,0,0.7); padding: 15px 0;">"으아악! 교탁이 왜 이렇게 끈적해!!?? 👋😱"</div>
+            </div>
+            <div style="margin-top: 30px; color: white; font-size: 1.5rem; font-weight: 700; z-index: 101; text-shadow: 0 2px 10px #000;">선생님이 당하는 모습을 몰래 지켜보는 중...</div>
+        </div>
     </div>
-    <script type="module" src="js/main.js"></script>
+    <script src="js/main.js"></script>
 </body>
 
 </html>

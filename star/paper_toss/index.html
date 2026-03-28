@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8"><title>OFFICE PAPER TOSS 🗑️</title>
+    <style>
+        body { margin:0; background:#ddd; overflow:hidden; font-family:sans-serif; text-align:center; }
+        #bin { position:absolute; bottom:50px; left:50%; width:100px; height:100px; background:#333; transform:translateX(-50%); border-radius:0 0 10px 10px; }
+        #paper { position:absolute; bottom:200px; left:50%; width:40px; height:40px; background:#fff; border-radius:50%; transform:translateX(-50%); cursor:grab; }
+        #ui { font-size:24px; margin-top:20px; }
+    </style>
+</head>
+<body>
+    <div id="ui">Score: 0</div>
+    <div id="bin"></div>
+    <div id="paper"></div>
+    <script>
+        const p = document.getElementById('paper');
+        const b = document.getElementById('bin');
+        let score = 0;
+        let moving = false;
+
+        p.onmousedown = (e) => {
+            let sy = e.clientY; let sx = e.clientX;
+            window.onmouseup = (up) => {
+                let dy = sy - up.clientY; let dx = up.clientX - sx;
+                if(dy > 50) toss(dx, dy);
+                window.onmouseup = null;
+            };
+        };
+
+        function toss(dx, dy) {
+            moving = true;
+            let x = 0; let y = 0; let vx = dx/10; let vy = dy/10;
+            let loop = setInterval(() => {
+                x += vx; y += vy; vy -= 0.5;
+                p.style.bottom = (200 + y) + 'px';
+                p.style.left = (window.innerWidth/2 + x) + 'px';
+                if(y < -150) {
+                    clearInterval(loop);
+                    let rect = p.getBoundingClientRect();
+                    let brect = b.getBoundingClientRect();
+                    if(rect.left < brect.right && rect.right > brect.left) { score++; }
+                    else { score = 0; }
+                    document.getElementById('ui').innerText = 'Score: ' + score;
+                    p.style.bottom = '200px'; p.style.left = '50%';
+                    moving = false;
+                }
+            }, 20);
+        }
+    </script>
+</body>
+</html>

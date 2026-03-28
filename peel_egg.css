@@ -1,0 +1,312 @@
+:root {
+    --bg-color: #f5f6fa;
+    --shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    --border-radius: 20px;
+    --font-color: #2f3640;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Jua', sans-serif;
+    background-color: #74b9ff;
+    background-image: linear-gradient(135deg, #74b9ff 0%, #a29bfe 100%);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    color: var(--font-color);
+}
+
+.app-container {
+    width: 95vw;
+    height: 95vh;
+    background-color: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border: 5px solid #dcdde1;
+    position: relative;
+    user-select: none;
+}
+
+/* Header */
+.game-header {
+    background-color: #f5f6fa;
+    color: #2f3640;
+    padding: 15px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 4px solid #dcdde1;
+    z-index: 10;
+}
+
+.game-header h1 {
+    font-size: 2rem;
+    text-shadow: 1px 1px 0px rgba(255, 255, 255, 0.8);
+}
+
+.actions {
+    display: flex;
+    gap: 15px;
+}
+
+.action-btn {
+    font-family: 'Jua', sans-serif;
+    font-size: 1.2rem;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    background-color: #ffffff;
+    color: #a29bfe;
+    box-shadow: 0 4px 0 #dcdde1;
+    transition: all 0.2s;
+}
+
+.action-btn:active {
+    transform: translateY(4px);
+    box-shadow: none;
+}
+
+.play-btn {
+    background-color: #00cec9;
+    color: white;
+    box-shadow: 0 4px 0 #00b894;
+    font-size: 1.5rem;
+    width: 100%;
+    margin-top: 10px;
+}
+
+/* Main Layout */
+.main-content {
+    flex: 1;
+    display: flex;
+    overflow: hidden;
+    background-color: #f1f2f6;
+    background-image: linear-gradient(0deg, #eccc68 1px, transparent 1px),
+        linear-gradient(90deg, #eccc68 1px, transparent 1px);
+    background-size: 40px 40px;
+}
+
+/* Sidebar Tools */
+.sidebar {
+    width: 320px;
+    background-color: #fffaf0;
+    border-right: 4px dashed #6c5ce7;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    overflow-y: auto;
+    box-shadow: 5px 0 15px rgba(0, 0, 0, 0.05);
+}
+
+.panel h2 {
+    color: #6c5ce7;
+    margin-bottom: 10px;
+    font-size: 1.5rem;
+}
+
+.hint-text {
+    font-size: 1rem;
+    color: #747d8c;
+    margin-bottom: 15px;
+    line-height: 1.6;
+}
+
+/* Time text */
+.time-text {
+    font-size: 3rem;
+    font-weight: bold;
+    color: #d63031;
+    text-align: center;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Center Stage */
+.game-area {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    background-color: #fff;
+}
+
+.game-wrapper {
+    position: relative;
+    width: 500px;
+    height: 500px;
+    background-color: #ffeaa7;
+    /* soft yellow plate */
+    border-radius: 50%;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1), inset 0 0 20px rgba(0, 0, 0, 0.05);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+/* Egg styling */
+.egg-board {
+    position: relative;
+    width: 200px;
+    height: 280px;
+}
+
+.egg-shape {
+    width: 200px;
+    height: 280px;
+    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+}
+
+.egg-shadow {
+    position: absolute;
+    bottom: -20px;
+    left: 10%;
+    width: 80%;
+    height: 30px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 50%;
+    filter: blur(8px);
+}
+
+/* The white peeled egg behind the canvas */
+.naked-egg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: #fdfbf7;
+    box-shadow:
+        inset -15px -20px 40px rgba(0, 0, 0, 0.15),
+        inset 10px 10px 20px rgba(255, 255, 255, 1);
+    z-index: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Cute face on naked egg */
+.face {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: -20px;
+}
+
+.eyes {
+    display: flex;
+    gap: 30px;
+    margin-bottom: 5px;
+}
+
+.eye {
+    width: 12px;
+    height: 12px;
+    background-color: #2d3436;
+    border-radius: 50%;
+}
+
+.mouth {
+    width: 15px;
+    height: 8px;
+    border: 3px solid #ff7675;
+    border-top: none;
+    border-radius: 0 0 15px 15px;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* The scratchable shell on top */
+.shell-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
+    cursor: pointer;
+    /* Basic drop shadow for depth of shell */
+    box-shadow: 2px 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.hint-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 24px;
+    font-weight: bold;
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    background: rgba(0, 0, 0, 0.5);
+    padding: 10px 20px;
+    border-radius: 20px;
+    pointer-events: none;
+    z-index: 10;
+    animation: pulse 1s infinite alternate;
+}
+
+@keyframes pulse {
+    from {
+        transform: translate(-50%, -50%) scale(1);
+    }
+
+    to {
+        transform: translate(-50%, -50%) scale(1.1);
+    }
+}
+
+/* Bounce Animation */
+@keyframes bounce {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-15px);
+    }
+}
+
+.bouncing {
+    animation: bounce 0.5s ease;
+}
+
+/* Result Overlay */
+.overlay-screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(45, 52, 54, 0.9);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    z-index: 50;
+    text-align: center;
+    border-radius: 50%;
+}
+
+.overlay-screen h2 {
+    font-size: 3.5rem;
+    margin-bottom: 15px;
+}
+
+.overlay-screen p {
+    font-size: 1.5rem;
+    margin-bottom: 30px;
+}

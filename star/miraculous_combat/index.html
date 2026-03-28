@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>미라클러스: 파리의 수호자</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="game-container">
+        <!-- Start Screen -->
+        <div id="start-screen" class="overlay">
+            <div class="menu-box">
+                <h1 class="logo">MIRACULOUS</h1>
+                <p>성별과 영웅을 선택하세요!</p>
+                <div class="char-selection">
+                    <div class="char-card" id="select-ladybug">
+                        <img src="assets/ladybug.png" alt="Ladybug">
+                        <h3>레이디버그</h3>
+                        <p>무기: 요요</p>
+                        <p>필살기: 행운의 부적</p>
+                    </div>
+                    <div class="char-card" id="select-catnoir">
+                        <img src="assets/catnoir.png" alt="Cat Noir">
+                        <h3>블랙캣</h3>
+                        <p>무기: 봉</p>
+                        <p>필살기: 고대 재앙</p>
+                    </div>
+                </div>
+                <button id="start-btn" disabled>임무 시작!</button>
+            </div>
+        </div>
+
+        <!-- Game HUD -->
+        <div id="hud" class="hidden">
+            <div class="hp-container">
+                <div class="hp-bar-outer"><div id="hp-fill"></div></div>
+                <span id="char-name">영웅</span>
+            </div>
+            <div class="mana-container">
+                <div class="mana-bar-outer"><div id="mana-fill"></div></div>
+                <span id="mana-text">MIRACULOUS ENERGY</span>
+            </div>
+            <div id="score">AKUMA PURIFIED: <span id="kill-count">0</span></div>
+        </div>
+
+        <!-- Ability Overlay -->
+        <div id="ability-flash" class="flash-overlay hidden"></div>
+
+        <canvas id="gameCanvas"></canvas>
+
+        <!-- Win/Lose Overlays -->
+        <div id="win-screen" class="overlay hidden">
+            <div class="menu-box">
+                <h1 class="win-title">MISSION ACCOMPLISHED!</h1>
+                <p>파리의 평화를 지켰습니다.</p>
+                <div class="hero-pose">🐞 🐱</div>
+                <button onclick="location.reload()">다시 하기</button>
+            </div>
+        </div>
+
+        <div id="lose-screen" class="overlay hidden">
+            <div class="menu-box">
+                <h1 class="lose-title">MISSION FAILED</h1>
+                <p>변입이 해제되었습니다...</p>
+                <button onclick="location.reload()">다시 도전</button>
+            </div>
+        </div>
+    </div>
+    <script src="js/main.js"></script>
+</body>
+</html>

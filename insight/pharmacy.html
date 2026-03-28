@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>💊 꼬마 약사님의 친절한 약국</title>
+    <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="pharmacy.css">
+</head>
+<body>
+    <div class="game-container">
+        <!-- 상단 바 -->
+        <header class="game-header">
+            <button class="back-btn" onclick="location.href='index.html'">◀ 뒤로가기</button>
+            <h1>💊 꼬마 약사님의 약국</h1>
+            <div id="score-display">조제 완료: <span id="done-count">0</span></div>
+        </header>
+
+        <!-- 게임 영역 -->
+        <main class="game-main">
+            <!-- 처방전 (왼쪽) -->
+            <section class="prescription-panel">
+                <div class="paper">
+                    <h2>📋 처방전</h2>
+                    <div id="rx-list">
+                        <!-- 처방 내용이 여기 나타납니다 -->
+                        <div class="rx-item">비어 있음</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 조제 영역 (중앙) -->
+            <section class="pharmacy-counter">
+                <div id="patient-face">🦊<span>(기다리는 중)</span></div>
+                
+                <div class="work-area">
+                    <div id="medicine-bag" class="bag">
+                        <div class="bag-label">내 소중한 약 💊</div>
+                        <div id="bag-contents"></div>
+                    </div>
+                </div>
+
+                <div class="tools-shelf">
+                    <div class="pill red" data-color="red" draggable="true">🔴</div>
+                    <div class="pill blue" data-color="blue" draggable="true">🔵</div>
+                    <div class="pill yellow" data-color="yellow" draggable="true">🟡</div>
+                    <div class="pill green" data-color="green" draggable="true">🟢</div>
+                    <div class="bottle syrup" data-color="syrup" draggable="true">🍼</div>
+                </div>
+            </section>
+
+            <!-- 결과 조작 (오른쪽) -->
+            <aside class="action-panel">
+                <button id="next-patient-btn">새 환자 부르기! 🔔</button>
+                <button id="finish-btn" class="hidden">약 배달하기! 🚚</button>
+                <div id="feedback-msg">환자님이 기다리고 있어요!</div>
+            </aside>
+        </main>
+        
+        <div id="toast" class="hidden">조제 성공! ✨</div>
+    </div>
+
+    <script src="pharmacy.js"></script>
+</body>
+</html>

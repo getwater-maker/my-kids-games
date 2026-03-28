@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>LAST LEGION: TOWER DEFENSE | Tactical War Simulation</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+</head>
+<body>
+    <div id="game-container">
+        <!-- Main Game HUD -->
+        <div id="hud">
+            <!-- Top HUD: Game Info -->
+            <div class="hud-top">
+                <div class="base-health">
+                    <div class="hp-label">BASE INTEGRITY</div>
+                    <div class="hp-bar-outer"><div id="hp-bar-fill"></div></div>
+                    <div class="hp-value"><span id="curr-hp">20</span> / 20</div>
+                </div>
+                <div class="wave-info">
+                    <div id="wave-text">WAVE 1</div>
+                    <div class="timer-box" id="next-wave-timer">NEXT IN: 10s</div>
+                </div>
+                <div class="resource-info">
+                    <div class="gold-icon">💰</div>
+                    <div id="gold-value">500</div>
+                </div>
+            </div>
+
+            <!-- Side HUD: Tower Selection -->
+            <div id="tower-dock">
+                <div class="tower-btn" id="btn-tower-1" data-cost="100">
+                    <div class="icon">🔫</div>
+                    <div class="label">SENTRY</div>
+                    <div class="cost">100</div>
+                </div>
+                <div class="tower-btn" id="btn-tower-2" data-cost="250">
+                    <div class="icon">🚀</div>
+                    <div class="label">MISSILE</div>
+                    <div class="cost">250</div>
+                </div>
+                <div class="tower-btn" id="btn-tower-3" data-cost="500">
+                    <div class="icon">⚡</div>
+                    <div class="label">LASER</div>
+                    <div class="cost">500</div>
+                </div>
+            </div>
+
+            <!-- Mobile Controls Overlay (only for placement) -->
+            <div id="mobile-controls" class="hidden">
+                <button id="btn-confirm" class="action-btn confirm">CONFIRM</button>
+                <button id="btn-cancel" class="action-btn cancel">CANCEL</button>
+            </div>
+
+            <!-- Notification Center -->
+            <div id="notif-center"></div>
+        </div>
+
+        <!-- Overlays -->
+        <div id="start-overlay" class="overlay">
+            <div class="glass-box">
+                <h1 class="logo">LAST LEGION <span class="sub">TOWER DEFENSE</span></h1>
+                <p>Tactical Defense Command v1.0</p>
+                <div class="briefing">
+                    <p><b>MISSION</b>: 밀려오는 적 군단을 막아내고 기지를 수호하십시오.</p>
+                    <p><b>PC</b>: 마우스 클릭으로 포탑 설치 | 휠로 줌인/아웃</p>
+                    <p><b>MOBILE</b>: 터치로 포탑 선택 및 배치 영역 선택</p>
+                </div>
+                <button id="start-btn">DEPLOY COMMAND</button>
+            </div>
+        </div>
+
+        <div id="game-over-overlay" class="overlay hidden">
+            <div class="glass-box">
+                <h1 id="result-status">BASE COMPROMISED</h1>
+                <p id="final-stats">Total Waves Survived: 5</p>
+                <button onclick="location.reload()">REDEPLOY</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Placement Ghost Visualizer (Hidden HTML element reference if needed) -->
+    <div id="placement-ghost" style="display:none; pointer-events:none;"></div>
+
+    <script src="js/main.js"></script>
+</body>
+</html>

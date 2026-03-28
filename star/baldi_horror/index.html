@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BALDI'S BASICS: HORROR EDUCATION 📏</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Comic+Sans+MS&family=Creepster&display=swap');
+        body { margin: 0; background: #fff; overflow: hidden; font-family: 'Comic Sans MS', cursive; }
+        #game-container { position: relative; width: 100vw; height: 100vh; background: #ddd; }
+        canvas { display: block; background: #fff; }
+        #ui { position: absolute; top: 10px; left: 10px; font-size: 24px; color: #000; z-index: 100; }
+        #math-screen {
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 400px; height: 300px; background: #fff; border: 10px solid #2ecc71;
+            display: none; flex-direction: column; align-items: center; justify-content: center;
+            z-index: 1000; box-shadow: 0 0 50px rgba(0,0,0,0.5);
+        }
+        #jumpscare {
+            position: fixed; top:0; left:0; width:100%; height:100%;
+            background: #000; display:none; z-index:2000; justify-content: center; align-items: center;
+        }
+        #jumpscare img { width: 100%; height: 100%; object-fit: contain; }
+        #overlay {
+            position: absolute; top:0; left:0; width:100%; height:100%;
+            background: rgba(255,255,255,0.9); display: flex; flex-direction: column;
+            justify-content: center; align-items: center; z-index: 500;
+        }
+        .btn { padding: 15px 40px; font-size: 2rem; background: #2ecc71; color: #fff; border: none; cursor: pointer; border-radius: 10px; }
+        input { font-size: 24px; width: 100px; text-align: center; margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <canvas id="gameCanvas"></canvas>
+        <div id="ui">Notebooks: 0 / 7</div>
+        <div id="math-screen">
+            <h2 id="question">1 + 1 = ?</h2>
+            <input type="number" id="answer">
+            <button onclick="checkAnswer()" style="margin-top:10px; padding: 10px 20px;">Submit</button>
+        </div>
+        <div id="jumpscare">
+            <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHpwaGZqZndqZndqZndqZndqZndqZndqZndqZndqZndqZndqZndqJmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1n/6W8kIDH3f858uByAIs/giphy.gif" alt="BALDI">
+        </div>
+        <div id="overlay">
+            <h1 style="font-size: 4rem; color: #2ecc71;">BALDI'S BASICS</h1>
+            <p style="font-size: 1.5rem;">7개의 노트를 모으고 탈출하세요.<br>문제를 틀리면 발디가 화를 냅니다.</p>
+            <button class="btn" onclick="startGame()">Start Learning</button>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const mathScreen = document.getElementById('math-screen');
+        const overlay = document.getElementById('overlay');
+        const jumpscare = document.getElementById('jumpscare');
+        const qText = document.getElementById('question');
+        const ansInput = document.getElementById('answer');
+        const ui = document.getElementById('ui');
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        let player = { x: 100, y: 100, speed: 5 };
+        let baldi = { x: 500, y: 500, speed: 2, slapTimer: 0 };
+        let notebooks = [];
+        let score = 0;
+        let gameActive = false;
+        let currentProblem = null;
+
+        function initLevel() {
+            notebooks = [];
+            for(let i=0; i<7; i++) {
+                notebooks.push({ x: Math.random()*(canvas.width-100)+50, y: Math.random()*(canvas.height-100)+50, collected: false });
+            }
+        }
+
+        const keys = {};
+        window.addEventListener('keydown', e => keys[e.code] = true);
+        window.addEventListener('keyup', e => keys[e.code] = false);
+
+        function startGame() {
+            overlay.style.display = 'none';
+            initLevel();
+            gameActive = true;
+            loop();
+        }
+
+        function loop() {
+            if(!gameActive) return;
+
+            // Player movement
+            if(mathScreen.style.display !== 'flex') {
+                if(keys['ArrowUp'] || keys['KeyW']) player.y -= player.speed;
+                if(keys['ArrowDown'] || keys['KeyS']) player.y += player.speed;
+                if(keys['ArrowLeft'] || keys['KeyA']) player.x -= player.speed;
+                if(keys['ArrowRight'] || keys['KeyD']) player.x += player.speed;
+            }
+
+            // Baldi Movement (Slapping)
+            baldi.slapTimer++;
+            if(baldi.slapTimer > 40) {
+                let dx = player.x - baldi.x;
+                let dy = player.y - baldi.y;
+                let dist = Math.sqrt(dx*dx + dy*dy);
+                baldi.x += (dx/dist) * 40; // Teleport a bit (classic baldi slap)
+                baldi.y += (dy/dist) * 40;
+                baldi.slapTimer = 0;
+                
+                if(dist < 40) gameOver();
+            }
+
+            // Notebooks
+            notebooks.forEach(nb => {
+                if(!nb.collected && Math.sqrt((player.x-nb.x)**2 + (player.y-nb.y)**2) < 30) {
+                    showMath(nb);
+                }
+            });
+
+            draw();
+            requestAnimationFrame(loop);
+        }
+
+        function showMath(nb) {
+            currentProblem = { nb, a: Math.floor(Math.random()*10), b: Math.floor(Math.random()*10) };
+            qText.innerText = `${currentProblem.a} + ${currentProblem.b} = ?`;
+            mathScreen.style.display = 'flex';
+            ansInput.focus();
+        }
+
+        function checkAnswer() {
+            let userAns = parseInt(ansInput.value);
+            if(userAns === currentProblem.a + currentProblem.b) {
+                currentProblem.nb.collected = true;
+                score++;
+                ui.innerText = `Notebooks: ${score} / 7`;
+                baldi.speed += 0.2;
+                if(score === 7) win();
+            } else {
+                baldi.speed += 1.5; // Baldi gets angry
+                currentProblem.nb.collected = true; // Still collected but Baldi is fast
+                score++;
+                ui.innerText = `Notebooks: ${score} / 7`;
+            }
+            mathScreen.style.display = 'none';
+            ansInput.value = '';
+        }
+
+        function draw() {
+            ctx.fillStyle = '#fff';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Notebooks
+            ctx.fillStyle = '#3498db';
+            notebooks.forEach(nb => {
+                if(!nb.collected) ctx.fillRect(nb.x-10, nb.y-15, 20, 30);
+            });
+
+            // Player
+            ctx.fillStyle = '#f1c40f';
+            ctx.beginPath(); ctx.arc(player.x, player.y, 20, 0, Math.PI*2); ctx.fill();
+
+            // Baldi
+            ctx.fillStyle = '#2ecc71';
+            ctx.beginPath(); ctx.arc(baldi.x, baldi.y, 25, 0, Math.PI*2); ctx.fill();
+            ctx.fillStyle = '#000';
+            ctx.fillText("📏", baldi.x-10, baldi.y+5);
+        }
+
+        function gameOver() {
+            gameActive = false;
+            jumpscare.style.display = 'flex';
+            setTimeout(() => location.reload(), 2000);
+        }
+
+        function win() {
+            gameActive = false;
+            overlay.style.display = 'flex';
+            overlay.innerHTML = `<h1>YOU WIN</h1><p>학교를 탈출했습니다!</p><button class="btn" onclick="location.reload()">Replay</button>`;
+        }
+    </script>
+</body>
+</html>

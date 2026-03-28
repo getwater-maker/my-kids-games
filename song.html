@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>노래 맞추기 🎵</title>
+    <link rel="stylesheet" href="song.css">
+    <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="app-container">
+        <header class="game-header">
+            <h1>🎵 두근두근 노래 맞추기</h1>
+            <div class="actions">
+                <button onclick="location.href='index.html'" class="action-btn">⬅️ 뒤로가기</button>
+                <div class="score-badge">점수: <span id="scoreDisplay">0</span>점</div>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <div class="music-player-panel">
+                <div class="cd-player">
+                    <div class="cd" id="cdDisk">💿</div>
+                    <div class="note-particle" id="note1">🎵</div>
+                    <div class="note-particle" id="note2">🎶</div>
+                </div>
+
+                <h2 id="statusText">노래를 듣고 제목을 맞춰보세요!</h2>
+                <div class="progress-bar">
+                    <div class="progress" id="musicProgress"></div>
+                </div>
+
+                <button id="playBtn" class="big-btn start-btn">▶️ 랜덤 노래 듣기!</button>
+            </div>
+
+            <div class="answer-panel">
+                <div class="choice-grid" id="choiceGrid">
+                    <!-- 정답 버튼들이 자바스크립트로 들어갑니다 -->
+                </div>
+            </div>
+
+            <div id="resultOverlay" class="overlay hidden">
+                <h2 id="resultTitle">정답입니다! 🎉</h2>
+                <p id="resultDesc">우와, 귀가 정말 밝으시네요!</p>
+                <button id="nextBtn" class="big-btn">다음 노래 도전!</button>
+            </div>
+        </main>
+    </div>
+
+    <audio id="gameAudio" preload="auto"></audio>
+
+    <!-- 효과음 -->
+    <audio id="sfx-correct" src="https://assets.mixkit.co/active_storage/sfx/1435/1435-preview.mp3"></audio>
+    <audio id="sfx-wrong" src="https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3"></audio>
+
+    <script src="song.js"></script>
+</body>
+
+</html>

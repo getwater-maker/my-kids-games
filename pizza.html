@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>피자 만들기 🍕</title>
+    <link rel="stylesheet" href="pizza.css">
+    <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="app-container">
+        <header class="game-header">
+            <h1>🍕 화덕 피자 공방</h1>
+            <div class="actions">
+                <button onclick="location.href='index.html'" class="action-btn">⬅️ 뒤로가기</button>
+                <button id="clearBtn" class="action-btn clear-btn">🔥 새 반죽 굽기</button>
+                <button id="saveBtn" class="action-btn save-btn">📸 사진 저장!</button>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <!-- Left Toolbar -->
+            <aside class="sidebar">
+                <div class="panel">
+                    <h2>🍅 베이스 소스 바르기</h2>
+                    <p class="hint-text">마우스로 스윽~ 발라보세요!</p>
+                    <div class="tool-list">
+                        <button class="tool-btn active" data-tool="sauce" data-color="#e74c3c">🍅 토마토 소스</button>
+                        <button class="tool-btn" data-tool="sauce" data-color="#f5f6fa">🥛 크림 소스</button>
+                        <button class="tool-btn" data-tool="sauce" data-color="#2ecc71">🌿 바질 페스토</button>
+                        <button class="tool-btn" data-tool="sauce" data-color="#34495e">🦑 먹물 소스</button>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <h2>🧀 치즈 & 가루 솔솔</h2>
+                    <p class="hint-text">누르고 움직여서 솔솔~</p>
+                    <div class="tool-list">
+                        <button class="tool-btn" data-tool="cheese" data-color="#f1c40f">🧀 모짜렐라 치즈</button>
+                        <button class="tool-btn" data-tool="cheese" data-color="#ffffff">❄️ 파마산 가루</button>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <h2>🥓 맛있는 토핑 듬뿍</h2>
+                    <p class="hint-text">원하는 곳에 콕콕!</p>
+                    <div class="sticker-list">
+                        <button class="tool-btn sticker-btn" data-tool="topping" data-val="🔴">🔴 페퍼로니</button>
+                        <button class="tool-btn sticker-btn" data-tool="topping" data-val="🍄">🍄 양송이</button>
+                        <button class="tool-btn sticker-btn" data-tool="topping" data-val="🫒">🫒 올리브</button>
+                        <button class="tool-btn sticker-btn" data-tool="topping" data-val="🥓">🥓 베이컨</button>
+                        <button class="tool-btn sticker-btn" data-tool="topping" data-val="🌿">🌿 바질 잎</button>
+                        <button class="tool-btn sticker-btn" data-tool="topping" data-val="🍍">🍍 파인애플</button>
+                        <button class="tool-btn sticker-btn" data-tool="topping" data-val="🍤">🍤 새우</button>
+                        <button class="tool-btn sticker-btn" data-tool="topping" data-val="🧅">🧅 양파</button>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Center Stage -->
+            <section class="preview-area">
+                <div class="pizza-wrapper">
+                    <!-- The pan -->
+                    <div class="pizza-pan"></div>
+                    <!-- The magical canvas that will hold our pizza -->
+                    <canvas id="pizzaCanvas" width="560" height="560"></canvas>
+                    <div id="cursorHint" class="cursor-hint">🍅</div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Sounds -->
+    <audio id="sfx-sauce" src="https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3" loop></audio>
+    <audio id="sfx-pop" src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3"></audio>
+    <audio id="sfx-sprinkle" src="https://assets.mixkit.co/active_storage/sfx/2627/2627-preview.mp3" loop></audio>
+
+    <script src="pizza.js"></script>
+</body>
+
+</html>

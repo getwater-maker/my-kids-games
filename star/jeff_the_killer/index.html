@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8"><title>JEFF THE KILLER: RUN! 🔪</title>
+    <style>
+        body { margin:0; background:#000; color:#fff; font-family:sans-serif; overflow:hidden; }
+        #player { position:absolute; bottom:50px; left:50%; width:30px; height:30px; background:#00f; transform:translateX(-50%); }
+        .wall { position:absolute; width:100px; height:20px; background:#fff; }
+        #jeff { position:absolute; top:20px; left:50%; font-size:50px; transform:translateX(-50%); animation: flash 1s infinite; }
+        @keyframes flash { 0%{opacity:1;} 50%{opacity:0.2;} 100%{opacity:1;} }
+    </style>
+</head>
+<body>
+    <div id="jeff">🔪 JEFF IS COMING... 🔪</div>
+    <div id="player"></div>
+    <div id="ui" style="position:absolute; top:80px; width:100%; text-align:center;">장애물을 피하며 도망치세요!</div>
+    <script>
+        const p = document.getElementById('player');
+        let px = 50;
+        window.addEventListener('mousemove', e => {
+            px = (e.clientX / window.innerWidth) * 100;
+            p.style.left = px + '%';
+        });
+
+        function spawnWall() {
+            let w = document.createElement('div'); w.className='wall';
+            w.style.left = Math.random()*90 + '%';
+            w.style.top = '-20px';
+            document.body.appendChild(w);
+            let move = setInterval(() => {
+                let curr = parseInt(w.style.top);
+                w.style.top = (curr + 5) + 'px';
+                if(curr > window.innerHeight) { clearInterval(move); document.body.removeChild(w); }
+                let rect = w.getBoundingClientRect();
+                let prect = p.getBoundingClientRect();
+                if(rect.left < prect.right && rect.right > prect.left && rect.top < prect.bottom && rect.bottom > prect.top) {
+                    alert('JEFF CAUGHT YOU!'); location.reload();
+                }
+            }, 20);
+        }
+        setInterval(spawnWall, 1000);
+    </script>
+</body>
+</html>

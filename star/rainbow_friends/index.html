@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8"><title>RAINBOW FRIENDS: HIDE! 📦</title>
+    <style>
+        body { margin:0; background:#34495e; overflow:hidden; font-family:sans-serif; }
+        #blue { position:absolute; top:20px; left:0; width:100px; height:100px; background:#00f; font-size:60px; display:flex; justify-content:center; align-items:center; transition: 0.1s; }
+        #player { position:absolute; bottom:20px; left:50%; width:60px; height:60px; background:#e67e22; transform:translateX(-50%); border: 4px solid #fff; }
+        #player.hidden { opacity: 0.3; border: 4px dashed #000; scale: 0.8; }
+        #ui { position:absolute; top:150px; width:100%; text-align:center; color:#fff; font-size:24px; }
+    </style>
+</head>
+<body>
+    <div id="blue">👤</div>
+    <div id="player"></div>
+    <div id="ui">스페이스바를 눌러 상자속에 숨으세요! 블루가 당신을 지나가게 하세요!</div>
+    <script>
+        const blue = document.getElementById('blue');
+        const p = document.getElementById('player');
+        let hidden = false;
+        let bx = 0;
+
+        window.addEventListener('keydown', e => { if(e.code === 'Space') { hidden=true; p.classList.add('hidden'); } });
+        window.addEventListener('keyup', e => { if(e.code === 'Space') { hidden=false; p.classList.remove('hidden'); } });
+
+        function moveBlue() {
+            bx += 2;
+            blue.style.left = bx + 'px';
+            if(bx > window.innerWidth) bx = -100;
+            
+            // Check collision
+            let brect = blue.getBoundingClientRect();
+            let prect = p.getBoundingClientRect();
+            if(!hidden && brect.left < prect.right && brect.right > prect.left) {
+                alert('BLUE CAUGHT YOU!'); location.reload();
+            }
+            requestAnimationFrame(moveBlue);
+        }
+        moveBlue();
+    </script>
+</body>
+</html>

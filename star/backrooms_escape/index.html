@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BACKROOMS: NEXTBOT ESCAPE 🟨</title>
+    <style>
+        body { margin: 0; background: #222; overflow: hidden; font-family: 'Arial', sans-serif; }
+        #canvas-container { position: relative; width: 100vw; height: 100vh; background: #e0d080; }
+        canvas { display: block; filter: contrast(130%) brightness(90%); }
+        #ui { position: absolute; top: 20px; left: 20px; color: #333; font-weight: bold; font-size: 20px; pointer-events: none; }
+        #overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); display: flex; flex-direction: column; justify-content: center; align-items: center; color: #e0d080; text-align: center; }
+        .btn-start { padding: 15px 40px; font-size: 24px; background: #e0d080; border: none; color: #333; cursor: pointer; border-radius: 5px; margin-top: 20px; font-weight: bold; }
+        #nextbot { position: absolute; width: 150px; height: 150px; pointer-events: none; display: none; }
+    </style>
+</head>
+<body>
+    <div id="canvas-container">
+        <canvas id="gameCanvas"></canvas>
+        <div id="ui">BACKROOMS LEVEL 0 - ESCAPE THE NEXTBOT</div>
+        <img id="nextbot" src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHpwaGZqZndqZndqZndqZndqZndqZndqZndqZndqZndqZndqZndqJmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1n/6ozwFj8tPyJfW/giphy.gif" alt="NEXTBOT">
+        <div id="overlay">
+            <h1 style="font-size: 60px;">THE BACKROOMS</h1>
+            <p>끝없는 노란색 방...<br>무언가가 당신을 노려보고 있습니다.<br>도망치세요! 잡히면 돌아올 수 없습니다.</p>
+            <button class="btn-start" onclick="startGame()">진입하기</button>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const nextbotImg = document.getElementById('nextbot');
+        const overlay = document.getElementById('overlay');
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        let player = { x: canvas.width/2, y: canvas.height/2, size: 15, speed: 4 };
+        let nextbot = { x: -200, y: -200, speed: 4.2 };
+        let walls = [];
+        let gameActive = false;
+        let keys = {};
+
+        window.addEventListener('keydown', (e) => keys[e.key] = true);
+        window.addEventListener('keyup', (e) => keys[e.key] = false);
+
+        function generateWalls() {
+            walls = [];
+            for(let i=0; i<15; i++) {
+                walls.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    w: Math.random() * 200 + 50,
+                    h: Math.random() * 200 + 50
+                });
+            }
+        }
+
+        function startGame() {
+            overlay.style.display = 'none';
+            nextbotImg.style.display = 'block';
+            player.x = canvas.width/2;
+            player.y = canvas.height/2;
+            nextbot.x = 0;
+            nextbot.y = 0;
+            generateWalls();
+            gameActive = true;
+            gameLoop();
+        }
+
+        function gameLoop() {
+            if(!gameActive) return;
+
+            let oldX = player.x;
+            let oldY = player.y;
+
+            if(keys['ArrowUp'] || keys['w']) player.y -= player.speed;
+            if(keys['ArrowDown'] || keys['s']) player.y += player.speed;
+            if(keys['ArrowLeft'] || keys['a']) player.x -= player.speed;
+            if(keys['ArrowRight'] || keys['d']) player.x += player.speed;
+
+            // Wall collision
+            walls.forEach(w => {
+                if(player.x < w.x + w.w && player.x + player.size > w.x &&
+                   player.y < w.y + w.h && player.y + player.size > w.y) {
+                    player.x = oldX;
+                    player.y = oldY;
+                }
+            });
+
+            // Nextbot chase
+            let dx = player.x - nextbot.x;
+            let dy = player.y - nextbot.y;
+            let dist = Math.sqrt(dx*dx + dy*dy);
+            nextbot.x += (dx/dist) * nextbot.speed;
+            nextbot.y += (dy/dist) * nextbot.speed;
+
+            // Update Nextbot image position
+            nextbotImg.style.left = (nextbot.x - 75) + 'px';
+            nextbotImg.style.top = (nextbot.y - 75) + 'px';
+
+            if(dist < 50) gameOver();
+
+            draw();
+            requestAnimationFrame(gameLoop);
+        }
+
+        function draw() {
+            ctx.fillStyle = '#e0d080'; // Backrooms yellow
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Draw Wallpaper pattern
+            ctx.strokeStyle = '#c0b060';
+            ctx.lineWidth = 1;
+            for(let i=0; i<canvas.width; i+=40) {
+                ctx.beginPath(); ctx.moveTo(i,0); ctx.lineTo(i,canvas.height); ctx.stroke();
+            }
+
+            // Draw Walls
+            ctx.fillStyle = '#b0a050';
+            walls.forEach(w => {
+                ctx.fillRect(w.x, w.y, w.w, w.h);
+                ctx.strokeRect(w.x, w.y, w.w, w.h);
+            });
+
+            // Draw Player Flashlight effect
+            let grad = ctx.createRadialGradient(player.x, player.y, 10, player.x, player.y, 300);
+            grad.addColorStop(0, 'rgba(255,255,200,0.3)');
+            grad.addColorStop(1, 'rgba(0,0,0,0.8)');
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Draw Player
+            ctx.fillStyle = '#333';
+            ctx.beginPath();
+            ctx.arc(player.x, player.y, player.size, 0, Math.PI*2);
+            ctx.fill();
+        }
+
+        function gameOver() {
+            gameActive = false;
+            nextbotImg.style.display = 'none';
+            overlay.style.display = 'flex';
+            overlay.innerHTML = '<h1 style="color:red">YOU CLIPPED OUT OF REALITY</h1><p>넥스트봇에게 잡혔습니다...</p><button class="btn-start" onclick="startGame()">다시 시도</button>';
+        }
+
+    </script>
+</body>
+</html>

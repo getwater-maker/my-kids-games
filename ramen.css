@@ -1,0 +1,254 @@
+:root {
+    --bg-color: #ffd32a;
+    /* Yellow brass pot theme */
+    --shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    --border-radius: 20px;
+    --font-color: #2b2b2b;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Jua', sans-serif;
+    background-color: #f7d794;
+    /* Noodle soup background */
+    background-image: linear-gradient(135deg, #f8a5c2 0%, #f6e58d 100%);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    color: var(--font-color);
+}
+
+.app-container {
+    width: 95vw;
+    height: 95vh;
+    background-color: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border: 5px solid #ff7f50;
+    /* Orange-ish hot color */
+    position: relative;
+    user-select: none;
+}
+
+/* Header */
+.game-header {
+    background-color: #ff5252;
+    /* Spicy red header */
+    color: white;
+    padding: 15px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 4px solid #b2bec3;
+    z-index: 10;
+}
+
+.game-header h1 {
+    font-size: 2rem;
+    text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.3);
+}
+
+.actions {
+    display: flex;
+    gap: 15px;
+}
+
+.action-btn {
+    font-family: 'Jua', sans-serif;
+    font-size: 1.2rem;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    background-color: #f1f2f6;
+    color: #57606f;
+    box-shadow: 0 4px 0 #ced6e0;
+    transition: all 0.2s;
+}
+
+.action-btn:active {
+    transform: translateY(4px);
+    box-shadow: none;
+}
+
+.clear-btn {
+    background-color: #ffb142;
+    color: white;
+    box-shadow: 0 4px 0 #cc8e35;
+}
+
+.save-btn {
+    background-color: #33d9b2;
+    color: white;
+    box-shadow: 0 4px 0 #218c74;
+}
+
+/* Main Layout */
+.main-content {
+    flex: 1;
+    display: flex;
+    overflow: hidden;
+    background-color: #d1d8e0;
+    /* Clean kitchen table */
+    background-image: radial-gradient(#a5b1c2 2px, transparent 2px);
+    background-size: 30px 30px;
+}
+
+/* Sidebar Tools */
+.sidebar {
+    width: 320px;
+    background-color: #fffaf0;
+    border-right: 4px dashed #ffb8b8;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    overflow-y: auto;
+    box-shadow: 5px 0 15px rgba(0, 0, 0, 0.05);
+}
+
+.panel h2 {
+    color: #e15f41;
+    /* Hot dark orange/red */
+    margin-bottom: 5px;
+    font-size: 1.3rem;
+}
+
+.hint-text {
+    font-size: 0.9rem;
+    color: #7f8fa6;
+    margin-bottom: 10px;
+}
+
+.tool-list,
+.sticker-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
+.tool-btn {
+    font-family: 'Jua', sans-serif;
+    font-size: 1rem;
+    padding: 10px 5px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    background-color: #dff9fb;
+    color: #2b2b2b;
+    box-shadow: 0 4px 0 #c7ecee;
+    transition: all 0.1s;
+    text-align: center;
+}
+
+.tool-btn.active {
+    background-color: #ff7979;
+    box-shadow: 0 4px 0 #eb4d4b;
+    color: white;
+}
+
+.tool-btn:active {
+    transform: translateY(4px);
+    box-shadow: none;
+}
+
+/* Center Stage */
+.preview-area {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.ramen-wrapper {
+    position: relative;
+    width: 600px;
+    height: 600px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Ramen Pot - Aluminum Pot Style */
+.ramen-pot {
+    position: absolute;
+    width: 540px;
+    height: 540px;
+    background: #eccc68;
+    /* inner bottom color */
+    border-radius: 50%;
+    border: 18px solid #ffa502;
+    /* Thick yellow-orange pot rim */
+    box-shadow:
+        inset 0 0 40px rgba(0, 0, 0, 0.3),
+        /* Depth inside */
+        -15px -15px 30px rgba(255, 255, 255, 0.7),
+        /* Highlight top left */
+        20px 20px 30px rgba(0, 0, 0, 0.3);
+    /* Shadow bottom right */
+}
+
+/* Handles of the pot */
+.ramen-pot::before {
+    content: '';
+    position: absolute;
+    width: 50px;
+    height: 120px;
+    background: #ffa502;
+    left: -40px;
+    top: 50%;
+    transform: translateY(-50%);
+    border-radius: 20px 0 0 20px;
+    box-shadow: inset 5px 5px 10px rgba(255, 255, 255, 0.4),
+        inset -5px -5px 10px rgba(0, 0, 0, 0.2),
+        -10px 10px 20px rgba(0, 0, 0, 0.3);
+    z-index: -1;
+}
+
+.ramen-pot::after {
+    content: '';
+    position: absolute;
+    width: 50px;
+    height: 120px;
+    background: #ffa502;
+    right: -40px;
+    top: 50%;
+    transform: translateY(-50%);
+    border-radius: 0 20px 20px 0;
+    box-shadow: inset -5px -5px 10px rgba(0, 0, 0, 0.2),
+        inset 5px 5px 10px rgba(255, 255, 255, 0.4),
+        10px 10px 20px rgba(0, 0, 0, 0.3);
+    z-index: -1;
+}
+
+/* Overlay canvas */
+#ramenCanvas {
+    position: absolute;
+    pointer-events: auto;
+    z-index: 10;
+    cursor: crosshair;
+    border-radius: 50%;
+    /* Clip drawing inside the pot */
+}
+
+/* Cursor Hint */
+.cursor-hint {
+    position: absolute;
+    pointer-events: none;
+    font-size: 50px;
+    display: none;
+    z-index: 20;
+    transform: translate(-50%, -50%);
+    filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.4));
+}

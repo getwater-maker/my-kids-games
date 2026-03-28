@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8"><title>SMASH THE COMPUTER 🖥️</title>
+    <style>
+        body { margin:0; background:#444; display:flex; flex-direction:column; align-items:center; justify-content:center; height:100vh; font-family:sans-serif; }
+        #pc { width:300px; height:200px; background:#ccc; border:10px solid #888; border-radius:10px; position:relative; cursor:pointer; overflow:hidden; }
+        #screen { width:100%; height:100%; background:#000; display:flex; align-items:center; justify-content:center; color:#0f0; font-family:monospace; }
+        .crack { position:absolute; background:#fff; opacity:0.8; pointer-events:none; }
+    </style>
+</head>
+<body>
+    <h1 style="color:#fff;">SMASH THE COMPUTER!</h1>
+    <p style="color:#eee;">맘껏 때려 부수세요!</p>
+    <div id="pc"><div id="screen">C:\> system_error</div></div>
+    <script>
+        const pc = document.getElementById('pc');
+        pc.onclick = (e) => {
+            for(let i=0; i<5; i++){
+                let c = document.createElement('div'); c.className='crack';
+                c.style.width = Math.random()*100 + 'px'; c.style.height = '2px';
+                c.style.left = (e.clientX - pc.offsetLeft) + 'px';
+                c.style.top = (e.clientY - pc.offsetTop) + 'px';
+                c.style.transform = `rotate(${Math.random()*360}deg)`;
+                pc.appendChild(c);
+            }
+            if(navigator.vibrate) navigator.vibrate(100);
+        };
+    </script>
+</body>
+</html>

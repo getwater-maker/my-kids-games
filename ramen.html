@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>라면 만들기 🍜</title>
+    <link rel="stylesheet" href="ramen.css">
+    <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="app-container">
+        <header class="game-header">
+            <h1>🍜 펄펄 끓는 라면 가게</h1>
+            <div class="actions">
+                <button onclick="location.href='index.html'" class="action-btn">⬅️ 뒤로가기</button>
+                <button id="clearBtn" class="action-btn clear-btn">🔥 새 냄비 끓이기</button>
+                <button id="saveBtn" class="action-btn save-btn">📸 사진 저장!</button>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <!-- Left Toolbar -->
+            <aside class="sidebar">
+                <div class="panel">
+                    <h2>💧 진한 육수 붓기</h2>
+                    <p class="hint-text">원하는 국물 색을 채워주세요!</p>
+                    <div class="tool-list">
+                        <button class="tool-btn active" data-tool="broth" data-color="#e15f41">🌶️ 얼큰한 맛</button>
+                        <button class="tool-btn" data-tool="broth" data-color="#f3a683">🍅 순한 맛</button>
+                        <button class="tool-btn" data-tool="broth" data-color="#f5cd79">🍗 뽀얀 사골</button>
+                        <button class="tool-btn" data-tool="broth" data-color="#303952">🦑 먹물 라면</button>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <h2>🍝 꼬들꼬들 사리</h2>
+                    <p class="hint-text">쭉쭉~ 면발을 뽑아봐요!</p>
+                    <div class="tool-list">
+                        <button class="tool-btn" data-tool="noodle" data-color="#ffdda1" data-size="15">🍝 꼬불
+                            굵은면</button>
+                        <button class="tool-btn" data-tool="noodle" data-color="#f1d08e" data-size="8">🍜 얇은 소면</button>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <h2>✨ 라면 마법 가루</h2>
+                    <p class="hint-text">누르고 움직여서 팍팍!</p>
+                    <div class="tool-list">
+                        <button class="tool-btn" data-tool="powder" data-color="#e66767">🌶️ 고춧가루</button>
+                        <button class="tool-btn" data-tool="powder" data-color="#1dd1a1">🥦 파슬리</button>
+                        <button class="tool-btn" data-tool="powder" data-color="#574b90">🖤 후추 후추</button>
+                        <button class="tool-btn" data-tool="powder" data-color="#f368e0">🌸 벚꽃 스프</button>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <h2>🥚 화룡점정 토핑</h2>
+                    <p class="hint-text">원하는 곳에 톡톡 올려요!</p>
+                    <div class="sticker-list">
+                        <button class="tool-btn sticker-btn" data-tool="topping" data-val="🥚">🥚 톡 까넣은 계란</button>
+                        <button class="tool-btn sticker-btn" data-tool="topping" data-val="🥟">🥟 통통 물만두</button>
+                        <button class="tool-btn sticker-btn" data-tool="topping" data-val="🧅">🧅 송송 썬 파</button>
+                        <button class="tool-btn sticker-btn" data-tool="topping" data-val="🧀">🧀 슬라이스 치즈</button>
+                        <button class="tool-btn sticker-btn" data-tool="topping" data-val="🥩">🥩 차슈(고기)</button>
+                        <button class="tool-btn sticker-btn" data-tool="topping" data-val="🍄">🍄 표고버섯</button>
+                        <button class="tool-btn sticker-btn" data-tool="topping" data-val="🍥">🍥 소용돌이 어묵</button>
+                        <button class="tool-btn sticker-btn" data-tool="topping" data-val="🦐">🦐 통통 새우</button>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Center Stage -->
+            <section class="preview-area">
+                <div class="ramen-wrapper">
+                    <!-- The Pot -->
+                    <div class="ramen-pot"></div>
+                    <!-- The magic canvas for drawing broth, noodle, powder, and toppings -->
+                    <canvas id="ramenCanvas" width="500" height="500"></canvas>
+                    <div id="cursorHint" class="cursor-hint">🌶️</div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Sounds (We'll use similar mixkit endpoints but imagine they fit) -->
+    <audio id="sfx-broth" src="https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3" loop></audio>
+    <audio id="sfx-pop" src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3"></audio>
+    <audio id="sfx-sprinkle" src="https://assets.mixkit.co/active_storage/sfx/2627/2627-preview.mp3" loop></audio>
+
+    <script src="ramen.js"></script>
+</body>
+
+</html>

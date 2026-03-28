@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>POPPY PLAYTIME: HUGGY CHASE 🎈</title>
+    <style>
+        body { margin: 0; background: #001; overflow: hidden; font-family: 'Fredoka', sans-serif; }
+        canvas { display: block; background: #050510; }
+        #ui { position: absolute; top: 20px; left: 20px; color: #fff; text-shadow: 2px 2px #000; font-size: 24px; pointer-events: none; }
+        #overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: flex; flex-direction: column; justify-content: center; align-items: center; color: #fff; text-align: center; }
+        .btn-start { padding: 15px 40px; font-size: 24px; background: #00f; border: none; color: #fff; cursor: pointer; border-radius: 10px; margin-top: 20px; box-shadow: 0 4px #005; }
+        .btn-start:active { transform: translateY(2px); box-shadow: 0 2px #005; }
+    </style>
+</head>
+<body>
+    <div id="ui">SCORE: 0</div>
+    <canvas id="gameCanvas"></canvas>
+    <div id="overlay">
+        <h1 style="color: #48dbfb; font-size: 50px;">POPPY PLAYTIME</h1>
+        <p>허기워기(Huggy Wuggy)가 쫓아옵니다!<br>화면을 클릭하거나 화살표 키로 도망치세요.<br>상자를 모아 점수를 올리세요!</p>
+        <button class="btn-start" onclick="startGame()">도망치기 시작!</button>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const ui = document.getElementById('ui');
+        const overlay = document.getElementById('overlay');
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        let player = { x: canvas.width/2, y: canvas.height/2, size: 20, speed: 5 };
+        let huggy = { x: 50, y: 50, size: 40, speed: 3.5 };
+        let items = [];
+        let score = 0;
+        let gameActive = false;
+        let mouse = { x: canvas.width/2, y: canvas.height/2 };
+
+        window.addEventListener('mousemove', (e) => { mouse.x = e.clientX; mouse.y = e.clientY; });
+        window.addEventListener('touchmove', (e) => { mouse.x = e.touches[0].clientX; mouse.y = e.touches[0].clientY; });
+        window.addEventListener('resize', () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; });
+
+        function spawnItem() {
+            items.push({
+                x: Math.random() * (canvas.width - 40) + 20,
+                y: Math.random() * (canvas.height - 40) + 20,
+                size: 15
+            });
+        }
+
+        function startGame() {
+            overlay.style.display = 'none';
+            score = 0;
+            player.x = canvas.width / 2;
+            player.y = canvas.height / 2;
+            huggy.x = 0;
+            huggy.y = 0;
+            huggy.speed = 3.5;
+            items = [];
+            for(let i=0; i<5; i++) spawnItem();
+            gameActive = true;
+            gameLoop();
+        }
+
+        function gameLoop() {
+            if(!gameActive) return;
+
+            // Player move towards mouse/touch
+            let dx = mouse.x - player.x;
+            let dy = mouse.y - player.y;
+            let dist = Math.sqrt(dx*dx + dy*dy);
+            if(dist > 5) {
+                player.x += (dx/dist) * player.speed;
+                player.y += (dy/dist) * player.speed;
+            }
+
+            // Huggy chase player
+            let hdx = player.x - huggy.x;
+            let hdy = player.y - huggy.y;
+            let hdist = Math.sqrt(hdx*hdx + hdy*hdy);
+            huggy.x += (hdx/hdist) * huggy.speed;
+            huggy.y += (hdy/hdist) * huggy.speed;
+
+            // Huggy speed up over time
+            huggy.speed += 0.0005;
+
+            // Collision check
+            if(hdist < player.size + huggy.size) {
+                gameOver();
+            }
+
+            // Item collection
+            items.forEach((item, index) => {
+                let idx = player.x - item.x;
+                let idy = player.y - item.y;
+                let idist = Math.sqrt(idx*idx + idy*idy);
+                if(idist < player.size + item.size) {
+                    items.splice(index, 1);
+                    score += 10;
+                    ui.innerText = "SCORE: " + score;
+                    spawnItem();
+                }
+            });
+
+            draw();
+            requestAnimationFrame(gameLoop);
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw Pipes/Background pattern
+            ctx.strokeStyle = '#222';
+            ctx.lineWidth = 2;
+            for(let i=0; i<canvas.width; i+=100) {
+                ctx.beginPath();ctx.moveTo(i,0);ctx.lineTo(i,canvas.height);ctx.stroke();
+            }
+            for(let i=0; i<canvas.height; i+=100) {
+                ctx.beginPath();ctx.moveTo(0,i);ctx.lineTo(canvas.width,i);ctx.stroke();
+            }
+
+            // Draw Items (GrabPacks)
+            items.forEach(item => {
+                ctx.fillStyle = '#ff9f43';
+                ctx.fillRect(item.x - item.size, item.y - item.size, item.size*2, item.size*2);
+                ctx.strokeStyle = '#fff';
+                ctx.strokeRect(item.x - item.size, item.y - item.size, item.size*2, item.size*2);
+            });
+
+            // Draw Player (GrabPack Hand)
+            ctx.fillStyle = '#ee5253';
+            ctx.beginPath();
+            ctx.arc(player.x, player.y, player.size, 0, Math.PI*2);
+            ctx.fill();
+            ctx.strokeStyle = '#fff';
+            ctx.stroke();
+
+            // Draw Huggy Wuggy
+            ctx.fillStyle = '#0984e3'; // Blue fur
+            ctx.beginPath();
+            ctx.moveTo(huggy.x - huggy.size, huggy.y - huggy.size);
+            ctx.lineTo(huggy.x + huggy.size, huggy.y - huggy.size);
+            ctx.lineTo(huggy.x + huggy.size*1.5, huggy.y + huggy.size*2); 
+            ctx.lineTo(huggy.x - huggy.size*1.5, huggy.y + huggy.size*2);
+            ctx.fill();
+            
+            // Head
+            ctx.fillStyle = '#0984e3';
+            ctx.beginPath();
+            ctx.arc(huggy.x, huggy.y - huggy.size, huggy.size*1.2, 0, Math.PI*2);
+            ctx.fill();
+            
+            // Lips
+            ctx.fillStyle = '#d63031';
+            ctx.beginPath();
+            ctx.ellipse(huggy.x, huggy.y - huggy.size + 10, huggy.size*0.8, huggy.size*0.4, 0, 0, Math.PI*2);
+            ctx.fill();
+            
+            // Eyes
+            ctx.fillStyle = '#fff';
+            ctx.beginPath();
+            ctx.arc(huggy.x - huggy.size/2, huggy.y - huggy.size - 10, 8, 0, Math.PI*2);
+            ctx.arc(huggy.x + huggy.size/2, huggy.y - huggy.size - 10, 8, 0, Math.PI*2);
+            ctx.fill();
+            ctx.fillStyle = '#000';
+            ctx.beginPath();
+            ctx.arc(huggy.x - huggy.size/2, huggy.y - huggy.size - 10, 3, 0, Math.PI*2);
+            ctx.arc(huggy.x + huggy.size/2, huggy.y - huggy.size - 10, 3, 0, Math.PI*2);
+            ctx.fill();
+        }
+
+        function gameOver() {
+            gameActive = false;
+            overlay.style.display = 'flex';
+            overlay.innerHTML = '<h1 style="color:red">EATEN!</h1><p>허기워기에게 잡혔습니다!<br>SCORE: ' + score + '</p><button class="btn-start" onclick="startGame()">다시 도망치기</button>';
+        }
+
+    </script>
+</body>
+</html>

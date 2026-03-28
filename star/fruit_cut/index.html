@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8"><title>FRUIT SLICE 🍉</title>
+    <style>
+        body { margin:0; background:#111; overflow:hidden; font-family:sans-serif; }
+        canvas { display:block; }
+        #ui { position:absolute; top:20px; left:20px; color:#fff; font-size:24px; }
+    </style>
+</head>
+<body>
+    <div id="ui">Score: 0</div>
+    <canvas id="c"></canvas>
+    <script>
+        const canvas = document.getElementById('c');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+        let fruits = [];
+        let score = 0;
+        function spawn() {
+            fruits.push({ x: Math.random()*canvas.width, y: canvas.height+50, vy: -Math.random()*15 - 10, vx: (Math.random()-0.5)*5, r: 30, color: ['#f00','#0f0','#ff0','#f80'][Math.floor(Math.random()*4)] });
+        }
+        setInterval(spawn, 1000);
+        function loop() {
+            ctx.fillStyle = 'rgba(0,0,0,0.2)'; ctx.fillRect(0,0,canvas.width,canvas.height);
+            fruits.forEach((f, i) => {
+                f.x += f.vx; f.y += f.vy; f.vy += 0.3;
+                ctx.fillStyle = f.color; ctx.beginPath(); ctx.arc(f.x, f.y, f.r, 0, Math.PI*2); ctx.fill();
+                if(f.y > canvas.height + 100) fruits.splice(i,1);
+            });
+            requestAnimationFrame(loop);
+        }
+        canvas.onmousemove = (e) => {
+            fruits.forEach((f, i) => {
+                if(Math.sqrt((e.clientX-f.x)**2 + (e.clientY-f.y)**2) < f.r) {
+                    fruits.splice(i,1); score++; document.getElementById('ui').innerText = 'Score: ' + score;
+                }
+            });
+        };
+        loop();
+    </script>
+</body>
+</html>

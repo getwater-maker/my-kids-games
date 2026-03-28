@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>RAINBOW SIX MOBILE | Tactical FPS Simulation</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/PointerLockControls.js"></script>
+</head>
+<body>
+    <div id="game-container">
+        <!-- Canvas Layer -->
+        <!-- HUD Layer -->
+        <div id="hud">
+            <!-- Top: Info & Objective -->
+            <div class="hud-top">
+                <div class="team-info blue">BLUE SQUAD</div>
+                <div class="match-timer">
+                    <span id="timer">02:30</span>
+                    <div class="objective">OBJECTIVE: SECURE AREA</div>
+                </div>
+                <div class="team-info red">RED SQUAD</div>
+            </div>
+
+            <!-- Crosshair -->
+            <div id="crosshair">
+                <div class="dot"></div>
+                <div class="line top"></div>
+                <div class="line bottom"></div>
+                <div class="line left"></div>
+                <div class="line right"></div>
+            </div>
+
+            <!-- Mobile Controls -->
+            <div id="mobile-ui" class="hidden">
+                <div id="joystick-container">
+                    <div id="joystick-base">
+                        <div id="joystick-stick"></div>
+                    </div>
+                </div>
+                <div id="mobile-buttons">
+                    <button class="m-btn btn-shoot" id="btn-shoot">🔥</button>
+                    <button class="m-btn btn-aim" id="btn-aim">🎯</button>
+                    <button class="m-btn btn-reload" id="btn-reload">🔄</button>
+                    <button class="m-btn btn-ability" id="btn-ability">🛡️</button>
+                </div>
+            </div>
+
+            <!-- Bottom: Player Stats -->
+            <div class="hud-bottom">
+                <div class="player-left">
+                    <div class="hp-label">HP</div>
+                    <div class="hp-bar-container">
+                        <div id="hp-bar-fill"></div>
+                    </div>
+                    <div class="hp-value"><span id="curr-hp">100</span> / 100</div>
+                    <div id="class-tag" style="color: var(--accent-gold); font-size: 0.8rem; font-weight: 700; margin-top: 5px;">CLASS: PIONEER</div>
+                </div>
+                <div class="player-right">
+                    <div class="weapon-name" id="weapon-name">416-C CARBINE</div>
+                    <div class="ammo-display">
+                        <span id="curr-ammo">30</span><span class="ammo-slash">/</span><span id="max-ammo">150</span>
+                    </div>
+                    <div class="gadget-info" id="gadget-name">GADGET: 1 / 1</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Overlays -->
+        <div id="start-screen" class="overlay">
+            <div class="glass-box">
+                <h1 class="logo">RAINBOW SIX <span class="mobile">MOBILE</span></h1>
+                <p>Tactical FPS Simulator v1.1 - 1v1 DUEL UPDATED</p>
+                
+                <!-- Class Selection -->
+                <div id="class-selection" style="display: flex; gap: 15px; margin: 25px 0; justify-content: center;">
+                    <div class="class-card" onclick="selectClass('scythe')" style="cursor: pointer; padding: 15px; background: rgba(255,255,255,0.05); border: 1px solid var(--accent-blue); border-radius: 10px; width: 140px;">
+                        <div style="font-size: 2rem;">🏮</div>
+                        <div style="font-weight: 900; margin-top: 5px;">SCYTHE (낫)</div>
+                        <div style="font-size: 0.7rem; color: #ccc;">Speed +15 | 2-Jump</div>
+                    </div>
+                    <div class="class-card active" onclick="selectClass('burst')" style="cursor: pointer; padding: 15px; background: rgba(255,255,255,0.05); border: 2px solid white; border-radius: 10px; width: 140px;">
+                        <div style="font-size: 2rem;">🔫</div>
+                        <div style="font-weight: 900; margin-top: 5px;">BURST RIFLE</div>
+                        <div style="font-size: 0.7rem; color: #ccc;">3-Round Burst</div>
+                    </div>
+                    <div class="class-card" onclick="selectClass('dagger')" style="cursor: pointer; padding: 15px; background: rgba(255,255,255,0.05); border: 1px solid var(--accent-blue); border-radius: 10px; width: 140px;">
+                        <div style="font-size: 2rem;">🗡️</div>
+                        <div style="font-weight: 900; margin-top: 5px;">DAGGER (단검)</div>
+                        <div style="font-size: 0.7rem; color: #ccc;">Throwing Knife</div>
+                    </div>
+                </div>
+
+                <div class="mode-toggle" style="margin-bottom: 20px;">
+                    <label style="font-weight: 900; color: var(--accent-gold);"><input type="checkbox" id="mode-1v1" checked> 1대1 결투 모드 (1v1 DUEL)</label>
+                </div>
+
+                <div class="controls-guide">
+                    <div class="guide-item pc-guide">
+                        <strong>PC</strong>: WASD - Move | Space - Jump (x2) | L-Click - Shoot | R-Click - ADS
+                    </div>
+                </div>
+                <button id="start-btn">DEPLOY OPERATION</button>
+            </div>
+        </div>
+
+        <!-- Hit Marker Overlay -->
+        <div id="hit-marker" class="hidden"></div>
+        <!-- Damage Indicator -->
+        <div id="damage-vignette"></div>
+    </div>
+
+    <script src="js/main.js"></script>
+</body>
+</html>

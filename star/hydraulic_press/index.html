@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8"><title>HYDRAULIC PRESS 🏗️</title>
+    <style>
+        body { margin:0; background:#333; display:flex; flex-direction:column; align-items:center; justify-content:center; height:100vh; font-family:sans-serif; }
+        #press { width:200px; height:100px; background:#666; position:absolute; top:50px; border-bottom:10px solid #222; transition: 0.5s; }
+        #object { width:100px; height:100px; background:#f1c40f; position:absolute; bottom:50px; transition: 0.5s; }
+        .crushed { transform: scale(3, 0.1); background:#d4ac0d !important; }
+        button { margin-top: auto; margin-bottom: 50px; padding:20px 40px; font-size:24px; background:#e74c3c; color:#fff; border:none; cursor:pointer; }
+    </style>
+</head>
+<body>
+    <h1 style="color:#fff;">HYDRAULIC PRESS</h1>
+    <div id="press"></div>
+    <div id="object"></div>
+    <button onmousedown="crush()" onmouseup="release()">PRESS</button>
+    <script>
+        const p = document.getElementById('press');
+        const o = document.getElementById('object');
+        function crush() {
+            p.style.top = (window.innerHeight - 160) + 'px';
+            setTimeout(() => { o.classList.add('crushed'); }, 400);
+        }
+        function release() {
+            p.style.top = '50px';
+            setTimeout(() => { o.classList.remove('crushed'); }, 500);
+        }
+    </script>
+</body>
+</html>

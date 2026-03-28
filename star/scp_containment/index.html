@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8"><title>SCP-173: DON'T BLINK! 🥜</title>
+    <style>
+        body { margin:0; background:#222; overflow:hidden; font-family:sans-serif; }
+        #scp { position:absolute; top:50px; left:50%; transform:translateX(-50%); font-size:100px; display:none; }
+        #blink-overlay { position:absolute; top:0; left:0; width:100%; height:100%; background:#000; display:none; z-index:1000; }
+        #ui { position:absolute; bottom:50px; width:100%; text-align:center; color:#fff; font-size:30px; }
+    </style>
+</head>
+<body>
+    <div id="scp">🗿</div>
+    <div id="blink-overlay"></div>
+    <div id="ui">그가 움직이지 못하게 지켜보세요! (스페이스바를 눌러 눈을 깜빡이세요)</div>
+    <script>
+        const scp = document.getElementById('scp');
+        const blink = document.getElementById('blink-overlay');
+        let dist = 50;
+        let isBlinking = false;
+        let scpVisible = true;
+
+        function update() {
+            if(!isBlinking) { scp.style.display='block'; }
+            else { 
+                scp.style.display='none'; 
+                dist += 10;
+                scp.style.top = dist + 'px';
+            }
+            if(dist > window.innerHeight - 150) { alert('CRACK! SCP-173 SNAPPED YOUR NECK!'); location.reload(); return; }
+            requestAnimationFrame(update);
+        }
+
+        window.addEventListener('keydown', e => { if(e.code === 'Space') { isBlinking=true; blink.style.display='block'; } });
+        window.addEventListener('keyup', e => { if(e.code === 'Space') { isBlinking=false; blink.style.display='none'; } });
+        
+        update();
+    </script>
+</body>
+</html>

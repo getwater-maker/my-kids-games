@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8"><title>GLASS BREAK SIMULATOR 💎</title>
+    <style>
+        body { margin:0; background:#222; overflow:hidden; display:flex; justify-content:center; align-items:center; height:100vh; }
+        #glass { width:80%; height:80%; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.3); backdrop-filter:blur(5px); cursor:crosshair; position:relative; overflow:hidden; }
+        .crack { position:absolute; pointer-events:none; background:#fff; opacity:0.6; }
+    </style>
+</head>
+<body>
+    <div id="glass"></div>
+    <script>
+        const glass = document.getElementById('glass');
+        glass.onmousedown = (e) => {
+            for(let i=0; i<10; i++) {
+                let crack = document.createElement('div');
+                crack.className = 'crack';
+                let len = Math.random()*100 + 20;
+                let ang = Math.random()*360;
+                crack.style.width = len + 'px';
+                crack.style.height = '1px';
+                crack.style.left = (e.clientX - glass.offsetLeft) + 'px';
+                crack.style.top = (e.clientY - glass.offsetTop) + 'px';
+                crack.style.transform = `rotate(${ang}deg)`;
+                crack.style.transformOrigin = '0 0';
+                glass.appendChild(crack);
+            }
+        };
+    </script>
+</body>
+</html>

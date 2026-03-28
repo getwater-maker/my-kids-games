@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8"><title>SKIBIDI SURVIVAL: TOILET MADNESS 🚽</title>
+    <style>
+        body { margin:0; background:#000; color:#fff; font-family:sans-serif; overflow:hidden; }
+        canvas { display:block; }
+        #ui { position:absolute; top:20px; left:20px; font-size:24px; color:#f1c40f; }
+    </style>
+</head>
+<body>
+    <div id="ui">Survived: 0s</div>
+    <canvas id="c"></canvas>
+    <script>
+        const canvas = document.getElementById('c');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+        let player = { x: canvas.width/2, y: canvas.height/2 };
+        let timer = 0;
+        let toilets = [];
+
+        window.addEventListener('mousemove', e => { player.x = e.clientX; player.y = e.clientY; });
+
+        function loop() {
+            ctx.fillStyle = '#111'; ctx.fillRect(0,0,canvas.width,canvas.height);
+            timer += 1/60;
+            document.getElementById('ui').innerText = `Survived: ${Math.floor(timer)}s`;
+
+            if(Math.random() < 0.05) toilets.push({ x: Math.random()*canvas.width, y: -50, speed: 4 + timer*0.1 });
+
+            toilets.forEach((t, i) => {
+                t.y += t.speed;
+                ctx.font = '40px serif'; ctx.fillText('🚽', t.x, t.y);
+                if(Math.sqrt((t.x-player.x)**2 + (t.y-player.y)**2) < 40) { alert('BRRR SKIBIDI DOP DOP! Final: ' + Math.floor(timer)+'s'); location.reload(); }
+                if(t.y > canvas.height) toilets.splice(i,1);
+            });
+
+            ctx.font = '30px serif'; ctx.fillText('🎥', player.x-15, player.y+10);
+            requestAnimationFrame(loop);
+        }
+        loop();
+    </script>
+</body>
+</html>

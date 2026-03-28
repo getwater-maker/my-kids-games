@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>빙수 만들기 🍧</title>
+    <link rel="stylesheet" href="bingsu.css">
+    <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="app-container">
+        <header class="game-header">
+            <h1>🍧 시원달콤 빙수 가게</h1>
+            <div class="actions">
+                <button onclick="location.href='index.html'" class="action-btn">⬅️ 뒤로가기</button>
+                <button id="clearBtn" class="action-btn clear-btn">🧊 새 그릇 꺼내기</button>
+                <button id="saveBtn" class="action-btn save-btn">📸 사진 저장!</button>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <!-- Left Toolbar -->
+            <aside class="sidebar">
+                <div class="panel">
+                    <h2>❄️ 눈꽃 얼음 갈기</h2>
+                    <p style="font-size: 0.9rem; color: #666; margin-bottom: 10px;">그릇 위에 산처럼 쌓아봐!</p>
+                    <div class="tool-list">
+                        <button class="tool-btn active" data-tool="ice" data-color="#ffffff" style="width: 100%;">🧊 우유
+                            얼음</button>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <h2>🍯 달콤한 시럽 뿌리기</h2>
+                    <div class="tool-list">
+                        <button class="tool-btn" data-tool="syrup" data-color="rgba(255, 234, 167, 0.7)">🥛 연유
+                            (듬뿍)</button>
+                        <button class="tool-btn" data-tool="syrup" data-color="rgba(255, 118, 117, 0.7)">🍓 딸기
+                            시럽</button>
+                        <button class="tool-btn" data-tool="syrup" data-color="rgba(92, 58, 33, 0.8)">🍫 초코 시럽</button>
+                        <button class="tool-btn" data-tool="syrup" data-color="rgba(186, 220, 88, 0.8)">🍵 녹차
+                            시럽</button>
+                        <button class="tool-btn" data-tool="syrup" data-color="rgba(253, 203, 110, 0.7)">🥭 망고
+                            시럽</button>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <h2>🍡 맛있는 토핑 올리기</h2>
+                    <p style="font-size: 0.9rem; color: #666; margin-bottom: 10px;">원하는 곳에 콕콕!</p>
+                    <div class="sticker-list">
+                        <button class="tool-btn sticker-btn" data-tool="topping" data-val="🍒">🍒 뽀인트 체리</button>
+                        <button class="tool-btn sticker-btn" data-tool="topping" data-val="🍓">🍓 생딸기</button>
+                        <button class="tool-btn sticker-btn" data-tool="topping" data-val="🥭">🥭 애플망고</button>
+                        <button class="tool-btn sticker-btn" data-tool="topping" data-val="🍡">🍡 쫄깃 인절미</button>
+                        <button class="tool-btn sticker-btn" data-tool="topping" data-val="🫘">🫘 통팥 (듬뿍)</button>
+                        <button class="tool-btn sticker-btn" data-tool="topping" data-val="🍨">🍨 아이스크림 스쿱</button>
+                        <button class="tool-btn sticker-btn" data-tool="topping" data-val="🍉">🍉 수박 조각</button>
+                        <button class="tool-btn sticker-btn" data-tool="topping" data-val="🍫">🍫 초콜릿 큐브</button>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Center Stage -->
+            <section class="preview-area">
+                <!-- Our Bingsu Wrapper -->
+                <div class="bingsu-wrapper" id="bingsuWrapper">
+
+                    <!-- Background Glass Bowl -->
+                    <div class="glass-bowl-back"></div>
+
+                    <canvas id="bingsuCanvas" width="500" height="600"></canvas>
+
+                    <!-- Foreground Glass Bowl Mask to make it look like ice is INSIDE the bowl! -->
+                    <div class="glass-bowl-front"></div>
+
+                    <!-- Cursor Hint Bubble -->
+                    <div id="cursorHint" class="cursor-hint">🧊</div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Sounds! -->
+    <audio id="sfx-ice" src="https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3" loop></audio>
+    <!-- use cream for now to simulate soft sounds -->
+    <audio id="sfx-pop" src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3"></audio>
+
+    <script src="bingsu.js"></script>
+</body>
+
+</html>

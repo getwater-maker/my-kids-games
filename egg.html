@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>계란후라이 만들기 🍳</title>
+    <link rel="stylesheet" href="egg.css">
+    <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="app-container">
+        <header class="game-header">
+            <h1>🍳 지글지글 계란후라이</h1>
+            <div class="actions">
+                <button onclick="location.href='index.html'" class="action-btn">⬅️ 뒤로가기</button>
+                <button id="clearBtn" class="action-btn clear-btn">🔥 새 프라이팬</button>
+                <button id="saveBtn" class="action-btn save-btn">📸 사진 저장!</button>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <!-- Left Toolbar -->
+            <aside class="sidebar">
+                <div class="panel">
+                    <h2>🥚 계란 톡! 깨트리기</h2>
+                    <p class="hint-text">원하는 곳에 클릭해서 계란을 구워요!</p>
+                    <div class="tool-list">
+                        <button class="tool-btn active" data-tool="egg" data-val="sunny">🍳 반숙 후라이</button>
+                        <button class="tool-btn" data-tool="egg" data-val="hard">🥚 완숙 프라이</button>
+                        <button class="tool-btn" data-tool="egg" data-val="scramble">💛 몽글 스크램블</button>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <h2>🧂 솔솔 조미료</h2>
+                    <p class="hint-text">마우스를 누른 채로 움직여보세요!</p>
+                    <div class="tool-list">
+                        <button class="tool-btn" data-tool="powder" data-color="#ffffff">🧂 소금 톡톡</button>
+                        <button class="tool-btn" data-tool="powder" data-color="#2d3436">🖤 후추 후추</button>
+                        <button class="tool-btn" data-tool="powder" data-color="#2ecc71">🌿 파슬리 가루</button>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <h2>🍅 케첩 아트</h2>
+                    <p class="hint-text">계란 위에 예쁘게 그림을 그려볼까요?</p>
+                    <div class="tool-list">
+                        <button class="tool-btn" data-tool="sauce" data-color="#e74c3c" data-size="12">🍅 빨간 케첩</button>
+                        <button class="tool-btn" data-tool="sauce" data-color="#f1c40f" data-size="12">🍯 머스타드</button>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <h2>🥓 꿀조합 토핑</h2>
+                    <p class="hint-text">맛있는 반찬도 같이 구워요!</p>
+                    <div class="sticker-list">
+                        <button class="tool-btn sticker-btn" data-tool="topping" data-val="🥓">🥓 베이컨</button>
+                        <button class="tool-btn sticker-btn" data-tool="topping" data-val="🌭">🌭 소시지</button>
+                        <button class="tool-btn sticker-btn" data-tool="topping" data-val="🥪">🥪 토스트</button>
+                        <button class="tool-btn sticker-btn" data-tool="topping" data-val="🍅">🍅 방울토마토</button>
+                        <button class="tool-btn sticker-btn" data-tool="topping" data-val="🧀">🧀 치즈</button>
+                        <button class="tool-btn sticker-btn" data-tool="topping" data-val="🥑">🥑 아보카도</button>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Center Stage -->
+            <section class="preview-area">
+                <div class="pan-wrapper">
+                    <!-- The pan -->
+                    <div class="frying-pan"></div>
+                    <div class="pan-handle"></div>
+                    <!-- The magic canvas that will hold our eggs -->
+                    <canvas id="eggCanvas" width="500" height="500"></canvas>
+                    <div id="cursorHint" class="cursor-hint">🍳</div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Sounds -->
+    <audio id="sfx-sizzle" src="https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3" loop></audio>
+    <audio id="sfx-pop" src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3"></audio>
+
+    <script src="egg.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8"><title>BUBBLE WRAP POPPER 🫧</title>
+    <style>
+        body { margin:0; background:#e3f2fd; display:flex; justify-content:center; align-items:center; height:100vh; overflow:hidden; }
+        #wrap { display:grid; grid-template-columns: repeat(10, 50px); gap:5px; background:rgba(255,255,255,0.5); padding:10px; border-radius:10px; }
+        .bubble { width:50px; height:50px; background:rgba(255,255,255,0.8); border:1px solid rgba(0,0,0,0.1); border-radius:50%; cursor:pointer; box-shadow: inset -2px -2px 5px rgba(0,0,0,0.1); }
+        .bubble.popped { background:rgba(255,255,255,0.2); box-shadow: none; pointer-events:none; }
+    </style>
+</head>
+<body>
+    <div id="wrap"></div>
+    <script>
+        const wrap = document.getElementById('wrap');
+        for(let i=0; i<100; i++) {
+            let b = document.createElement('div'); b.className='bubble';
+            b.onclick = () => { b.classList.add('popped'); if(navigator.vibrate) navigator.vibrate(10); };
+            wrap.appendChild(b);
+        }
+    </script>
+</body>
+</html>
